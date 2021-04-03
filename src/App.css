@@ -5,3 +5,20 @@
   align-items: center;
   justify-content: center;
 }
+
+.react-recycled-list {
+  background-color: #929292;
+}
+
+.react-recycled-row {
+  border: 1px solid #ffffff;
+  background-color: #282c34;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MuiGrid-root {
+  text-align: center;
+}
