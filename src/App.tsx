@@ -70,18 +70,19 @@ function App() {
         height={350}
         data={data}
         rowHeight={100}
-        // rowHeights={data.map(() => 100)}
-        rowHeights={heights}
-        rowColumns={columns}
+        rowHeights={data.map(() => 100)}
+        // rowHeights={heights}
+        // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
+        useScrollingIndicator
       />
     </div>
   );
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, dataEndIndex, column } = props;
+  const { data, dataIndex, dataEndIndex, column, isScrolling } = props;
   const dataSection = data.slice(dataIndex, dataEndIndex);
   let xs: 12 | 6 | 4 | 3 = 12;
   if (column === 2) xs = 6;
@@ -93,7 +94,7 @@ const Row = React.memo(function (props: RowProps) {
       {dataSection.map((dataItem, index) => {
         return (
           <Grid key={index} xs={xs}>
-            {`item ${dataItem}`}
+            {`item ${isScrolling? "scrolling" : dataItem}`}
           </Grid>
         );
       })}

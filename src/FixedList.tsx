@@ -14,6 +14,7 @@ export interface RowProps {
   dataIndex: number;
   dataEndIndex: number;
   column: number;
+  isScrolling: boolean;
 }
 
 interface props {
@@ -32,12 +33,13 @@ interface props {
   rowTagName?: string;
   rowClassName?: string;
   useScrollingIndicator?: boolean;
+  scrollInterval?: number;
 }
 
 interface state {
   renderedRowIndex: number[];
   topRenderedRowRelativeIndex: number;
-  loadingState: boolean[];
+  scrollState: boolean[];
 }
 
 export default class FixedList extends React.PureComponent<props, state> {
@@ -51,6 +53,7 @@ export default class FixedList extends React.PureComponent<props, state> {
   prevScroll: number;
   numOfInvisibleRowOnEachDirection: number;
   totalRows: number;
+  private _timeOut: any;
 
   validateProps = () => {
     const { rowHeights, column, rowColumns, data } = this.props;
@@ -79,6 +82,15 @@ export default class FixedList extends React.PureComponent<props, state> {
         "The number of rows provided from rowHeights does not match the number of rows calculated from your input data"
       );
     }
+  };
+
+  _debounceScrollState = () => {
+    clearTimeout(this._timeOut);
+    this._timeOut = setTimeout(() => {
+      this.setState({
+        scrollState: this.initialArrayTemplate.map(() => false),
+      });
+    }, this.props.scrollInterval || 250);
   };
 
   constructor(props: props) {
@@ -124,7 +136,7 @@ export default class FixedList extends React.PureComponent<props, state> {
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
-      loadingState: this.initialArrayTemplate.map(() => false),
+      scrollState: this.initialArrayTemplate.map(() => false),
       topRenderedRowRelativeIndex: 0,
     };
   }
@@ -191,19 +203,19 @@ export default class FixedList extends React.PureComponent<props, state> {
         const newRenderedRowIndex = this.initialArrayTemplate.map(
           (_, index) => index
         );
-        const newLoadingState = this.initialArrayTemplate.map(() => false);
+        const newScrollState = this.initialArrayTemplate.map(() => false);
         let cycle = 0;
         while (cycle < rowsToRecycle) {
           const newTopRenderedRowRelativeIndex = this.mod(cycle);
           newRenderedRowIndex[
             newTopRenderedRowRelativeIndex
           ] += this.totalNumOfRenderedRows;
-          newLoadingState[newTopRenderedRowRelativeIndex] = true;
+          newScrollState[newTopRenderedRowRelativeIndex] = true;
           cycle++;
         }
         this.setState({
           renderedRowIndex: newRenderedRowIndex,
-          loadingState: newLoadingState,
+          scrollState: newScrollState,
           topRenderedRowRelativeIndex: this.mod(rowsToRecycle),
         });
       } else this.forceUpdate();
@@ -218,11 +230,11 @@ export default class FixedList extends React.PureComponent<props, state> {
   };
 
   recycle = (scrollTop: number) => {
-    const { height } = this.props;
+    const { height, useScrollingIndicator } = this.props;
     const {
       renderedRowIndex,
       topRenderedRowRelativeIndex,
-      loadingState,
+      scrollState,
     } = this.state;
     const topScroll = scrollTop - this.prevScroll > 0 ? false : true;
     this.prevScroll = scrollTop;
@@ -253,7 +265,7 @@ export default class FixedList extends React.PureComponent<props, state> {
 
     if (rowsToRecycle > 0) {
       const newRenderedRowIndex = [...renderedRowIndex];
-      const newLoadingState = [...loadingState];
+      const newScrollState = [...scrollState];
       let cycle = 0;
       while (cycle < rowsToRecycle) {
         const newTopRenderedRowRelativeIndex = this.mod(
@@ -264,7 +276,7 @@ export default class FixedList extends React.PureComponent<props, state> {
           ? -this.totalNumOfRenderedRows
           : this.totalNumOfRenderedRows;
 
-        newLoadingState[newTopRenderedRowRelativeIndex] = true;
+        newScrollState[newTopRenderedRowRelativeIndex] = true;
 
         cycle++;
       }
@@ -274,9 +286,11 @@ export default class FixedList extends React.PureComponent<props, state> {
           (topScroll ? -rowsToRecycle : rowsToRecycle)
       );
 
+      if (useScrollingIndicator) this._debounceScrollState()
+
       this.setState({
         renderedRowIndex: newRenderedRowIndex,
-        loadingState: newLoadingState,
+        scrollState: newScrollState,
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
     }
@@ -290,7 +304,7 @@ export default class FixedList extends React.PureComponent<props, state> {
     const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
       (value) => targetIndex >= value[0] && targetIndex < value[1]
     );
-    validateScrollTo(targetRow)
+    validateScrollTo(targetRow);
     const targetPosition = this.rowPositions[targetRow];
 
     if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
@@ -299,7 +313,7 @@ export default class FixedList extends React.PureComponent<props, state> {
 
   scrollToRow = (targetRow: number) => {
     const targetPosition = this.rowPositions[targetRow];
-    validateScrollTo(targetPosition)
+    validateScrollTo(targetPosition);
     if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
     this.recycle(targetPosition);
   };
@@ -317,7 +331,7 @@ export default class FixedList extends React.PureComponent<props, state> {
       rowHeights,
       rowClassName,
     } = this.props;
-    const { renderedRowIndex } = this.state;
+    const { renderedRowIndex, scrollState } = this.state;
 
     const ListTag: any = listTagName || "div";
     const RowTag: any = rowTagName || "div";
@@ -342,7 +356,7 @@ export default class FixedList extends React.PureComponent<props, state> {
             position: "relative",
           }}
         >
-          {renderedRowIndex.map((absoluteRowIndex) => {
+          {renderedRowIndex.map((absoluteRowIndex, index) => {
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
 
             return (
@@ -362,6 +376,7 @@ export default class FixedList extends React.PureComponent<props, state> {
                   dataEndIndex={dataIndexInfo[1]}
                   row={absoluteRowIndex}
                   column={this.calculatedRowColumns[absoluteRowIndex]}
+                  isScrolling={scrollState[index]}
                 />
               </RowTag>
             );
