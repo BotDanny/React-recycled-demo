@@ -5,6 +5,7 @@ import {
   calculateRowPositions,
   mapRowIndexToDataIndex,
   classNames,
+  validateScrollTo,
 } from "./utils";
 
 export interface RowProps {
@@ -46,13 +47,13 @@ export default class FixedList extends React.PureComponent<props, state> {
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
   calculatedRowColumns: number[];
-  listRef: React.RefObject<HTMLElement>;
+  listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
   numOfInvisibleRowOnEachDirection: number;
   totalRows: number;
 
   validateProps = () => {
-    const { rowHeight, rowHeights, column, rowColumns, data } = this.props;
+    const { rowHeights, column, rowColumns, data } = this.props;
     if (rowColumns) {
       if (
         rowColumns.reduce((acc, current) => acc + current, 0) !== data.length
@@ -108,13 +109,7 @@ export default class FixedList extends React.PureComponent<props, state> {
       data.length
     );
     this.rowPositions = calculateRowPositions(rowHeights);
-
     this.totalRows = rowHeights.length;
-    if (this.rowToDataIndexMap[this.totalRows - 1][1] !== data.length) {
-      throw Error(
-        "The total number of data item calculated from rowHeights does not match the length of your input data"
-      );
-    }
 
     const numOfVisibleRow = Math.ceil(height / rowHeight);
     this.numOfInvisibleRowOnEachDirection =
@@ -134,11 +129,89 @@ export default class FixedList extends React.PureComponent<props, state> {
     };
   }
 
-  componentDidUpdate = (prevProps: any, prevState: any) => {
-    const myProp = this.props;
+  componentDidUpdate(prevProps: props) {
+    const currentProp = this.props;
+    if (prevProps === currentProp) return;
+    const {
+      rowHeight,
+      rowHeights,
+      column,
+      rowColumns,
+      height,
+      data,
+      additionalRenderedRow,
+    } = currentProp;
+    if (
+      prevProps.rowHeight !== rowHeight ||
+      prevProps.rowHeights !== rowHeights ||
+      prevProps.column !== column ||
+      prevProps.rowColumns !== rowColumns ||
+      prevProps.height !== height ||
+      prevProps.data !== data ||
+      prevProps.additionalRenderedRow !== additionalRenderedRow
+    ) {
+      this.validateProps();
 
-    console.log("update");
-  };
+      this.calculatedRowColumns = rowColumns
+        ? rowColumns
+        : column
+        ? Array(rowHeights.length).fill(column)
+        : Array(rowHeights.length).fill(1);
+
+      this.rowToDataIndexMap = mapRowIndexToDataIndex(
+        this.calculatedRowColumns,
+        data.length
+      );
+      this.rowPositions = calculateRowPositions(rowHeights);
+      this.totalRows = rowHeights.length;
+
+      const numOfVisibleRow = Math.ceil(height / rowHeight);
+      this.numOfInvisibleRowOnEachDirection =
+        additionalRenderedRow || Math.ceil(numOfVisibleRow / 2);
+      this.totalNumOfRenderedRows =
+        numOfVisibleRow + this.numOfInvisibleRowOnEachDirection * 2;
+      if (this.totalNumOfRenderedRows > this.totalRows)
+        this.totalNumOfRenderedRows = this.totalRows;
+      this.initialArrayTemplate = Array(this.totalNumOfRenderedRows).fill(null);
+
+      this.fullHeight = rowHeights.reduce((acc, current) => acc + current, 0);
+
+      const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
+      const viewportBottom = this.prevScroll + height;
+      const newBottomRenderedRowIndex = Math.min(
+        _.sortedIndex(this.rowPositions, viewportBottom) -
+          1 +
+          this.numOfInvisibleRowOnEachDirection,
+        this.totalRows - 1
+      );
+
+      const rowsToRecycle = newBottomRenderedRowIndex - bottomRenderedRowIndex;
+
+      if (rowsToRecycle > 0) {
+        const newRenderedRowIndex = this.initialArrayTemplate.map(
+          (_, index) => index
+        );
+        const newLoadingState = this.initialArrayTemplate.map(() => false);
+        let cycle = 0;
+        while (cycle < rowsToRecycle) {
+          const newTopRenderedRowRelativeIndex = this.mod(cycle);
+          newRenderedRowIndex[
+            newTopRenderedRowRelativeIndex
+          ] += this.totalNumOfRenderedRows;
+          newLoadingState[newTopRenderedRowRelativeIndex] = true;
+          cycle++;
+        }
+        this.setState({
+          renderedRowIndex: newRenderedRowIndex,
+          loadingState: newLoadingState,
+          topRenderedRowRelativeIndex: this.mod(rowsToRecycle),
+        });
+      } else this.forceUpdate();
+
+      if (this.fullHeight - height < this.prevScroll)
+        this.prevScroll = this.fullHeight - height;
+    }
+  }
 
   mod = (n: number, m: number = this.totalNumOfRenderedRows) => {
     return ((n % m) + m) % m;
@@ -213,6 +286,24 @@ export default class FixedList extends React.PureComponent<props, state> {
     this.recycle(event.currentTarget.scrollTop);
   };
 
+  scrollToDataIndex = (targetIndex: number) => {
+    const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
+      (value) => targetIndex >= value[0] && targetIndex < value[1]
+    );
+    validateScrollTo(targetRow)
+    const targetPosition = this.rowPositions[targetRow];
+
+    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    this.recycle(targetPosition);
+  };
+
+  scrollToRow = (targetRow: number) => {
+    const targetPosition = this.rowPositions[targetRow];
+    validateScrollTo(targetPosition)
+    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    this.recycle(targetPosition);
+  };
+
   render() {
     const {
       listTagName,
@@ -242,6 +333,7 @@ export default class FixedList extends React.PureComponent<props, state> {
           overflowY: "scroll",
         }}
         onScroll={this.onScroll}
+        ref={this.listRef}
       >
         <ListTag
           className={classNames("react-recycled-list", listClassName)}

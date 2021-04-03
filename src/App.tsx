@@ -25,20 +25,54 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
   return [heights, columns];
 }
 
+const initialData = Array(50)
+  .fill(null)
+  .map((_, index) => index);
+
 function App() {
-  const data = Array(50)
-    .fill(null)
-    .map((_, index) => index);
+  const childRef = React.useRef() as React.RefObject<FixedList>
+  const [data, setData] = React.useState(initialData);
+  const [test, setTest] = React.useState(false);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
   return (
     <div className="App">
+      <button
+        onClick={() =>
+          setData(
+            Array(data.length + 3)
+              .fill(null)
+              .map((_, index) => index)
+          )
+        }
+      >
+        + Data
+      </button>
+      <button
+        onClick={() =>
+          setData(
+            Array(data.length - 3)
+              .fill(null)
+              .map((_, index) => index)
+          )
+        }
+      >
+        - data
+      </button>
+      <button
+        onClick={() => {
+          childRef.current?.scrollToDataIndex(17)
+        }}
+      >
+        scroll to data 17
+      </button>
       <FixedList
-        height={300}
+        ref={childRef}
+        height={350}
         data={data}
         rowHeight={100}
-        // rowHeights={heights}
-        rowHeights={data.map(() => 100)}
-        // rowColumns={columns}
+        // rowHeights={data.map(() => 100)}
+        rowHeights={heights}
+        rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
       />

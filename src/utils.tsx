@@ -33,3 +33,9 @@ export function classNames(className1: string, className2: string | undefined) {
     if (className2) return `${className1} ${className2}`
     else return className1
 }
+
+export function validateScrollTo(result: any) {
+    if (result === -1 || result === undefined) {
+        throw Error("Invalid input to, make sure your input data index or row is correct")
+    }
+}
