@@ -29,10 +29,6 @@ export function mapRowIndexToDataIndex(
   return map;
 }
 
-export function mod(n :number, m: number) {
-    return ((n % m) + m) % m;
-}
-
 export function classNames(className1: string, className2: string | undefined) {
     if (className2) return `${className1} ${className2}`
     else return className1
