@@ -1,7 +1,8 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import FixedList, { RowProps } from "./FixedList";
+// import FixedList, { RowProps } from "./FixedSizeList";
+import VariableSizeList, { RowProps } from "./VariableSizeList";
 import { Grid } from "@material-ui/core";
 import { FixedSizeList } from "react-window";
 
@@ -30,7 +31,7 @@ const initialData = Array(50)
   .map((_, index) => index);
 
 function App() {
-  const childRef = React.useRef() as React.RefObject<FixedList>
+  const childRef = React.useRef() as React.RefObject<VariableSizeList>
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
@@ -65,7 +66,7 @@ function App() {
       >
         scroll to data 17
       </button>
-      <FixedList
+      <VariableSizeList
         ref={childRef}
         height={350}
         data={data}

@@ -22,7 +22,6 @@ interface props {
   width: string;
   data: any[];
   rowHeight: number;
-  rowHeights: number[];
   rowComponent: React.ElementType<RowProps>;
   column?: number;
   rowColumns?: number[];
@@ -48,7 +47,6 @@ export default class FixedList extends React.PureComponent<props, state> {
   fullHeight: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
-  calculatedRowColumns: number[];
   listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -56,7 +54,7 @@ export default class FixedList extends React.PureComponent<props, state> {
   private _timeOut: any;
 
   validateProps = () => {
-    const { rowHeights, column, rowColumns, data } = this.props;
+    const { rowColumns, data } = this.props;
     if (rowColumns) {
       if (
         rowColumns.reduce((acc, current) => acc + current, 0) !== data.length
@@ -65,22 +63,6 @@ export default class FixedList extends React.PureComponent<props, state> {
           "The total number of data item calculated from rowColumns does not match the length of your input data"
         );
       }
-      if (rowColumns.length !== rowHeights.length) {
-        throw Error(
-          "The number of rows provided from rowHeights does not match the number of rows provided from rowColumns"
-        );
-      }
-    } else if (column) {
-      const rows = Math.ceil(data.length / column);
-      if (rows !== rowHeights.length) {
-        throw Error(
-          "The number of rows provided from rowHeights does not match the number of rows calculated from column"
-        );
-      }
-    } else if (rowHeights.length !== data.length) {
-      throw Error(
-        "The number of rows provided from rowHeights does not match the number of rows calculated from your input data"
-      );
     }
   };
 
@@ -98,7 +80,6 @@ export default class FixedList extends React.PureComponent<props, state> {
 
     const {
       rowHeight,
-      rowHeights,
       column,
       rowColumns,
       data,
@@ -106,20 +87,21 @@ export default class FixedList extends React.PureComponent<props, state> {
       additionalRenderedRow,
     } = props;
 
-    this.validateProps();
+    // this.validateProps();
     this.listRef = React.createRef();
     this.prevScroll = 0;
 
-    this.calculatedRowColumns = rowColumns
+    const calculatedRowColumns = rowColumns
       ? rowColumns
       : column
-      ? Array(rowHeights.length).fill(column)
-      : Array(rowHeights.length).fill(1);
+      ? Array(Math.ceil(data.length / column)).fill(column)
+      : Array(data.length).fill(1);
 
     this.rowToDataIndexMap = mapRowIndexToDataIndex(
-      this.calculatedRowColumns,
+      calculatedRowColumns,
       data.length
     );
+    const rowHeights = calculatedRowColumns.map(() => rowHeight);
     this.rowPositions = calculateRowPositions(rowHeights);
     this.totalRows = rowHeights.length;
 
@@ -146,7 +128,6 @@ export default class FixedList extends React.PureComponent<props, state> {
     if (prevProps === currentProp) return;
     const {
       rowHeight,
-      rowHeights,
       column,
       rowColumns,
       height,
@@ -155,7 +136,6 @@ export default class FixedList extends React.PureComponent<props, state> {
     } = currentProp;
     if (
       prevProps.rowHeight !== rowHeight ||
-      prevProps.rowHeights !== rowHeights ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
       prevProps.height !== height ||
@@ -164,16 +144,17 @@ export default class FixedList extends React.PureComponent<props, state> {
     ) {
       this.validateProps();
 
-      this.calculatedRowColumns = rowColumns
+      const calculatedRowColumns = rowColumns
         ? rowColumns
         : column
-        ? Array(rowHeights.length).fill(column)
-        : Array(rowHeights.length).fill(1);
+        ? Array(Math.ceil(data.length / column)).fill(column)
+        : Array(data.length).fill(1);
 
       this.rowToDataIndexMap = mapRowIndexToDataIndex(
-        this.calculatedRowColumns,
+        calculatedRowColumns,
         data.length
       );
+      const rowHeights = calculatedRowColumns.map(() => rowHeight);
       this.rowPositions = calculateRowPositions(rowHeights);
       this.totalRows = rowHeights.length;
 
@@ -286,7 +267,7 @@ export default class FixedList extends React.PureComponent<props, state> {
           (topScroll ? -rowsToRecycle : rowsToRecycle)
       );
 
-      if (useScrollingIndicator) this._debounceScrollState()
+      if (useScrollingIndicator) this._debounceScrollState();
 
       this.setState({
         renderedRowIndex: newRenderedRowIndex,
@@ -328,8 +309,8 @@ export default class FixedList extends React.PureComponent<props, state> {
       width,
       rowComponent: MyComponent,
       rowTagName,
-      rowHeights,
       rowClassName,
+      rowHeight,
     } = this.props;
     const { renderedRowIndex, scrollState } = this.state;
 
@@ -358,13 +339,14 @@ export default class FixedList extends React.PureComponent<props, state> {
         >
           {renderedRowIndex.map((absoluteRowIndex, index) => {
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
-
+            const startDataIndex = dataIndexInfo[0];
+            const endDataIndex = dataIndexInfo[1];
             return (
               <RowTag
                 style={{
                   position: "absolute",
                   top: this.rowPositions[absoluteRowIndex],
-                  height: rowHeights[absoluteRowIndex],
+                  height: rowHeight,
                   width: "100%",
                   boxSizing: "border-box",
                 }}
@@ -372,10 +354,10 @@ export default class FixedList extends React.PureComponent<props, state> {
               >
                 <MyComponent
                   data={data}
-                  dataIndex={dataIndexInfo[0]}
-                  dataEndIndex={dataIndexInfo[1]}
+                  dataIndex={startDataIndex}
+                  dataEndIndex={endDataIndex}
                   row={absoluteRowIndex}
-                  column={this.calculatedRowColumns[absoluteRowIndex]}
+                  column={endDataIndex - startDataIndex}
                   isScrolling={scrollState[index]}
                 />
               </RowTag>
