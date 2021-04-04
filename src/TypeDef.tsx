@@ -23,22 +23,26 @@ export interface ReactRecycledListProps {
   rowClassName?: string;
   useScrollingIndicator?: boolean;
   scrollInterval?: number;
-  onRecycle?: (renderInfo: {
-    topRenderedRowIndex: number;
-    firstRenderedDataIndex: number;
-    bottomRenderedRowIndex: number;
-    lastRenderedDataIndex: number;
-  }) => void;
-  onScroll?: (renderInfo: {
-    topVisibleRowIndex: number;
-    firstVisibleDataIndex: number;
-    bottomVisibleRowIndex: number;
-    lastVisibleDataIndex: number;
-  }) => void;
+  onRecycle?: OnRecycleCallBack;
+  onScroll?: OnScrollCallBack;
 }
 
+export type OnRecycleCallBack = (renderInfo: {
+  topRenderedRowIndex: number;
+  firstRenderedDataIndex: number;
+  bottomRenderedRowIndex: number;
+  lastRenderedDataIndex: number;
+}) => void;
+
+export type OnScrollCallBack = (renderInfo: {
+  topVisibleRowIndex: number;
+  firstVisibleDataIndex: number;
+  bottomVisibleRowIndex: number;
+  lastVisibleDataIndex: number;
+}) => void;
+
 export interface ReactRecycledListState {
-    renderedRowIndex: number[];
-    topRenderedRowRelativeIndex: number;
-    scrollState: boolean[];
-  }
+  renderedRowIndex: number[];
+  topRenderedRowRelativeIndex: number;
+  scrollState: boolean[];
+}

@@ -72,12 +72,12 @@ function App() {
         height={350}
         data={data}
         rowHeight={100}
-        rowHeights={data.map(() => 100)}
-        // rowHeights={heights}
-        // rowColumns={columns}
+        // rowHeights={data.map(() => 100)}
+        rowHeights={heights}
+        rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        useScrollingIndicator
+        // useScrollingIndicator
       />
     </div>
   );
@@ -128,6 +128,10 @@ function FixedListDemo() {
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
+        onRecycle={(props: any) => {
+          console.log(props)
+        }}
+        useScrollingIndicator
       />
     </div>
   );
