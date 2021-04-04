@@ -34,6 +34,18 @@ interface props {
   rowClassName?: string;
   useScrollingIndicator?: boolean;
   scrollInterval?: number;
+  onRecycle?: (renderInfo: {
+    topRenderedRowIndex: number;
+    firstRenderedDataIndex: number;
+    bottomRenderedRowIndex: number;
+    lastRenderedDataIndex: number;
+  }) => void;
+  onScroll?: (renderInfo: {
+    topVisibleRowIndex: number;
+    firstVisibleDataIndex: number;
+    bottomVisibleRowIndex: number;
+    lastVisibleDataIndex: number;
+  }) => void;
 }
 
 interface state {
@@ -42,13 +54,15 @@ interface state {
   scrollState: boolean[];
 }
 
-export default class VariableSizeList extends React.PureComponent<props, state> {
+export default class VariableSizeList extends React.PureComponent<
+  props,
+  state
+> {
   rowPositions: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
-  calculatedRowColumns: number[];
   listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -110,14 +124,14 @@ export default class VariableSizeList extends React.PureComponent<props, state> 
     this.listRef = React.createRef();
     this.prevScroll = 0;
 
-    this.calculatedRowColumns = rowColumns
+    const calculatedRowColumns = rowColumns
       ? rowColumns
       : column
       ? Array(rowHeights.length).fill(column)
       : Array(rowHeights.length).fill(1);
 
     this.rowToDataIndexMap = mapRowIndexToDataIndex(
-      this.calculatedRowColumns,
+      calculatedRowColumns,
       data.length
     );
     this.rowPositions = calculateRowPositions(rowHeights);
@@ -164,14 +178,14 @@ export default class VariableSizeList extends React.PureComponent<props, state> 
     ) {
       this.validateProps();
 
-      this.calculatedRowColumns = rowColumns
+      const calculatedRowColumns = rowColumns
         ? rowColumns
         : column
         ? Array(rowHeights.length).fill(column)
         : Array(rowHeights.length).fill(1);
 
       this.rowToDataIndexMap = mapRowIndexToDataIndex(
-        this.calculatedRowColumns,
+        calculatedRowColumns,
         data.length
       );
       this.rowPositions = calculateRowPositions(rowHeights);
@@ -286,7 +300,7 @@ export default class VariableSizeList extends React.PureComponent<props, state> 
           (topScroll ? -rowsToRecycle : rowsToRecycle)
       );
 
-      if (useScrollingIndicator) this._debounceScrollState()
+      if (useScrollingIndicator) this._debounceScrollState();
 
       this.setState({
         renderedRowIndex: newRenderedRowIndex,
@@ -358,7 +372,8 @@ export default class VariableSizeList extends React.PureComponent<props, state> 
         >
           {renderedRowIndex.map((absoluteRowIndex, index) => {
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
-
+            const startDataIndex = dataIndexInfo[0];
+            const endDataIndex = dataIndexInfo[1];
             return (
               <RowTag
                 style={{
@@ -372,10 +387,10 @@ export default class VariableSizeList extends React.PureComponent<props, state> 
               >
                 <MyComponent
                   data={data}
-                  dataIndex={dataIndexInfo[0]}
-                  dataEndIndex={dataIndexInfo[1]}
+                  dataIndex={startDataIndex}
+                  dataEndIndex={endDataIndex}
                   row={absoluteRowIndex}
-                  column={this.calculatedRowColumns[absoluteRowIndex]}
+                  column={endDataIndex - startDataIndex}
                   isScrolling={scrollState[index]}
                 />
               </RowTag>

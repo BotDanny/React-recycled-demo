@@ -133,6 +133,7 @@ export default class FixedList extends React.PureComponent<props, state> {
       height,
       data,
       additionalRenderedRow,
+      useScrollingIndicator
     } = currentProp;
     if (
       prevProps.rowHeight !== rowHeight ||
@@ -171,10 +172,11 @@ export default class FixedList extends React.PureComponent<props, state> {
 
       const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
       const viewportBottom = this.prevScroll + height;
+      let viewportBottomRow = viewportBottom / rowHeight;
+      if (Number.isInteger(viewportBottomRow)) viewportBottomRow -= 1;
+      else viewportBottomRow = Math.floor(viewportBottomRow);
       const newBottomRenderedRowIndex = Math.min(
-        _.sortedIndex(this.rowPositions, viewportBottom) -
-          1 +
-          this.numOfInvisibleRowOnEachDirection,
+        viewportBottomRow + this.numOfInvisibleRowOnEachDirection,
         this.totalRows - 1
       );
 
@@ -194,9 +196,15 @@ export default class FixedList extends React.PureComponent<props, state> {
           newScrollState[newTopRenderedRowRelativeIndex] = true;
           cycle++;
         }
+
+        if (useScrollingIndicator) {
+          this.setState({
+            scrollState: newScrollState,
+          });
+          this._debounceScrollState();
+        }
         this.setState({
           renderedRowIndex: newRenderedRowIndex,
-          scrollState: newScrollState,
           topRenderedRowRelativeIndex: this.mod(rowsToRecycle),
         });
       } else this.forceUpdate();
@@ -211,7 +219,7 @@ export default class FixedList extends React.PureComponent<props, state> {
   };
 
   recycle = (scrollTop: number) => {
-    const { height, useScrollingIndicator } = this.props;
+    const { height, useScrollingIndicator, rowHeight } = this.props;
     const {
       renderedRowIndex,
       topRenderedRowRelativeIndex,
@@ -224,8 +232,7 @@ export default class FixedList extends React.PureComponent<props, state> {
     if (topScroll) {
       const topRenderedRowIndex = renderedRowIndex[topRenderedRowRelativeIndex];
       const newTopRenderedRowIndex = Math.max(
-        _.sortedLastIndex(this.rowPositions, scrollTop) -
-          1 -
+        Math.floor(scrollTop / rowHeight) -
           this.numOfInvisibleRowOnEachDirection,
         0
       );
@@ -234,10 +241,11 @@ export default class FixedList extends React.PureComponent<props, state> {
       const bottomRenderedRowIndex =
         renderedRowIndex[this.mod(topRenderedRowRelativeIndex - 1)];
       const viewportBottom = scrollTop + height;
+      let viewportBottomRow = viewportBottom / rowHeight;
+      if (Number.isInteger(viewportBottomRow)) viewportBottomRow -= 1;
+      else viewportBottomRow = Math.floor(viewportBottomRow);
       const newBottomRenderedRowIndex = Math.min(
-        _.sortedIndex(this.rowPositions, viewportBottom) -
-          1 +
-          this.numOfInvisibleRowOnEachDirection,
+        viewportBottomRow + this.numOfInvisibleRowOnEachDirection,
         this.totalRows - 1
       );
 
@@ -267,11 +275,15 @@ export default class FixedList extends React.PureComponent<props, state> {
           (topScroll ? -rowsToRecycle : rowsToRecycle)
       );
 
-      if (useScrollingIndicator) this._debounceScrollState();
+      if (useScrollingIndicator) {
+        this.setState({
+          scrollState: newScrollState,
+        });
+        this._debounceScrollState();
+      }
 
       this.setState({
         renderedRowIndex: newRenderedRowIndex,
-        scrollState: newScrollState,
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
     }
