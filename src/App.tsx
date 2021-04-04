@@ -69,12 +69,12 @@ function App() {
       </button>
       <VariableSizeList
         ref={childRef}
-        height={350}
+        height={300}
         data={data}
         rowHeight={100}
-        // rowHeights={data.map(() => 100)}
-        rowHeights={heights}
-        rowColumns={columns}
+        rowHeights={data.map(() => 100)}
+        // rowHeights={heights}
+        // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
         // useScrollingIndicator
@@ -121,17 +121,17 @@ function FixedListDemo() {
       </button>
       <FixedList
         ref={childRef}
-        height={350}
+        height={300}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        onRecycle={(props: any) => {
-          console.log(props)
-        }}
-        useScrollingIndicator
+        // onRecycle={(props: any) => {
+        //   console.log(props)
+        // }}
+        // useScrollingIndicator
       />
     </div>
   );
@@ -198,4 +198,4 @@ const ReactWindowRow = React.memo(function (props: {
   );
 });
 
-export default FixedListDemo;
+export default App;
