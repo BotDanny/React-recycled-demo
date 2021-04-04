@@ -7,56 +7,15 @@ import {
   classNames,
   validateScrollTo,
 } from "./utils";
+import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 
-export interface RowProps {
-  data: any[];
-  row: number;
-  dataIndex: number;
-  dataEndIndex: number;
-  column: number;
-  isScrolling: boolean;
-}
-
-interface props {
-  height: number;
-  width: string;
-  data: any[];
-  rowHeight: number;
+interface props extends ReactRecycledListProps {
   rowHeights: number[];
-  rowComponent: React.ElementType<RowProps>;
-  column?: number;
-  rowColumns?: number[];
-  additionalRenderedRow?: number;
-  listWindowClassName?: string;
-  listClassName?: string;
-  listTagName?: string;
-  rowTagName?: string;
-  rowClassName?: string;
-  useScrollingIndicator?: boolean;
-  scrollInterval?: number;
-  onRecycle?: (renderInfo: {
-    topRenderedRowIndex: number;
-    firstRenderedDataIndex: number;
-    bottomRenderedRowIndex: number;
-    lastRenderedDataIndex: number;
-  }) => void;
-  onScroll?: (renderInfo: {
-    topVisibleRowIndex: number;
-    firstVisibleDataIndex: number;
-    bottomVisibleRowIndex: number;
-    lastVisibleDataIndex: number;
-  }) => void;
-}
-
-interface state {
-  renderedRowIndex: number[];
-  topRenderedRowRelativeIndex: number;
-  scrollState: boolean[];
 }
 
 export default class VariableSizeList extends React.PureComponent<
   props,
-  state
+  ReactRecycledListState
 > {
   rowPositions: number[];
   rowToDataIndexMap: RowToDataIndexMap;

@@ -7,41 +7,9 @@ import {
   classNames,
   validateScrollTo,
 } from "./utils";
+import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 
-export interface RowProps {
-  data: any[];
-  row: number;
-  dataIndex: number;
-  dataEndIndex: number;
-  column: number;
-  isScrolling: boolean;
-}
-
-interface props {
-  height: number;
-  width: string;
-  data: any[];
-  rowHeight: number;
-  rowComponent: React.ElementType<RowProps>;
-  column?: number;
-  rowColumns?: number[];
-  additionalRenderedRow?: number;
-  listWindowClassName?: string;
-  listClassName?: string;
-  listTagName?: string;
-  rowTagName?: string;
-  rowClassName?: string;
-  useScrollingIndicator?: boolean;
-  scrollInterval?: number;
-}
-
-interface state {
-  renderedRowIndex: number[];
-  topRenderedRowRelativeIndex: number;
-  scrollState: boolean[];
-}
-
-export default class FixedList extends React.PureComponent<props, state> {
+export default class FixedList extends React.PureComponent<ReactRecycledListProps, ReactRecycledListState> {
   rowPositions: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
@@ -75,7 +43,7 @@ export default class FixedList extends React.PureComponent<props, state> {
     }, this.props.scrollInterval || 250);
   };
 
-  constructor(props: props) {
+  constructor(props: ReactRecycledListProps) {
     super(props);
 
     const {
@@ -123,7 +91,7 @@ export default class FixedList extends React.PureComponent<props, state> {
     };
   }
 
-  componentDidUpdate(prevProps: props) {
+  componentDidUpdate(prevProps: ReactRecycledListProps) {
     const currentProp = this.props;
     if (prevProps === currentProp) return;
     const {
