@@ -4,7 +4,7 @@ import "./App.css";
 import FixedList from "./FixedSizeList";
 import VariableSizeList from "./VariableSizeList";
 import { Grid } from "@material-ui/core";
-import { FixedSizeList } from "react-window";
+import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
 
 function randInt(min: number, max: number) {
@@ -32,7 +32,7 @@ const initialData = Array(50)
   .map((_, index) => index);
 
 function App() {
-  const childRef = React.useRef() as React.RefObject<VariableSizeList>
+  const childRef = React.useRef() as React.RefObject<VariableSizeList>;
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
@@ -62,7 +62,7 @@ function App() {
       </button>
       <button
         onClick={() => {
-          childRef.current?.scrollToDataIndex(17)
+          childRef.current?.scrollToDataIndex(17);
         }}
       >
         scroll to data 17
@@ -72,11 +72,14 @@ function App() {
         height={300}
         data={data}
         rowHeight={100}
-        rowHeights={data.map(() => 100)}
-        // rowHeights={heights}
-        // rowColumns={columns}
+        // rowHeights={data.map(() => 100)}
+        rowHeights={heights}
+        rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
+        onVisibleRowChange={(props) => {
+          console.log(props);
+        }}
         // useScrollingIndicator
       />
     </div>
@@ -84,7 +87,7 @@ function App() {
 }
 
 function FixedListDemo() {
-  const childRef = React.useRef() as React.RefObject<FixedList>
+  const childRef = React.useRef() as React.RefObject<FixedList>;
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
@@ -114,7 +117,7 @@ function FixedListDemo() {
       </button>
       <button
         onClick={() => {
-          childRef.current?.scrollToDataIndex(17)
+          childRef.current?.scrollToDataIndex(17);
         }}
       >
         scroll to data 17
@@ -128,9 +131,10 @@ function FixedListDemo() {
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        // onRecycle={(props: any) => {
-        //   console.log(props)
-        // }}
+        // column={3}
+        onVisibleRowChange={(props) => {
+          console.log(props);
+        }}
         // useScrollingIndicator
       />
     </div>
@@ -146,17 +150,17 @@ const Row = React.memo(function (props: RowProps) {
   else if (column === 4) xs = 3;
   console.log(`item ${data[dataIndex]}`);
   React.useEffect(() => {
-    console.log(`${dataIndex} mounted`)
+    console.log(`${dataIndex} mounted`);
     return () => {
-      console.log(`${dataIndex} unmounted`)
-    }
-  }, [])
+      console.log(`${dataIndex} unmounted`);
+    };
+  }, []);
   return (
     <>
       {dataSection.map((dataItem, index) => {
         return (
           <Grid key={index} xs={xs}>
-            {`item ${isScrolling? "scrolling" : dataItem}`}
+            {`item ${isScrolling ? "scrolling" : dataItem}`}
           </Grid>
         );
       })}
@@ -165,43 +169,46 @@ const Row = React.memo(function (props: RowProps) {
 });
 
 function ReactWindow() {
-  const data = Array(50)
+  const data = Array(150)
     .fill(null)
     .map((_, index) => index);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
   return (
     <div className="App">
-      <FixedSizeList
-        className="react-recycled-list"
+      <FixedSizeGrid
+        columnCount={3}
+        columnWidth={650}
         height={300}
-        itemCount={data.length}
-        itemSize={100}
-        width="100%"
+        rowCount={150 / 3}
+        rowHeight={100}
+        width={1900}
+        // width="100%"
       >
-        {ReactWindowRow}
-      </FixedSizeList>
+        {({ columnIndex, rowIndex, style }) => (
+          <div style={style}>
+            row {rowIndex}, column {columnIndex}
+          </div>
+        )}
+      </FixedSizeGrid>
     </div>
   );
 }
 
-const ReactWindowRow = React.memo(function (props: {
-  index: number;
-  style: any;
-}) {
-  const { index, style } = props;
-  React.useEffect(() => {
-    console.log(`${index} mounted`)
-    return () => {
-      console.log(`${index} unmounted`)
-    }
-  }, [])
+const ReactWindowRow = React.memo(function (props: any) {
+  const { columnIndex, rowIndex, style } = props;
+  // React.useEffect(() => {
+  //   console.log(`${index} mounted`);
+  //   return () => {
+  //     console.log(`${index} unmounted`);
+  //   };
+  // }, []);
   return (
     <div className="react-recycled-row" style={style}>
-      <Grid key={index} xs={12}>
-        Item {index}
+      <Grid key={rowIndex + columnIndex} xs={4}>
+        Item {rowIndex + columnIndex}
       </Grid>
     </div>
   );
 });
 
-export default App;
+export default FixedListDemo;

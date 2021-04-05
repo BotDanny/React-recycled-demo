@@ -36,6 +36,6 @@ export function classNames(className1: string, className2: string | undefined) {
 
 export function validateScrollTo(result: any) {
     if (result === -1 || result === undefined) {
-        throw Error("Invalid input to, make sure your input data index or row is correct")
+        throw Error("Invalid input to ScrollTo, make sure your input data index or row is correct")
     }
 }

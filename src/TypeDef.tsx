@@ -23,8 +23,8 @@ export interface ReactRecycledListProps {
   rowClassName?: string;
   useScrollingIndicator?: boolean;
   scrollInterval?: number;
-  onRecycle?: OnRecycleCallBack;
-  onScroll?: OnScrollCallBack;
+  onRenderedRowChange?: OnRecycleCallBack;
+  onVisibleRowChange?: OnScrollCallBack;
 }
 
 export type OnRecycleCallBack = (renderInfo: {

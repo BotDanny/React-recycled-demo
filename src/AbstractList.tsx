@@ -1,6 +1,10 @@
 import React from "react";
-import { ReactRecycledListProps, ReactRecycledListState, RowProps } from "./TypeDef";
-import { RowToDataIndexMap, validateScrollTo, classNames, } from "./utils";
+import {
+  ReactRecycledListProps,
+  ReactRecycledListState,
+  RowProps,
+} from "./TypeDef";
+import { RowToDataIndexMap, validateScrollTo, classNames } from "./utils";
 import * as _ from "lodash";
 
 export default abstract class General<
@@ -9,6 +13,7 @@ export default abstract class General<
 > extends React.PureComponent<P, S> {
   listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
+  prevBottomVisibleRow: number;
   abstract rowHeights: number[];
   abstract rowPositions: number[];
   abstract rowToDataIndexMap: RowToDataIndexMap;
@@ -25,67 +30,30 @@ export default abstract class General<
     super(props);
     this.listRef = React.createRef();
     this.prevScroll = 0;
+    this.prevBottomVisibleRow = 0;
   }
 
-  onScroll = (event: React.UIEvent<HTMLElement>) => {
-    this.recycle(event.currentTarget.scrollTop);
-  };
+  onScrollChange = (scrollTop: number) => {
+    const { onVisibleRowChange } = this.props;
+    if (!onVisibleRowChange) return;
 
-  scrollToDataIndex = (targetIndex: number) => {
-    const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
-      (value) => targetIndex >= value[0] && targetIndex < value[1]
+    const bottomVisibleRowIndex = this.getBottomViewportRowIndex(
+      scrollTop + this.props.height
     );
-    validateScrollTo(targetRow);
-    const targetPosition = this.rowPositions[targetRow];
 
-    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
-    this.recycle(targetPosition);
-  };
+    if (bottomVisibleRowIndex === this.prevBottomVisibleRow) return;
+    const topVisibleRowIndex = this.getTopViewportRowIndex(scrollTop);
+    const firstVisibleDataIndex = this.rowToDataIndexMap[topVisibleRowIndex][0];
 
-  scrollToRow = (targetRow: number) => {
-    const targetPosition = this.rowPositions[targetRow];
-    validateScrollTo(targetPosition);
-    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
-    this.recycle(targetPosition);
-  };
-
-  mod = (n: number, m: number = this.totalNumOfRenderedRows) => {
-    return ((n % m) + m) % m;
-  };
-
-  _debounceScrollState = () => {
-    clearTimeout(this.timeOut);
-    this.timeOut = setTimeout(() => {
-      this.setState({
-        scrollState: this.initialArrayTemplate.map(() => false),
-      });
-    }, this.props.scrollInterval || 250);
-  };
-
-  onListWillRecycle = (
-    newRenderedRowIndex: number[],
-    newTopRenderedRowRelativeIndex: number,
-    newScrollState: boolean[]
-  ) => {
-    const { useScrollingIndicator, onRecycle } = this.props;
-    if (useScrollingIndicator) {
-      this.setState({
-        scrollState: newScrollState,
-      });
-      this._debounceScrollState();
-    }
-
-    if (onRecycle) {
-      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
-      const bottomRowIndex =
-        newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
-      onRecycle({
-        topRenderedRowIndex: topRowIndex,
-        firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
-        bottomRenderedRowIndex: bottomRowIndex,
-        lastRenderedDataIndex: this.rowToDataIndexMap[bottomRowIndex][1] - 1,
-      });
-    }
+    const lastVisibleDataIndex =
+      this.rowToDataIndexMap[bottomVisibleRowIndex][1] - 1;
+    onVisibleRowChange({
+      topVisibleRowIndex,
+      firstVisibleDataIndex,
+      bottomVisibleRowIndex,
+      lastVisibleDataIndex,
+    });
+    this.prevBottomVisibleRow = bottomVisibleRowIndex;
   };
 
   recycle = (scrollTop: number) => {
@@ -97,6 +65,8 @@ export default abstract class General<
     } = this.state;
     const topScroll = scrollTop - this.prevScroll > 0 ? false : true;
     this.prevScroll = scrollTop;
+
+    this.onScrollChange(scrollTop);
 
     let rowsToRecycle = 0;
     if (topScroll) {
@@ -161,10 +131,10 @@ export default abstract class General<
     const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
     const viewportBottom = this.prevScroll + height;
     const newBottomRenderedRowIndex = Math.min(
-        this.getBottomViewportRowIndex(viewportBottom) +
-          this.numOfInvisibleRowOnEachDirection,
-        this.totalRows - 1
-      );
+      this.getBottomViewportRowIndex(viewportBottom) +
+        this.numOfInvisibleRowOnEachDirection,
+      this.totalRows - 1
+    );
 
     const rowsToRecycle = newBottomRenderedRowIndex - bottomRenderedRowIndex;
 
@@ -195,8 +165,71 @@ export default abstract class General<
       });
     } else this.forceUpdate();
 
-    if (this.fullHeight - height < this.prevScroll)
+    if (this.fullHeight - height < this.prevScroll) {
       this.prevScroll = this.fullHeight - height;
+      this.prevBottomVisibleRow = this.totalRows - 1;
+    }
+  };
+
+  onScroll = (event: React.UIEvent<HTMLElement>) => {
+    this.recycle(event.currentTarget.scrollTop);
+  };
+
+  scrollToDataIndex = (targetIndex: number) => {
+    const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
+      (value) => targetIndex >= value[0] && targetIndex < value[1]
+    );
+    validateScrollTo(targetRow);
+    const targetPosition = this.rowPositions[targetRow];
+
+    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    this.recycle(targetPosition);
+  };
+
+  scrollToRow = (targetRow: number) => {
+    const targetPosition = this.rowPositions[targetRow];
+    validateScrollTo(targetPosition);
+    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    this.recycle(targetPosition);
+  };
+
+  mod = (n: number, m: number = this.totalNumOfRenderedRows) => {
+    return ((n % m) + m) % m;
+  };
+
+  _debounceScrollState = () => {
+    clearTimeout(this.timeOut);
+    this.timeOut = setTimeout(() => {
+      this.setState({
+        scrollState: this.initialArrayTemplate.map(() => false),
+      });
+    }, this.props.scrollInterval || 250);
+  };
+
+  onListWillRecycle = (
+    newRenderedRowIndex: number[],
+    newTopRenderedRowRelativeIndex: number,
+    newScrollState: boolean[]
+  ) => {
+    const { useScrollingIndicator, onRenderedRowChange } = this.props;
+    if (useScrollingIndicator) {
+      this.setState({
+        scrollState: newScrollState,
+      });
+      this._debounceScrollState();
+    }
+
+    if (onRenderedRowChange) {
+      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
+      const bottomRowIndex =
+        newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
+      onRenderedRowChange({
+        topRenderedRowIndex: topRowIndex,
+        firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
+        bottomRenderedRowIndex: bottomRowIndex,
+        lastRenderedDataIndex: this.rowToDataIndexMap[bottomRowIndex][1] - 1,
+      });
+    }
   };
 
   render() {
@@ -215,7 +248,7 @@ export default abstract class General<
 
     const ListTag: any = listTagName || "div";
     const RowTag: any = rowTagName || "div";
-    const RowComponent: React.ElementType<RowProps> = rowComponent
+    const RowComponent: React.ElementType<RowProps> = rowComponent;
     return (
       <div
         className={classNames(
