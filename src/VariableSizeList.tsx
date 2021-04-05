@@ -18,6 +18,7 @@ export default class VariableSizeList extends GeneralList<
   ReactRecycledListState
 > {
   rowPositions: number[];
+  rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
   initialArrayTemplate: null[];
@@ -96,6 +97,7 @@ export default class VariableSizeList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
+      rowHeights
     };
   };
 
@@ -109,6 +111,7 @@ export default class VariableSizeList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
+      rowHeights
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -118,6 +121,7 @@ export default class VariableSizeList extends GeneralList<
     this.fullHeight = fullHeight;
     this.totalNumOfRenderedRows = totalNumOfRenderedRows;
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+    this.rowHeights = rowHeights;
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -164,7 +168,7 @@ export default class VariableSizeList extends GeneralList<
       this.fullHeight = fullHeight;
       this.totalNumOfRenderedRows = totalNumOfRenderedRows;
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-
+      this.rowHeights = rowHeights;
       this.resetList()
     }
   }
@@ -177,142 +181,4 @@ export default class VariableSizeList extends GeneralList<
     return _.sortedIndex(this.rowPositions, viewportBottom) - 1;
   };
 
-  // recycle = (scrollTop: number) => {
-  //   const { height } = this.props;
-  //   const {
-  //     renderedRowIndex,
-  //     topRenderedRowRelativeIndex,
-  //     scrollState,
-  //   } = this.state;
-  //   const topScroll = scrollTop - this.prevScroll > 0 ? false : true;
-  //   this.prevScroll = scrollTop;
-
-  //   let rowsToRecycle = 0;
-  //   if (topScroll) {
-  //     const topRenderedRowIndex = renderedRowIndex[topRenderedRowRelativeIndex];
-  //     const newTopRenderedRowIndex = Math.max(
-  //       _.sortedLastIndex(this.rowPositions, scrollTop) -
-  //         1 -
-  //         this.numOfInvisibleRowOnEachDirection,
-  //       0
-  //     );
-  //     rowsToRecycle = topRenderedRowIndex - newTopRenderedRowIndex;
-  //   } else {
-  //     const bottomRenderedRowIndex =
-  //       renderedRowIndex[this.mod(topRenderedRowRelativeIndex - 1)];
-  //     const viewportBottom = scrollTop + height;
-  //     const newBottomRenderedRowIndex = Math.min(
-  //       _.sortedIndex(this.rowPositions, viewportBottom) -
-  //         1 +
-  //         this.numOfInvisibleRowOnEachDirection,
-  //       this.totalRows - 1
-  //     );
-
-  //     rowsToRecycle = newBottomRenderedRowIndex - bottomRenderedRowIndex;
-  //   }
-
-  //   if (rowsToRecycle > 0) {
-  //     const newRenderedRowIndex = [...renderedRowIndex];
-  //     const newScrollState = [...scrollState];
-  //     let cycle = 0;
-  //     while (cycle < rowsToRecycle) {
-  //       const newTopRenderedRowRelativeIndex = this.mod(
-  //         topRenderedRowRelativeIndex + (topScroll ? -cycle - 1 : cycle)
-  //       );
-
-  //       newRenderedRowIndex[newTopRenderedRowRelativeIndex] += topScroll
-  //         ? -this.totalNumOfRenderedRows
-  //         : this.totalNumOfRenderedRows;
-
-  //       newScrollState[newTopRenderedRowRelativeIndex] = true;
-
-  //       cycle++;
-  //     }
-
-  //     const newTopRenderedRowRelativeIndex = this.mod(
-  //       topRenderedRowRelativeIndex +
-  //         (topScroll ? -rowsToRecycle : rowsToRecycle)
-  //     );
-
-  //     this.onListWillRecycle(
-  //       newRenderedRowIndex,
-  //       newTopRenderedRowRelativeIndex,
-  //       newScrollState
-  //     );
-
-  //     this.setState({
-  //       renderedRowIndex: newRenderedRowIndex,
-  //       topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
-  //     });
-  //   }
-  // };
-
-  render() {
-    const {
-      listTagName,
-      listClassName,
-      listWindowClassName,
-      data,
-      height,
-      width,
-      rowComponent: MyComponent,
-      rowTagName,
-      rowHeights,
-      rowClassName,
-    } = this.props;
-    const { renderedRowIndex, scrollState } = this.state;
-
-    const ListTag: any = listTagName || "div";
-    const RowTag: any = rowTagName || "div";
-    return (
-      <div
-        className={classNames(
-          "react-recycled-list-window",
-          listWindowClassName
-        )}
-        style={{
-          height,
-          width,
-          overflowY: "scroll",
-        }}
-        onScroll={this.onScroll}
-        ref={this.listRef}
-      >
-        <ListTag
-          className={classNames("react-recycled-list", listClassName)}
-          style={{
-            height: this.fullHeight,
-            position: "relative",
-          }}
-        >
-          {renderedRowIndex.map((absoluteRowIndex, index) => {
-            const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
-            const startDataIndex = dataIndexInfo[0];
-            const endDataIndex = dataIndexInfo[1];
-            return (
-              <RowTag
-                style={{
-                  position: "absolute",
-                  top: this.rowPositions[absoluteRowIndex],
-                  height: rowHeights[absoluteRowIndex],
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-                className={classNames("react-recycled-row", rowClassName)}
-              >
-                <MyComponent
-                  data={data}
-                  dataIndex={startDataIndex}
-                  dataEndIndex={endDataIndex}
-                  row={absoluteRowIndex}
-                  column={endDataIndex - startDataIndex}
-                  isScrolling={scrollState[index]}
-                />
-              </RowTag>
-            );
-          })}
-        </ListTag>
-      </div>
-    );
-  }
 }

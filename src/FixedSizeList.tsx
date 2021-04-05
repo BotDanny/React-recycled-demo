@@ -14,6 +14,7 @@ export default class FixedList extends GeneralList<
   ReactRecycledListState
 > {
   rowPositions: number[];
+  rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
   initialArrayTemplate: null[];
@@ -76,6 +77,7 @@ export default class FixedList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
+      rowHeights
     };
   };
 
@@ -90,6 +92,7 @@ export default class FixedList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
+      rowHeights
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -99,6 +102,7 @@ export default class FixedList extends GeneralList<
     this.fullHeight = fullHeight;
     this.totalNumOfRenderedRows = totalNumOfRenderedRows;
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+    this.rowHeights = rowHeights
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -134,6 +138,7 @@ export default class FixedList extends GeneralList<
         fullHeight,
         totalNumOfRenderedRows,
         numOfInvisibleRowOnEachDirection,
+        rowHeights
       } = this.initializeProperties();
 
       this.rowToDataIndexMap = rowToDataIndexMap;
@@ -143,6 +148,7 @@ export default class FixedList extends GeneralList<
       this.fullHeight = fullHeight;
       this.totalNumOfRenderedRows = totalNumOfRenderedRows;
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+      this.rowHeights = rowHeights;
 
       this.resetList()
     }
@@ -159,72 +165,4 @@ export default class FixedList extends GeneralList<
     return viewportBottomRow;
   };
 
-  render() {
-    const {
-      listTagName,
-      listClassName,
-      listWindowClassName,
-      data,
-      height,
-      width,
-      rowComponent: MyComponent,
-      rowTagName,
-      rowClassName,
-      rowHeight,
-    } = this.props;
-    const { renderedRowIndex, scrollState } = this.state;
-
-    const ListTag: any = listTagName || "div";
-    const RowTag: any = rowTagName || "div";
-    return (
-      <div
-        className={classNames(
-          "react-recycled-list-window",
-          listWindowClassName
-        )}
-        style={{
-          height,
-          width,
-          overflowY: "scroll",
-        }}
-        onScroll={this.onScroll}
-        ref={this.listRef}
-      >
-        <ListTag
-          className={classNames("react-recycled-list", listClassName)}
-          style={{
-            height: this.fullHeight,
-            position: "relative",
-          }}
-        >
-          {renderedRowIndex.map((absoluteRowIndex, index) => {
-            const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
-            const startDataIndex = dataIndexInfo[0];
-            const endDataIndex = dataIndexInfo[1];
-            return (
-              <RowTag
-                style={{
-                  position: "absolute",
-                  top: this.rowPositions[absoluteRowIndex],
-                  height: rowHeight,
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-                className={classNames("react-recycled-row", rowClassName)}
-              >
-                <MyComponent
-                  data={data}
-                  dataIndex={startDataIndex}
-                  dataEndIndex={endDataIndex}
-                  row={absoluteRowIndex}
-                  column={endDataIndex - startDataIndex}
-                  isScrolling={scrollState[index]}
-                />
-              </RowTag>
-            );
-          })}
-        </ListTag>
-      </div>
-    );
-  }
 }

@@ -145,6 +145,12 @@ const Row = React.memo(function (props: RowProps) {
   else if (column === 3) xs = 4;
   else if (column === 4) xs = 3;
   console.log(`item ${data[dataIndex]}`);
+  React.useEffect(() => {
+    console.log(`${dataIndex} mounted`)
+    return () => {
+      console.log(`${dataIndex} unmounted`)
+    }
+  }, [])
   return (
     <>
       {dataSection.map((dataItem, index) => {

@@ -1,6 +1,6 @@
 import React from "react";
-import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
-import { RowToDataIndexMap, validateScrollTo } from "./utils";
+import { ReactRecycledListProps, ReactRecycledListState, RowProps } from "./TypeDef";
+import { RowToDataIndexMap, validateScrollTo, classNames, } from "./utils";
 import * as _ from "lodash";
 
 export default abstract class General<
@@ -9,6 +9,7 @@ export default abstract class General<
 > extends React.PureComponent<P, S> {
   listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
+  abstract rowHeights: number[];
   abstract rowPositions: number[];
   abstract rowToDataIndexMap: RowToDataIndexMap;
   abstract totalNumOfRenderedRows: number;
@@ -197,4 +198,73 @@ export default abstract class General<
     if (this.fullHeight - height < this.prevScroll)
       this.prevScroll = this.fullHeight - height;
   };
+
+  render() {
+    const {
+      listTagName,
+      listClassName,
+      listWindowClassName,
+      data,
+      height,
+      width,
+      rowComponent,
+      rowTagName,
+      rowClassName,
+    } = this.props;
+    const { renderedRowIndex, scrollState } = this.state;
+
+    const ListTag: any = listTagName || "div";
+    const RowTag: any = rowTagName || "div";
+    const RowComponent: React.ElementType<RowProps> = rowComponent
+    return (
+      <div
+        className={classNames(
+          "react-recycled-list-window",
+          listWindowClassName
+        )}
+        style={{
+          height,
+          width,
+          overflowY: "scroll",
+        }}
+        onScroll={this.onScroll}
+        ref={this.listRef}
+      >
+        <ListTag
+          className={classNames("react-recycled-list", listClassName)}
+          style={{
+            height: this.fullHeight,
+            position: "relative",
+          }}
+        >
+          {renderedRowIndex.map((absoluteRowIndex, index) => {
+            const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
+            const startDataIndex = dataIndexInfo[0];
+            const endDataIndex = dataIndexInfo[1];
+            return (
+              <RowTag
+                style={{
+                  position: "absolute",
+                  top: this.rowPositions[absoluteRowIndex],
+                  height: this.rowHeights[absoluteRowIndex],
+                  width: "100%",
+                  boxSizing: "border-box",
+                }}
+                className={classNames("react-recycled-row", rowClassName)}
+              >
+                <RowComponent
+                  data={data}
+                  dataIndex={startDataIndex}
+                  dataEndIndex={endDataIndex}
+                  row={absoluteRowIndex}
+                  column={endDataIndex - startDataIndex}
+                  isScrolling={scrollState[index]}
+                />
+              </RowTag>
+            );
+          })}
+        </ListTag>
+      </div>
+    );
+  }
 }
