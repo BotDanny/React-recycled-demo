@@ -6,6 +6,7 @@ import VariableSizeList from "./VariableSizeList";
 import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
+import ResponsiveContainer from "./ResponsiveContainer";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -124,7 +125,7 @@ function FixedListDemo() {
       </button>
       <FixedList
         ref={childRef}
-        height={300}
+        height={0}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
@@ -211,4 +212,30 @@ const ReactWindowRow = React.memo(function (props: any) {
   );
 });
 
-export default FixedListDemo;
+function ResponsiveDemo() {
+  const childRef = React.useRef() as React.RefObject<VariableSizeList>;
+  const [data, setData] = React.useState(initialData);
+  const [test, setTest] = React.useState(false);
+  return (
+    <div className="App">
+      <ResponsiveContainer
+        render={({ width, height }) => {
+          return (
+            <FixedList
+              ref={childRef}
+              height={height}
+              data={data}
+              rowHeight={100}
+              rowComponent={Row}
+              width={width}
+              column={width <= 1200? 2 : 3}
+              // useScrollingIndicator
+            />
+          );
+        }}
+      />
+    </div>
+  );
+}
+
+export default ResponsiveDemo;

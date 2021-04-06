@@ -163,7 +163,13 @@ export default abstract class General<
         renderedRowIndex: newRenderedRowIndex,
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
-    } else this.forceUpdate();
+    } else {
+      this.setState({
+        renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
+        scrollState: this.initialArrayTemplate.map(() => false),
+        topRenderedRowRelativeIndex: 0,
+      });
+    }
 
     if (this.fullHeight - height < this.prevScroll) {
       this.prevScroll = this.fullHeight - height;
@@ -245,6 +251,7 @@ export default abstract class General<
       rowClassName,
     } = this.props;
     const { renderedRowIndex, scrollState } = this.state;
+    console.log("render");
 
     const ListTag: any = listTagName || "div";
     const RowTag: any = rowTagName || "div";
