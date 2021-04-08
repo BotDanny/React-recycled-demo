@@ -35,7 +35,7 @@ const initialData = Array(50)
 function App() {
   const childRef = React.useRef() as React.RefObject<VariableSizeList>;
   const [data, setData] = React.useState(initialData);
-  const [test, setTest] = React.useState(false);
+  const [test, setTest] = React.useState(400);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
   return (
     <div className="App">
@@ -68,9 +68,16 @@ function App() {
       >
         scroll to data 17
       </button>
+      <button
+        onClick={() => {
+          setTest(300);
+        }}
+      >
+        height
+      </button>
       <VariableSizeList
         ref={childRef}
-        height={300}
+        height={test}
         data={data}
         rowHeight={100}
         rowHeights={data.map(() => 100)}
@@ -239,4 +246,4 @@ function ResponsiveDemo() {
   );
 }
 
-export default App;
+export default ResponsiveDemo;

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import { classNames } from "./utils";
-
+import { addListener, removeListener } from "resize-detector";
 interface ResponsiveContainerProps {
   render: (sizeInfo: { width: number; height: number }) => React.ReactNode;
   className?: string;
@@ -18,9 +18,9 @@ export default function ResponsiveContainer(props: ResponsiveContainerProps) {
   return (
     <div
       className={classNames("react-recycled-responsive-container", className)}
-      ref={ref}
+      ref={ref as React.RefObject<HTMLDivElement>}
       style={{
-        height: "100%",
+        height: 400,
         width: "100%",
       }}
     >
@@ -28,6 +28,8 @@ export default function ResponsiveContainer(props: ResponsiveContainerProps) {
     </div>
   );
 }
+
+// To watch for window scroll height change, add a 100vh invisible div and attack a the resize ref there.
 
 class Test extends Component<{
   width: number | undefined;

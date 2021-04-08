@@ -162,17 +162,22 @@ export default abstract class General<
         renderedRowIndex: newRenderedRowIndex,
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
-    } else { // need fix
-    //   this.onListWillRecycle( 
-    //     newRenderedRowIndex,
-    //     newTopRenderedRowRelativeIndex,
-    //     newScrollState
-    //   );
-    //   this.setState({
-    //     renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
-    //     scrollState: this.initialArrayTemplate.map(() => false),
-    //     topRenderedRowRelativeIndex: 0,
-    //   });
+    } else {
+      const newRenderedRowIndex = this.initialArrayTemplate.map(
+        (_, index) => index
+      );
+      const newScrollState = this.initialArrayTemplate.map(() => false);
+      const newTopRenderedRowRelativeIndex = 0;
+
+      this.onListWillRecycle(
+        newRenderedRowIndex,
+        newTopRenderedRowRelativeIndex,
+        newScrollState
+      );
+      this.setState({
+        renderedRowIndex: newRenderedRowIndex,
+        topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
+      });
     }
 
     if (this.fullHeight - height < this.prevScroll) {
