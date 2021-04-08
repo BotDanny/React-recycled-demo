@@ -73,14 +73,14 @@ function App() {
         height={300}
         data={data}
         rowHeight={100}
-        // rowHeights={data.map(() => 100)}
-        rowHeights={heights}
-        rowColumns={columns}
+        rowHeights={data.map(() => 100)}
+        // rowHeights={heights}
+        // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        onVisibleRowChange={(props) => {
-          console.log(props);
-        }}
+        // onVisibleRowChange={(props) => {
+        //   console.log(props);
+        // }}
         // useScrollingIndicator
       />
     </div>
@@ -221,14 +221,15 @@ function ResponsiveDemo() {
       <ResponsiveContainer
         render={({ width, height }) => {
           return (
-            <FixedList
+            <VariableSizeList
               ref={childRef}
               height={height}
               data={data}
               rowHeight={100}
+              rowHeights={data.map(() => 100)}
               rowComponent={Row}
               width={width}
-              column={width <= 1200? 2 : 3}
+              // column={width <= 1200 ? 2 : 3}
               // useScrollingIndicator
             />
           );
@@ -238,4 +239,4 @@ function ResponsiveDemo() {
   );
 }
 
-export default ResponsiveDemo;
+export default App;

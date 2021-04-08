@@ -1,10 +1,7 @@
-import React, { Component } from "react";
-import * as _ from "lodash";
 import {
   RowToDataIndexMap,
   calculateRowPositions,
   mapRowIndexToDataIndex,
-  classNames,
 } from "./utils";
 import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 import GeneralList from "./AbstractList";

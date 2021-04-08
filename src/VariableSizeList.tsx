@@ -1,12 +1,10 @@
-import React, { Component } from "react";
-import * as _ from "lodash";
 import {
   RowToDataIndexMap,
   calculateRowPositions,
   mapRowIndexToDataIndex,
-  classNames,
 } from "./utils";
 import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
+import { sortedLastIndex, sortedFirstIndex } from "./utils";
 import GeneralList from "./AbstractList";
 
 interface props extends ReactRecycledListProps {
@@ -174,11 +172,11 @@ export default class VariableSizeList extends GeneralList<
   }
 
   getTopViewportRowIndex = (scrollTop: number) => {
-    return _.sortedLastIndex(this.rowPositions, scrollTop) - 1;
+    return sortedLastIndex(this.rowPositions, scrollTop) - 1;
   };
 
   getBottomViewportRowIndex = (viewportBottom: number) => {
-    return _.sortedIndex(this.rowPositions, viewportBottom) - 1;
+    return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
   };
 
 }

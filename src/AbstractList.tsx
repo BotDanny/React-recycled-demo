@@ -5,7 +5,6 @@ import {
   RowProps,
 } from "./TypeDef";
 import { RowToDataIndexMap, validateScrollTo, classNames } from "./utils";
-import * as _ from "lodash";
 
 export default abstract class General<
   P extends ReactRecycledListProps,
@@ -163,12 +162,17 @@ export default abstract class General<
         renderedRowIndex: newRenderedRowIndex,
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
-    } else {
-      this.setState({
-        renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
-        scrollState: this.initialArrayTemplate.map(() => false),
-        topRenderedRowRelativeIndex: 0,
-      });
+    } else { // need fix
+    //   this.onListWillRecycle( 
+    //     newRenderedRowIndex,
+    //     newTopRenderedRowRelativeIndex,
+    //     newScrollState
+    //   );
+    //   this.setState({
+    //     renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
+    //     scrollState: this.initialArrayTemplate.map(() => false),
+    //     topRenderedRowRelativeIndex: 0,
+    //   });
     }
 
     if (this.fullHeight - height < this.prevScroll) {
