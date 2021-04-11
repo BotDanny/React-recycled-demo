@@ -7,7 +7,7 @@ import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
 import ResponsiveContainer from "./ResponsiveContainer";
-// import FullWindowScroll from "./FullWindowScroll";
+import FullWindowFixedList from "./FullWindowScroll";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -29,7 +29,7 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
   return [heights, columns];
 }
 
-const initialData = Array(150)
+const initialData = Array(50)
   .fill(null)
   .map((_, index) => index);
 
@@ -258,7 +258,7 @@ function FullWindow() {
   //   });
   // });
 
-  // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top 
+  // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top
   return (
     <div className="App">
       <div
@@ -278,30 +278,44 @@ function FullWindow() {
         onScroll={(event: React.UIEvent<HTMLElement>) => {
           if (ref.current) {
             const myTop = event.currentTarget.getBoundingClientRect().top;
-            console.log(ref.current.getBoundingClientRect()); // - whatever the the top margin/ header height
+            const listTop = ref.current.getBoundingClientRect();
+            console.log(window.innerHeight - listTop.top); // - whatever the the top margin/ header height
           }
         }}
       >
         <div
-        style={{
-          height: 200,
-          width: "100%",
-        }}
-      >
-        something
-      </div>
-        <div
-        ref={ref}
           style={{
-            height: 600,
+            height: 200,
             width: "100%",
           }}
         >
-          test
+          something
         </div>
+        {
+          <div
+            ref={ref}
+            style={{
+              height: 600,
+              width: "100%",
+            }}
+          >
+            {Array(6)
+              .fill(null)
+              .map(() => (
+                <div
+                  ref={ref}
+                  style={{
+                    height: 100,
+                    width: "100%",
+                  }}
+                >
+                  test
+                </div>
+              ))}
+          </div>
+        }
       </div>
       <div
-        
         style={{
           height: 5000,
           width: "100%",
@@ -324,4 +338,64 @@ function FullWindow() {
   );
 }
 
-export default FullWindow;
+function FullWindowDemo() {
+  // const ref = React.useRef() as React.RefObject<HTMLDivElement>;
+  const [data, setData] = React.useState(initialData);
+  const [test, setTest] = React.useState(false);
+  const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
+  return (
+    <div className="App">
+      <div>dawdaagfwf</div>
+      <div
+        style={{
+          height: 600,
+          width: "100%",
+          overflowY: "scroll",
+        }}
+        ref={ref}
+      >
+        <button
+          style={{
+            position: "fixed",
+          }}
+          onClick={() =>
+            setData(
+              Array(data.length + 3)
+                .fill(null)
+                .map((_, index) => index)
+            )
+          }
+        >
+          + Data
+        </button>
+        <button
+          style={{
+            position: "fixed",
+            left: 100,
+          }}
+          onClick={() =>
+            setData(
+              Array(data.length - 3)
+                .fill(null)
+                .map((_, index) => index)
+            )
+          }
+        >
+          - data
+        </button>
+        <FullWindowFixedList
+          scrollElement={ref.current as HTMLElement | null}
+          data={data}
+          rowHeight={100}
+          // rowHeights={heights}
+          // rowColumns={columns}
+          rowComponent={Row}
+          width={"100%"}
+          // rootMarginTop={20}
+        />
+      </div>
+    </div>
+  );
+}
+
+export default FullWindowDemo;

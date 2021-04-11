@@ -1,3 +1,4 @@
+import React from "react";
 import {
   RowToDataIndexMap,
   calculateRowPositions,
@@ -26,6 +27,7 @@ export default class VariableList extends GeneralList<
   numOfInvisibleRowOnEachDirection: number;
   totalRows: number;
   timeOut: any;
+  listWindowRef: React.RefObject<HTMLDivElement>;
 
   initializeProperties = () => {
     const {
@@ -126,6 +128,7 @@ export default class VariableList extends GeneralList<
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
     this.rowHeights = rowHeights;
     this.windowHeight = windowHeight;
+    this.listWindowRef = React.createRef();
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -185,9 +188,5 @@ export default class VariableList extends GeneralList<
 
   getBottomViewportRowIndex = (viewportBottom: number) => {
     return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
-  };
-
-  getViewportBottomPosition = (scrollTop: number) => {
-    return scrollTop + this.windowHeight;
   };
 }

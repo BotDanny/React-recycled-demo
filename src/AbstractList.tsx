@@ -1,3 +1,4 @@
+import { withStyles } from "@material-ui/core";
 import React from "react";
 import {
   ReactRecycledListProps,
@@ -10,9 +11,9 @@ export default abstract class General<
   P extends ReactRecycledListProps,
   S extends ReactRecycledListState
 > extends React.PureComponent<P, S> {
-  listRef: React.RefObject<HTMLDivElement>;
   prevScroll: number;
   prevBottomVisibleRow: number;
+  abstract listWindowRef: any;
   abstract rowHeights: number[];
   abstract rowPositions: number[];
   abstract rowToDataIndexMap: RowToDataIndexMap;
@@ -23,13 +24,11 @@ export default abstract class General<
   abstract timeOut: any;
   abstract windowHeight: number;
   abstract numOfInvisibleRowOnEachDirection: number;
-  abstract getViewportBottomPosition(scrollTop: number): number;
   abstract getTopViewportRowIndex(scrollTop: number): number;
   abstract getBottomViewportRowIndex(scrollTop: number): number;
 
   constructor(props: P) {
     super(props);
-    this.listRef = React.createRef();
     this.prevScroll = 0;
     this.prevBottomVisibleRow = 0;
   }
@@ -39,7 +38,7 @@ export default abstract class General<
     if (!onVisibleRowChange) return;
 
     const bottomVisibleRowIndex = this.getBottomViewportRowIndex(
-      this.getViewportBottomPosition(scrollTop)
+      scrollTop + this.windowHeight
     );
 
     if (bottomVisibleRowIndex === this.prevBottomVisibleRow) return;
@@ -80,7 +79,7 @@ export default abstract class General<
     } else {
       const bottomRenderedRowIndex =
         renderedRowIndex[this.mod(topRenderedRowRelativeIndex - 1)];
-      const viewportBottom = this.getViewportBottomPosition(scrollTop)
+      const viewportBottom = scrollTop + this.windowHeight;
       const newBottomRenderedRowIndex = Math.min(
         this.getBottomViewportRowIndex(viewportBottom) +
           this.numOfInvisibleRowOnEachDirection,
@@ -128,7 +127,7 @@ export default abstract class General<
 
   resetList = () => {
     const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
-    const viewportBottom = this.getViewportBottomPosition(this.prevScroll);
+    const viewportBottom = this.prevScroll + this.windowHeight;
     const newBottomRenderedRowIndex = Math.min(
       this.getBottomViewportRowIndex(viewportBottom) +
         this.numOfInvisibleRowOnEachDirection,
@@ -197,14 +196,16 @@ export default abstract class General<
     validateScrollTo(targetRow);
     const targetPosition = this.rowPositions[targetRow];
 
-    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    if (this.listWindowRef.current)
+      this.listWindowRef.current.scrollTop = targetPosition;
     this.recycle(targetPosition);
   };
 
   scrollToRow = (targetRow: number) => {
     const targetPosition = this.rowPositions[targetRow];
     validateScrollTo(targetPosition);
-    if (this.listRef.current) this.listRef.current.scrollTop = targetPosition;
+    if (this.listWindowRef.current)
+      this.listWindowRef.current.scrollTop = targetPosition;
     this.recycle(targetPosition);
   };
 
@@ -276,7 +277,7 @@ export default abstract class General<
           width,
         }}
         onScroll={this.onScroll}
-        ref={this.listRef}
+        ref={this.listWindowRef}
       >
         <ListTag
           className={classNames("react-recycled-list", listClassName)}

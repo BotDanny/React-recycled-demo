@@ -1,3 +1,4 @@
+import React from "react";
 import {
   RowToDataIndexMap,
   calculateRowPositions,
@@ -24,6 +25,7 @@ export default class FixedList extends GeneralList<
   numOfInvisibleRowOnEachDirection: number;
   totalRows: number;
   timeOut: any;
+  listWindowRef: React.RefObject<HTMLDivElement>;
 
   initializeProperties = () => {
     const {
@@ -109,6 +111,7 @@ export default class FixedList extends GeneralList<
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
     this.rowHeights = rowHeights;
     this.windowHeight = windowHeight;
+    this.listWindowRef = React.createRef();
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -171,8 +174,4 @@ export default class FixedList extends GeneralList<
     else viewportBottomRow = Math.floor(viewportBottomRow);
     return viewportBottomRow;
   };
-
-  getViewportBottomPosition = (scrollTop: number) => {
-    return scrollTop + this.windowHeight
-  }
 }
