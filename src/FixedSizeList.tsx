@@ -6,14 +6,19 @@ import {
 import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 import GeneralList from "./AbstractList";
 
+interface FixedListProps extends ReactRecycledListProps {
+  height: number;
+}
+
 export default class FixedList extends GeneralList<
-  ReactRecycledListProps,
+  FixedListProps,
   ReactRecycledListState
 > {
   rowPositions: number[];
   rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
+  windowHeight: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -65,6 +70,7 @@ export default class FixedList extends GeneralList<
     const initialArrayTemplate = Array(totalNumOfRenderedRows).fill(null);
 
     const fullHeight = rowHeights.reduce((acc, current) => acc + current, 0);
+    const windowHeight = height;
 
     return {
       rowToDataIndexMap,
@@ -74,11 +80,12 @@ export default class FixedList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
-      rowHeights
+      rowHeights,
+      windowHeight
     };
   };
 
-  constructor(props: ReactRecycledListProps) {
+  constructor(props: FixedListProps) {
     super(props);
 
     const {
@@ -89,7 +96,8 @@ export default class FixedList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
-      rowHeights
+      rowHeights,
+      windowHeight
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -99,7 +107,8 @@ export default class FixedList extends GeneralList<
     this.fullHeight = fullHeight;
     this.totalNumOfRenderedRows = totalNumOfRenderedRows;
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-    this.rowHeights = rowHeights
+    this.rowHeights = rowHeights;
+    this.windowHeight = windowHeight;
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -108,7 +117,7 @@ export default class FixedList extends GeneralList<
     };
   }
 
-  componentDidUpdate(prevProps: ReactRecycledListProps) {
+  componentDidUpdate(prevProps: FixedListProps) {
     const currentProp = this.props;
     if (prevProps === currentProp) return;
     const {
@@ -135,7 +144,8 @@ export default class FixedList extends GeneralList<
         fullHeight,
         totalNumOfRenderedRows,
         numOfInvisibleRowOnEachDirection,
-        rowHeights
+        rowHeights,
+        windowHeight
       } = this.initializeProperties();
 
       this.rowToDataIndexMap = rowToDataIndexMap;
@@ -146,13 +156,13 @@ export default class FixedList extends GeneralList<
       this.totalNumOfRenderedRows = totalNumOfRenderedRows;
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
       this.rowHeights = rowHeights;
-
-      this.resetList()
+      this.windowHeight = windowHeight;
+      this.resetList();
     }
   }
 
   getTopViewportRowIndex = (scrollTop: number) => {
-    return Math.floor(scrollTop / this.props.rowHeight)
+    return Math.floor(scrollTop / this.props.rowHeight);
   };
 
   getBottomViewportRowIndex = (viewportBottom: number) => {
@@ -162,4 +172,7 @@ export default class FixedList extends GeneralList<
     return viewportBottomRow;
   };
 
+  getViewportBottomPosition = (scrollTop: number) => {
+    return scrollTop + this.windowHeight
+  }
 }

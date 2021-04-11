@@ -7,6 +7,7 @@ import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
 import ResponsiveContainer from "./ResponsiveContainer";
+import FullWindowScroll from "./FullWindowScroll";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -246,4 +247,85 @@ function ResponsiveDemo() {
   );
 }
 
-export default ResponsiveDemo;
+function FullWindow() {
+  const childRef = React.useRef() as React.RefObject<FullWindowScroll>;
+  const [data, setData] = React.useState(initialData);
+  const [test, setTest] = React.useState(false);
+  const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
+  // React.useEffect(() => {
+  //   window.addEventListener("scroll", (event) => {
+  //     const scrollContainer = event.currentTarget as Window;
+  //     // don't need scrollTop for window scroll, only BoundingClientRect is needed
+  //     if (ref.current) {
+  //       console.log(ref.current.getBoundingClientRect()); // - whatever the the top margin/ header height
+  //     }
+  //   });
+  // });
+
+  // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top 
+  return (
+    <div className="App">
+      <div
+        style={{
+          height: 600,
+          width: "100%",
+        }}
+      >
+        test
+      </div>
+      <div
+        style={{
+          height: 300,
+          width: "100%",
+          overflowY: "scroll",
+        }}
+        onScroll={(event: React.UIEvent<HTMLElement>) => {
+          if (ref.current) {
+            const myTop = event.currentTarget.getBoundingClientRect().top;
+            console.log(ref.current.getBoundingClientRect()); // - whatever the the top margin/ header height
+          }
+        }}
+      >
+        <div
+        style={{
+          height: 200,
+          width: "100%",
+        }}
+      >
+        something
+      </div>
+        <div
+        ref={ref}
+          style={{
+            height: 600,
+            width: "100%",
+          }}
+        >
+          test
+        </div>
+      </div>
+      <div
+        
+        style={{
+          height: 5000,
+          width: "100%",
+        }}
+      >
+        dwad
+      </div>
+      {/* <FullWindowScroll
+        ref={childRef}
+        height={}
+        data={data}
+        rowHeight={100}
+        // rowHeights={data.map(() => 100)}
+        rowComponent={Row}
+        width={width}
+        // column={width <= 1200 ? 2 : 3}
+        // useScrollingIndicator
+      /> */}
+    </div>
+  );
+}
+
+export default FullWindow;

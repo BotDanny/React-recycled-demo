@@ -9,6 +9,7 @@ import GeneralList from "./AbstractList";
 
 interface props extends ReactRecycledListProps {
   rowHeights: number[];
+  height: number;
 }
 
 export default class VariableSizeList extends GeneralList<
@@ -19,6 +20,7 @@ export default class VariableSizeList extends GeneralList<
   rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
+  windowHeight: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -86,6 +88,7 @@ export default class VariableSizeList extends GeneralList<
     const initialArrayTemplate = Array(totalNumOfRenderedRows).fill(null);
 
     const fullHeight = rowHeights.reduce((acc, current) => acc + current, 0);
+    const windowHeight = height;
 
     return {
       rowToDataIndexMap,
@@ -95,7 +98,8 @@ export default class VariableSizeList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
-      rowHeights
+      rowHeights,
+      windowHeight
     };
   };
 
@@ -109,7 +113,8 @@ export default class VariableSizeList extends GeneralList<
       fullHeight,
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
-      rowHeights
+      rowHeights,
+      windowHeight
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -120,6 +125,7 @@ export default class VariableSizeList extends GeneralList<
     this.totalNumOfRenderedRows = totalNumOfRenderedRows;
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
     this.rowHeights = rowHeights;
+    this.windowHeight = windowHeight;
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -157,6 +163,7 @@ export default class VariableSizeList extends GeneralList<
         fullHeight,
         totalNumOfRenderedRows,
         numOfInvisibleRowOnEachDirection,
+        windowHeight
       } = this.initializeProperties();
 
       this.rowToDataIndexMap = rowToDataIndexMap;
@@ -167,6 +174,7 @@ export default class VariableSizeList extends GeneralList<
       this.totalNumOfRenderedRows = totalNumOfRenderedRows;
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
       this.rowHeights = rowHeights;
+      this.windowHeight = windowHeight;
       this.resetList()
     }
   }
@@ -178,5 +186,9 @@ export default class VariableSizeList extends GeneralList<
   getBottomViewportRowIndex = (viewportBottom: number) => {
     return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
   };
+
+  getViewportBottomPosition = (scrollTop: number) => {
+    return scrollTop + this.windowHeight
+  }
 
 }

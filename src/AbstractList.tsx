@@ -21,7 +21,9 @@ export default abstract class General<
   abstract totalRows: number;
   abstract fullHeight: number;
   abstract timeOut: any;
+  abstract windowHeight: number;
   abstract numOfInvisibleRowOnEachDirection: number;
+  abstract getViewportBottomPosition(scrollTop: number): number;
   abstract getTopViewportRowIndex(scrollTop: number): number;
   abstract getBottomViewportRowIndex(scrollTop: number): number;
 
@@ -37,7 +39,7 @@ export default abstract class General<
     if (!onVisibleRowChange) return;
 
     const bottomVisibleRowIndex = this.getBottomViewportRowIndex(
-      scrollTop + this.props.height
+      this.getViewportBottomPosition(scrollTop)
     );
 
     if (bottomVisibleRowIndex === this.prevBottomVisibleRow) return;
@@ -56,7 +58,6 @@ export default abstract class General<
   };
 
   recycle = (scrollTop: number) => {
-    const { height } = this.props;
     const {
       renderedRowIndex,
       topRenderedRowRelativeIndex,
@@ -79,7 +80,7 @@ export default abstract class General<
     } else {
       const bottomRenderedRowIndex =
         renderedRowIndex[this.mod(topRenderedRowRelativeIndex - 1)];
-      const viewportBottom = scrollTop + height;
+      const viewportBottom = this.getViewportBottomPosition(scrollTop)
       const newBottomRenderedRowIndex = Math.min(
         this.getBottomViewportRowIndex(viewportBottom) +
           this.numOfInvisibleRowOnEachDirection,
@@ -126,9 +127,8 @@ export default abstract class General<
   };
 
   resetList = () => {
-    const { height } = this.props;
     const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
-    const viewportBottom = this.prevScroll + height;
+    const viewportBottom = this.getViewportBottomPosition(this.prevScroll);
     const newBottomRenderedRowIndex = Math.min(
       this.getBottomViewportRowIndex(viewportBottom) +
         this.numOfInvisibleRowOnEachDirection,
@@ -180,8 +180,8 @@ export default abstract class General<
       });
     }
 
-    if (this.fullHeight - height < this.prevScroll) {
-      this.prevScroll = this.fullHeight - height;
+    if (this.fullHeight - this.windowHeight < this.prevScroll) {
+      this.prevScroll = this.fullHeight - this.windowHeight;
       this.prevBottomVisibleRow = this.totalRows - 1;
     }
   };
@@ -253,7 +253,6 @@ export default abstract class General<
       listClassName,
       listWindowClassName,
       data,
-      height,
       width,
       rowComponent,
       rowTagName,
@@ -272,9 +271,9 @@ export default abstract class General<
           listWindowClassName
         )}
         style={{
-          height,
-          width,
+          height: this.windowHeight,
           overflowY: "scroll",
+          width,
         }}
         onScroll={this.onScroll}
         ref={this.listRef}
