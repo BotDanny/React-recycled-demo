@@ -1,17 +1,29 @@
 import { calculateRowPositions, mapRowIndexToDataIndex } from "./utils";
-import { ReactRecycledFullWindowListProps, ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
+import {
+  ReactRecycledFullWindowListProps,
+  ReactRecycledListProps,
+  ReactRecycledListState,
+} from "./TypeDef";
 import GeneralList from "./AbstractList";
 import { RowToDataIndexMap, validateScrollTo, classNames } from "./utils";
 import { RowProps } from "./TypeDef";
 import React from "react";
-export default class FullWindowScroll extends GeneralList<
-  ReactRecycledListProps,
+
+interface FullWindowFixedListProps extends ReactRecycledListProps {
+  rootMarginTop?: number;
+  rootMarginBottom?: number;
+  windowHeight?: number;
+}
+
+export default class FullWindowFixedList extends GeneralList<
+  FullWindowFixedListProps,
   ReactRecycledListState
 > {
   rowPositions: number[];
   rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
+  windowHeight: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -25,8 +37,10 @@ export default class FullWindowScroll extends GeneralList<
       column,
       rowColumns,
       data,
-      height,
       additionalRenderedRow,
+      windowHeight,
+      rootMarginTop = 0,
+      rootMarginBottom = 0,
     } = this.props;
 
     // Validate
@@ -40,6 +54,9 @@ export default class FullWindowScroll extends GeneralList<
         );
       }
     }
+
+    const calculatedWindowHeight =
+      (windowHeight || window.innerHeight) - rootMarginTop - rootMarginBottom;
 
     const calculatedRowColumns = rowColumns
       ? rowColumns
@@ -55,7 +72,7 @@ export default class FullWindowScroll extends GeneralList<
     const rowPositions = calculateRowPositions(rowHeights);
     const totalRows = rowHeights.length;
 
-    const numOfVisibleRow = Math.ceil(height / rowHeight);
+    const numOfVisibleRow = Math.ceil(calculatedWindowHeight / rowHeight);
     const numOfInvisibleRowOnEachDirection =
       additionalRenderedRow || Math.ceil(numOfVisibleRow / 2);
     let totalNumOfRenderedRows =
@@ -74,10 +91,11 @@ export default class FullWindowScroll extends GeneralList<
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
       rowHeights,
+      windowHeight: calculatedWindowHeight,
     };
   };
 
-  constructor(props: ReactRecycledListProps) {
+  constructor(props: FullWindowFixedListProps) {
     super(props);
 
     const {
@@ -89,6 +107,7 @@ export default class FullWindowScroll extends GeneralList<
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
       rowHeights,
+      windowHeight,
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -99,6 +118,7 @@ export default class FullWindowScroll extends GeneralList<
     this.totalNumOfRenderedRows = totalNumOfRenderedRows;
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
     this.rowHeights = rowHeights;
+    this.windowHeight = windowHeight;
     this.fullListRef = React.createRef();
 
     this.state = {
@@ -108,14 +128,14 @@ export default class FullWindowScroll extends GeneralList<
     };
   }
 
-  componentDidUpdate(prevProps: ReactRecycledListProps) {
+  componentDidUpdate(prevProps: FullWindowFixedListProps) {
     const currentProp = this.props;
     if (prevProps === currentProp) return;
     const {
       rowHeight,
       column,
       rowColumns,
-      height,
+      windowHeight,
       data,
       additionalRenderedRow,
     } = currentProp;
@@ -123,7 +143,7 @@ export default class FullWindowScroll extends GeneralList<
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
-      prevProps.height !== height ||
+      prevProps.windowHeight !== windowHeight ||
       prevProps.data !== data ||
       prevProps.additionalRenderedRow !== additionalRenderedRow
     ) {
@@ -166,9 +186,7 @@ export default class FullWindowScroll extends GeneralList<
     const {
       listTagName,
       listClassName,
-      listWindowClassName,
       data,
-      height,
       width,
       rowComponent,
       rowTagName,
@@ -186,6 +204,7 @@ export default class FullWindowScroll extends GeneralList<
         style={{
           height: this.fullHeight,
           position: "relative",
+          width,
         }}
         ref={this.fullListRef}
       >
@@ -306,7 +325,6 @@ export default class FullWindowScroll extends GeneralList<
 //     return viewportBottomRow;
 //   };
 
-
 //   constructor(props: ReactRecycledListProps) {
 //     super(props);
 //     this.listRef = React.createRef();
@@ -322,7 +340,7 @@ export default class FullWindowScroll extends GeneralList<
 //         numOfInvisibleRowOnEachDirection,
 //         rowHeights,
 //       } = this.initializeProperties();
-  
+
 //       this.rowToDataIndexMap = rowToDataIndexMap;
 //       this.rowPositions = rowPositions;
 //       this.totalRows = totalRows;
@@ -332,7 +350,7 @@ export default class FullWindowScroll extends GeneralList<
 //       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
 //       this.rowHeights = rowHeights;
 //       this.fullListRef = React.createRef();
-  
+
 //       this.state = {
 //         renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
 //         scrollState: this.initialArrayTemplate.map(() => false),
@@ -405,7 +423,7 @@ export default class FullWindowScroll extends GeneralList<
 //   };
 
 //   recycle = (scrollTop: number) => {
-//     const { height } = this.props;
+//     // const { height } = this.props;
 //     const {
 //       renderedRowIndex,
 //       topRenderedRowRelativeIndex,

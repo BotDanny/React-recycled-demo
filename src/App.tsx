@@ -7,7 +7,7 @@ import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
 import ResponsiveContainer from "./ResponsiveContainer";
-import FullWindowScroll from "./FullWindowScroll";
+// import FullWindowScroll from "./FullWindowScroll";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -29,7 +29,7 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
   return [heights, columns];
 }
 
-const initialData = Array(50)
+const initialData = Array(150)
   .fill(null)
   .map((_, index) => index);
 
@@ -81,9 +81,9 @@ function App() {
         height={test}
         data={data}
         rowHeight={100}
-        rowHeights={data.map(() => 100)}
-        // rowHeights={heights}
-        // rowColumns={columns}
+        // rowHeights={data.map(() => 100)}
+        rowHeights={heights}
+        rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
         // onVisibleRowChange={(props) => {
@@ -133,17 +133,17 @@ function FixedListDemo() {
       </button>
       <FixedList
         ref={childRef}
-        height={0}
+        height={300}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        // column={3}
-        onVisibleRowChange={(props) => {
-          console.log(props);
-        }}
+        column={3}
+        // onVisibleRowChange={(props) => {
+        //   console.log(props);
+        // }}
         // useScrollingIndicator
       />
     </div>
@@ -193,11 +193,7 @@ function ReactWindow() {
         width={1900}
         // width="100%"
       >
-        {({ columnIndex, rowIndex, style }) => (
-          <div style={style}>
-            row {rowIndex}, column {columnIndex}
-          </div>
-        )}
+        {ReactWindowRow}
       </FixedSizeGrid>
     </div>
   );
@@ -248,7 +244,7 @@ function ResponsiveDemo() {
 }
 
 function FullWindow() {
-  const childRef = React.useRef() as React.RefObject<FullWindowScroll>;
+  // const childRef = React.useRef() as React.RefObject<FullWindowScroll>;
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;

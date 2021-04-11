@@ -7,13 +7,13 @@ import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 import { sortedLastIndex, sortedFirstIndex } from "./utils";
 import GeneralList from "./AbstractList";
 
-interface props extends ReactRecycledListProps {
+interface VariableListProps extends ReactRecycledListProps {
   rowHeights: number[];
   height: number;
 }
 
-export default class VariableSizeList extends GeneralList<
-  props,
+export default class VariableList extends GeneralList<
+  VariableListProps,
   ReactRecycledListState
 > {
   rowPositions: number[];
@@ -99,11 +99,11 @@ export default class VariableSizeList extends GeneralList<
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
       rowHeights,
-      windowHeight
+      windowHeight,
     };
   };
 
-  constructor(props: props) {
+  constructor(props: VariableListProps) {
     super(props);
     const {
       rowToDataIndexMap,
@@ -114,7 +114,7 @@ export default class VariableSizeList extends GeneralList<
       totalNumOfRenderedRows,
       numOfInvisibleRowOnEachDirection,
       rowHeights,
-      windowHeight
+      windowHeight,
     } = this.initializeProperties();
 
     this.rowToDataIndexMap = rowToDataIndexMap;
@@ -134,7 +134,7 @@ export default class VariableSizeList extends GeneralList<
     };
   }
 
-  componentDidUpdate(prevProps: props) {
+  componentDidUpdate(prevProps: VariableListProps) {
     const currentProp = this.props;
     if (prevProps === currentProp) return;
     const {
@@ -163,7 +163,7 @@ export default class VariableSizeList extends GeneralList<
         fullHeight,
         totalNumOfRenderedRows,
         numOfInvisibleRowOnEachDirection,
-        windowHeight
+        windowHeight,
       } = this.initializeProperties();
 
       this.rowToDataIndexMap = rowToDataIndexMap;
@@ -175,7 +175,7 @@ export default class VariableSizeList extends GeneralList<
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
       this.rowHeights = rowHeights;
       this.windowHeight = windowHeight;
-      this.resetList()
+      this.resetList();
     }
   }
 
@@ -188,7 +188,6 @@ export default class VariableSizeList extends GeneralList<
   };
 
   getViewportBottomPosition = (scrollTop: number) => {
-    return scrollTop + this.windowHeight
-  }
-
+    return scrollTop + this.windowHeight;
+  };
 }
