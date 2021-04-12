@@ -248,15 +248,9 @@ function FullWindow() {
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
-  // React.useEffect(() => {
-  //   window.addEventListener("scroll", (event) => {
-  //     const scrollContainer = event.currentTarget as Window;
-  //     // don't need scrollTop for window scroll, only BoundingClientRect is needed
-  //     if (ref.current) {
-  //       console.log(ref.current.getBoundingClientRect()); // - whatever the the top margin/ header height
-  //     }
-  //   });
-  // });
+  React.useEffect(() => {
+    console.log(ref.current);
+  });
 
   // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top
   return (
@@ -279,7 +273,7 @@ function FullWindow() {
           if (ref.current) {
             const myTop = event.currentTarget.getBoundingClientRect().top;
             const listTop = ref.current.getBoundingClientRect();
-            console.log(window.innerHeight - listTop.top); // - whatever the the top margin/ header height
+            console.log(window.innerHeight - listTop.top); // - whatever the the top margin/ header height // this is the bottomviewport position
           }
         }}
       >
@@ -339,7 +333,7 @@ function FullWindow() {
 }
 
 function FullWindowDemo() {
-  // const ref = React.useRef() as React.RefObject<HTMLDivElement>;
+  const listref = React.useRef() as any;
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
@@ -357,6 +351,7 @@ function FullWindowDemo() {
         <button
           style={{
             position: "fixed",
+            zIndex: 100,
           }}
           onClick={() =>
             setData(
@@ -372,6 +367,7 @@ function FullWindowDemo() {
           style={{
             position: "fixed",
             left: 100,
+            zIndex: 100,
           }}
           onClick={() =>
             setData(
@@ -383,16 +379,37 @@ function FullWindowDemo() {
         >
           - data
         </button>
-        <FullWindowFixedList
-          scrollElement={ref.current as HTMLElement | null}
-          data={data}
-          rowHeight={100}
-          // rowHeights={heights}
-          // rowColumns={columns}
-          rowComponent={Row}
-          width={"100%"}
-          // rootMarginTop={20}
-        />
+        <button
+          style={{
+            position: "fixed",
+            left: 300,
+            zIndex: 100,
+          }}
+          onClick={() =>
+            listref.current.scrollToRow(10)
+          }
+        >
+          Scroll
+        </button>
+      </div>
+      <FullWindowFixedList
+        ref={listref}
+        data={data}
+        rowHeight={100}
+        // rowHeights={heights}
+        // rowColumns={columns}
+        rowComponent={Row}
+        width={"100%"}
+
+        rootMarginTop={200}
+        rootMarginBottom={200}
+      />
+      <div
+        style={{
+          height: 300,
+        }}
+      >
+        adawdawd
       </div>
     </div>
   );

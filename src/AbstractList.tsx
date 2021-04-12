@@ -125,9 +125,13 @@ export default abstract class General<
     }
   };
 
+  getResetViewportBottom = () => {
+    return this.prevScroll + this.windowHeight;
+  };
+
   resetList = () => {
     const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
-    const viewportBottom = this.prevScroll + this.windowHeight;
+    const viewportBottom =  this.getResetViewportBottom();
     const newBottomRenderedRowIndex = Math.min(
       this.getBottomViewportRowIndex(viewportBottom) +
         this.numOfInvisibleRowOnEachDirection,
@@ -136,11 +140,13 @@ export default abstract class General<
 
     const rowsToRecycle = newBottomRenderedRowIndex - bottomRenderedRowIndex;
 
+    let newRenderedRowIndex = this.initialArrayTemplate.map(
+      (_, index) => index
+    );
+    let newScrollState = this.initialArrayTemplate.map(() => false);
+    let newTopRenderedRowRelativeIndex = 0;
+
     if (rowsToRecycle > 0) {
-      const newRenderedRowIndex = this.initialArrayTemplate.map(
-        (_, index) => index
-      );
-      const newScrollState = this.initialArrayTemplate.map(() => false);
       let cycle = 0;
       while (cycle < rowsToRecycle) {
         const newTopRenderedRowRelativeIndex = this.mod(cycle);
@@ -150,34 +156,18 @@ export default abstract class General<
         newScrollState[newTopRenderedRowRelativeIndex] = true;
         cycle++;
       }
-      const newTopRenderedRowRelativeIndex = this.mod(rowsToRecycle);
-
-      this.onListWillRecycle(
-        newRenderedRowIndex,
-        newTopRenderedRowRelativeIndex,
-        newScrollState
-      );
-      this.setState({
-        renderedRowIndex: newRenderedRowIndex,
-        topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
-      });
-    } else {
-      const newRenderedRowIndex = this.initialArrayTemplate.map(
-        (_, index) => index
-      );
-      const newScrollState = this.initialArrayTemplate.map(() => false);
-      const newTopRenderedRowRelativeIndex = 0;
-
-      this.onListWillRecycle(
-        newRenderedRowIndex,
-        newTopRenderedRowRelativeIndex,
-        newScrollState
-      );
-      this.setState({
-        renderedRowIndex: newRenderedRowIndex,
-        topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
-      });
+      newTopRenderedRowRelativeIndex = this.mod(rowsToRecycle);
     }
+
+    this.onListWillRecycle(
+      newRenderedRowIndex,
+      newTopRenderedRowRelativeIndex,
+      newScrollState
+    );
+    this.setState({
+      renderedRowIndex: newRenderedRowIndex,
+      topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
+    });
 
     if (this.fullHeight - this.windowHeight < this.prevScroll) {
       this.prevScroll = this.fullHeight - this.windowHeight;
@@ -196,17 +186,19 @@ export default abstract class General<
     validateScrollTo(targetRow);
     const targetPosition = this.rowPositions[targetRow];
 
-    if (this.listWindowRef.current)
+    if (this.listWindowRef.current) {
       this.listWindowRef.current.scrollTop = targetPosition;
-    this.recycle(targetPosition);
+      this.recycle(targetPosition);
+    }
   };
 
   scrollToRow = (targetRow: number) => {
     const targetPosition = this.rowPositions[targetRow];
     validateScrollTo(targetPosition);
-    if (this.listWindowRef.current)
+    if (this.listWindowRef.current) {
       this.listWindowRef.current.scrollTop = targetPosition;
-    this.recycle(targetPosition);
+      this.recycle(targetPosition);
+    }
   };
 
   mod = (n: number, m: number = this.totalNumOfRenderedRows) => {
