@@ -177,14 +177,14 @@ export default class FullWindowFixedList extends GeneralList<
   getScrollTop = () => {
     const { rootMarginTop = 0 } = this.props;
     const recycledList = this.fullListRef.current as HTMLElement;
-    const distanceToWindowTop =
+    const distanceBetweenScrollContainerAndWindow =
       this.scrollListener === window
         ? 0
         : (this.scrollListener as HTMLElement).getBoundingClientRect().top;
 
     return -(
       recycledList.getBoundingClientRect().top -
-      distanceToWindowTop -
+      distanceBetweenScrollContainerAndWindow -
       rootMarginTop
     );
   };
@@ -201,20 +201,20 @@ export default class FullWindowFixedList extends GeneralList<
     if (this.scrollListener) {
       const recycledList = this.fullListRef.current as HTMLElement;
       if (this.scrollListener === window) {
-        const distanceToWindowTop =
+        const distanceToWindowTopFromTopOfList =
           recycledList.getBoundingClientRect().top + window.scrollY;
         this.scrollListener.scrollTo(
           0,
-          distanceToWindowTop + targetPosition - rootMarginTop
+          distanceToWindowTopFromTopOfList + targetPosition - rootMarginTop
         );
       } else {
         const customElement = this.scrollListener as HTMLElement;
-        const distanceToElementTop =
+        const distanceToElementTopFromTopOfList =
           recycledList.getBoundingClientRect().top -
           customElement.getBoundingClientRect().top;
 
         customElement.scrollTop =
-          distanceToElementTop + targetPosition - rootMarginTop;
+          distanceToElementTopFromTopOfList + targetPosition - rootMarginTop;
       }
       this.recycle(targetPosition);
     }
@@ -287,7 +287,6 @@ export default class FullWindowFixedList extends GeneralList<
   getResetViewportBottom = () => {
     if (this.fullListRef) {
       const { rootMarginBottom = 0, rootMarginTop = 0 } = this.props;
-      const recycledList = this.fullListRef.current as HTMLElement;
       const scrollTop = this.getScrollTop();
       const fullWindowHeight =
         this.windowHeight + rootMarginTop + rootMarginBottom;
