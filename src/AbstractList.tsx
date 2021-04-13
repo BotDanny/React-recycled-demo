@@ -131,7 +131,7 @@ export default abstract class General<
 
   resetList = () => {
     const bottomRenderedRowIndex = this.totalNumOfRenderedRows - 1;
-    const viewportBottom =  this.getResetViewportBottom();
+    const viewportBottom = this.getResetViewportBottom();
     const newBottomRenderedRowIndex = Math.min(
       this.getBottomViewportRowIndex(viewportBottom) +
         this.numOfInvisibleRowOnEachDirection,
@@ -185,16 +185,16 @@ export default abstract class General<
     );
     validateScrollTo(targetRow);
     const targetPosition = this.rowPositions[targetRow];
-
-    if (this.listWindowRef.current) {
-      this.listWindowRef.current.scrollTop = targetPosition;
-      this.recycle(targetPosition);
-    }
+    this.manualScroll(targetPosition);
   };
 
   scrollToRow = (targetRow: number) => {
     const targetPosition = this.rowPositions[targetRow];
     validateScrollTo(targetPosition);
+    this.manualScroll(targetPosition);
+  };
+
+  manualScroll = (targetPosition: number) => {
     if (this.listWindowRef.current) {
       this.listWindowRef.current.scrollTop = targetPosition;
       this.recycle(targetPosition);

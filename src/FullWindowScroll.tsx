@@ -193,32 +193,25 @@ export default class FullWindowFixedList extends GeneralList<
     }
   };
 
-  scrollToDataIndex = (targetIndex: number) => {
-    const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
-      (value) => targetIndex >= value[0] && targetIndex < value[1]
-    );
-    validateScrollTo(targetRow);
-    const targetPosition = this.rowPositions[targetRow];
-
-    if (this.listWindowRef.current) {
-      this.listWindowRef.current.scrollTop = targetPosition;
-    }
-    this.recycle(targetPosition);
-  };
-
-  scrollToRow = (targetRow: number) => { // need to do for custom scroll element
+  manualScroll = (targetPosition: number) => {
     const { rootMarginTop = 0 } = this.props;
-    const targetPosition = this.rowPositions[targetRow];
-    validateScrollTo(targetPosition);
     if (this.scrollListener) {
       const recycledList = this.fullListRef.current as HTMLElement;
       if (this.scrollListener === window) {
-        const interval =
+        const distanceToWindowTop =
           recycledList.getBoundingClientRect().top + window.scrollY;
         this.scrollListener.scrollTo(
           0,
-          interval + targetPosition - rootMarginTop
+          distanceToWindowTop + targetPosition - rootMarginTop
         );
+      } else {
+        const customElement = this.scrollListener as HTMLElement;
+        const distanceToElementTop =
+          recycledList.getBoundingClientRect().top -
+          customElement.getBoundingClientRect().top;
+
+        customElement.scrollTop =
+          distanceToElementTop + targetPosition - rootMarginTop;
       }
       this.recycle(targetPosition);
     }

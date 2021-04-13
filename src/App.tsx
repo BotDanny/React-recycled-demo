@@ -401,8 +401,8 @@ function FullWindowDemo() {
         rowComponent={Row}
         width={"100%"}
 
-        rootMarginTop={200}
-        rootMarginBottom={200}
+        rootMarginTop={0}
+        rootMarginBottom={0}
       />
       <div
         style={{
@@ -415,4 +415,4 @@ function FullWindowDemo() {
   );
 }
 
-export default FullWindowDemo;
+export default FullWindow;
