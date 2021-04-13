@@ -14,7 +14,7 @@ interface FullWindowFixedListProps extends ReactRecycledListProps {
   rootMarginBottom?: number;
   windowHeight?: number;
   serverWindowHeight?: number;
-  scrollElement?: HTMLElement | undefined;
+  scrollElement?: HTMLElement | undefined | null;
 }
 
 export default class FullWindowFixedList extends GeneralList<
@@ -26,7 +26,6 @@ export default class FullWindowFixedList extends GeneralList<
   rowToDataIndexMap: RowToDataIndexMap;
   fullHeight: number;
   windowHeight: number;
-  topWindowOffSet: number;
   initialArrayTemplate: null[];
   totalNumOfRenderedRows: number;
   numOfInvisibleRowOnEachDirection: number;
@@ -62,17 +61,15 @@ export default class FullWindowFixedList extends GeneralList<
     } // no need to consider padding because when you scroll down padding doesn't apply
 
     let calculatedWindowHeight = 0;
-    let topWindowOffSet = 0;
     let scrollListener;
 
     if (constructor && serverWindowHeight !== undefined) {
       calculatedWindowHeight = serverWindowHeight;
     } else if ("scrollElement" in this.props) {
-      if (scrollElement !== undefined) {
+      if (scrollElement) {
         calculatedWindowHeight = parseInt(
           window.getComputedStyle(scrollElement).height
         );
-        topWindowOffSet = scrollElement.getBoundingClientRect().top;
         scrollListener = scrollElement;
       } else calculatedWindowHeight = 0;
     } else {
@@ -119,7 +116,6 @@ export default class FullWindowFixedList extends GeneralList<
       numOfInvisibleRowOnEachDirection,
       rowHeights,
       windowHeight: calculatedWindowHeight,
-      topWindowOffSet,
       scrollListener,
     };
   };
@@ -137,7 +133,6 @@ export default class FullWindowFixedList extends GeneralList<
       numOfInvisibleRowOnEachDirection,
       rowHeights,
       windowHeight,
-      topWindowOffSet,
       scrollListener,
     } = this.initializeProperties(true);
 
@@ -153,7 +148,6 @@ export default class FullWindowFixedList extends GeneralList<
     this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
     this.rowHeights = rowHeights;
     this.windowHeight = windowHeight;
-    this.topWindowOffSet = topWindowOffSet;
     this.scrollListener = scrollListener;
 
     this.state = {
@@ -180,15 +174,24 @@ export default class FullWindowFixedList extends GeneralList<
     }
   };
 
-  onScroll = () => {
+  getScrollTop = () => {
     const { rootMarginTop = 0 } = this.props;
+    const recycledList = this.fullListRef.current as HTMLElement;
+    const distanceToWindowTop =
+      this.scrollListener === window
+        ? 0
+        : (this.scrollListener as HTMLElement).getBoundingClientRect().top;
+
+    return -(
+      recycledList.getBoundingClientRect().top -
+      distanceToWindowTop -
+      rootMarginTop
+    );
+  };
+
+  onScroll = () => {
     if (this.fullListRef) {
-      const recycledList = this.fullListRef.current as HTMLElement;
-      const scrollTop = -(
-        recycledList.getBoundingClientRect().top -
-        rootMarginTop -
-        this.topWindowOffSet
-      );
+      const scrollTop = this.getScrollTop();
       this.recycle(scrollTop);
     }
   };
@@ -230,11 +233,12 @@ export default class FullWindowFixedList extends GeneralList<
       rootMarginTop,
     } = this.props;
     if (
+      prevProps.data !== data ||
+      prevProps.windowHeight !== windowHeight ||
+      prevProps.scrollElement !== scrollElement ||
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
-      prevProps.windowHeight !== windowHeight ||
-      prevProps.data !== data ||
       prevProps.additionalRenderedRow !== additionalRenderedRow ||
       prevProps.rootMarginBottom !== rootMarginBottom ||
       prevProps.rootMarginTop !== rootMarginTop
@@ -249,7 +253,6 @@ export default class FullWindowFixedList extends GeneralList<
         numOfInvisibleRowOnEachDirection,
         rowHeights,
         windowHeight,
-        topWindowOffSet,
         scrollListener,
       } = this.initializeProperties();
 
@@ -262,7 +265,6 @@ export default class FullWindowFixedList extends GeneralList<
       this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
       this.rowHeights = rowHeights;
       this.windowHeight = windowHeight;
-      this.topWindowOffSet = topWindowOffSet;
       this.scrollListener = scrollListener;
       this.resetList();
       if (prevProps.scrollElement !== scrollElement) {
@@ -284,10 +286,12 @@ export default class FullWindowFixedList extends GeneralList<
 
   getResetViewportBottom = () => {
     if (this.fullListRef) {
-      const { rootMarginBottom = 0 } = this.props;
+      const { rootMarginBottom = 0, rootMarginTop = 0 } = this.props;
       const recycledList = this.fullListRef.current as HTMLElement;
-      const scrollTop = -recycledList.getBoundingClientRect().top;
-      return scrollTop + window.innerHeight - rootMarginBottom;
+      const scrollTop = this.getScrollTop();
+      const fullWindowHeight =
+        this.windowHeight + rootMarginTop + rootMarginBottom;
+      return scrollTop + fullWindowHeight - rootMarginBottom;
     }
     return this.prevScroll + this.windowHeight;
   };

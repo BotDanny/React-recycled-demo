@@ -246,11 +246,12 @@ function ResponsiveDemo() {
 function FullWindow() {
   // const childRef = React.useRef() as React.RefObject<FullWindowScroll>;
   const [data, setData] = React.useState(initialData);
-  const [test, setTest] = React.useState(false);
+  const [elementHasMounted, setElementHasMounted] = React.useState(false);
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
   React.useEffect(() => {
-    console.log(ref.current);
-  });
+    if (ref.current) setElementHasMounted(true);
+    else setElementHasMounted(false);
+  }, [ref]);
 
   // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top
   return (
@@ -269,13 +270,7 @@ function FullWindow() {
           width: "100%",
           overflowY: "scroll",
         }}
-        onScroll={(event: React.UIEvent<HTMLElement>) => {
-          if (ref.current) {
-            const myTop = event.currentTarget.getBoundingClientRect().top;
-            const listTop = ref.current.getBoundingClientRect();
-            console.log(window.innerHeight - listTop.top); // - whatever the the top margin/ header height // this is the bottomviewport position
-          }
-        }}
+        ref={ref}
       >
         <div
           style={{
@@ -285,49 +280,34 @@ function FullWindow() {
         >
           something
         </div>
-        {
-          <div
-            ref={ref}
-            style={{
-              height: 600,
-              width: "100%",
-            }}
-          >
-            {Array(6)
-              .fill(null)
-              .map(() => (
-                <div
-                  ref={ref}
-                  style={{
-                    height: 100,
-                    width: "100%",
-                  }}
-                >
-                  test
-                </div>
-              ))}
-          </div>
-        }
+        <FullWindowFixedList
+          scrollElement={ref.current}
+          data={data}
+          rowHeight={100}
+          // rowHeights={heights}
+          // rowColumns={columns}
+          rowComponent={Row}
+          width={"100%"}
+        />
       </div>
+      <FullWindowFixedList
+        data={data}
+        rowHeight={100}
+        // rowHeights={heights}
+        // rowColumns={columns}
+        rowComponent={Row}
+        width={"100%"}
+        rootMarginTop={0}
+        rootMarginBottom={0}
+      />
       <div
         style={{
-          height: 5000,
+          height: 500,
           width: "100%",
         }}
       >
         dwad
       </div>
-      {/* <FullWindowScroll
-        ref={childRef}
-        height={}
-        data={data}
-        rowHeight={100}
-        // rowHeights={data.map(() => 100)}
-        rowComponent={Row}
-        width={width}
-        // column={width <= 1200 ? 2 : 3}
-        // useScrollingIndicator
-      /> */}
     </div>
   );
 }
@@ -385,9 +365,7 @@ function FullWindowDemo() {
             left: 300,
             zIndex: 100,
           }}
-          onClick={() =>
-            listref.current.scrollToRow(10)
-          }
+          onClick={() => listref.current.scrollToRow(10)}
         >
           Scroll
         </button>
@@ -400,7 +378,6 @@ function FullWindowDemo() {
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-
         rootMarginTop={0}
         rootMarginBottom={0}
       />
