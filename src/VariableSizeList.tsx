@@ -137,9 +137,9 @@ export default class VariableList extends GeneralList<
     };
   }
 
-  componentDidUpdate(prevProps: VariableListProps) {
+  shouldResetList = (prevProps: VariableListProps) => {
     const currentProp = this.props;
-    if (prevProps === currentProp) return;
+    if (prevProps === currentProp) return false;
     const {
       rowHeight,
       rowHeights,
@@ -149,7 +149,8 @@ export default class VariableList extends GeneralList<
       data,
       additionalRenderedRow,
     } = currentProp;
-    if (
+
+    return (
       prevProps.rowHeight !== rowHeight ||
       prevProps.rowHeights !== rowHeights ||
       prevProps.column !== column ||
@@ -157,30 +158,8 @@ export default class VariableList extends GeneralList<
       prevProps.height !== height ||
       prevProps.data !== data ||
       prevProps.additionalRenderedRow !== additionalRenderedRow
-    ) {
-      const {
-        rowToDataIndexMap,
-        rowPositions,
-        totalRows,
-        initialArrayTemplate,
-        fullHeight,
-        totalNumOfRenderedRows,
-        numOfInvisibleRowOnEachDirection,
-        windowHeight,
-      } = this.initializeProperties();
-
-      this.rowToDataIndexMap = rowToDataIndexMap;
-      this.rowPositions = rowPositions;
-      this.totalRows = totalRows;
-      this.initialArrayTemplate = initialArrayTemplate;
-      this.fullHeight = fullHeight;
-      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
-      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-      this.rowHeights = rowHeights;
-      this.windowHeight = windowHeight;
-      this.resetList();
-    }
-  }
+    );
+  };
 
   getTopViewportRowIndex = (scrollTop: number) => {
     return sortedLastIndex(this.rowPositions, scrollTop) - 1;

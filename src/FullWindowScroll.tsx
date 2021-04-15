@@ -1,15 +1,14 @@
 import { calculateRowPositions, mapRowIndexToDataIndex } from "./utils";
 import {
-  ReactRecycledFullWindowListProps,
   ReactRecycledListProps,
   ReactRecycledListState,
 } from "./TypeDef";
 import GeneralList from "./AbstractList";
-import { RowToDataIndexMap, validateScrollTo, classNames } from "./utils";
+import { RowToDataIndexMap, classNames, sortedFirstIndex, sortedLastIndex } from "./utils";
 import { RowProps } from "./TypeDef";
 import React from "react";
 
-interface FullWindowFixedListProps extends ReactRecycledListProps {
+interface FullWindowListProps extends ReactRecycledListProps {
   rootMarginTop?: number;
   rootMarginBottom?: number;
   windowHeight?: number;
@@ -17,10 +16,10 @@ interface FullWindowFixedListProps extends ReactRecycledListProps {
   scrollElement?: HTMLElement | undefined | null;
 }
 
-export default class FullWindowFixedList extends GeneralList<
-  FullWindowFixedListProps,
-  ReactRecycledListState
-> {
+export default class FullWindowList<
+  P extends FullWindowListProps,
+  S extends ReactRecycledListState
+> extends GeneralList<P, S> {
   rowPositions: number[];
   rowHeights: number[];
   rowToDataIndexMap: RowToDataIndexMap;
@@ -35,7 +34,9 @@ export default class FullWindowFixedList extends GeneralList<
   scrollListener: HTMLElement | (Window & typeof globalThis) | undefined;
   listWindowRef: any;
 
-  initializeProperties = (constructor: boolean = false) => {
+  initializeProperties: (constructor?: boolean) => any = (
+    constructor: boolean = false
+  ) => {
     const {
       rowHeight,
       column,
@@ -46,7 +47,7 @@ export default class FullWindowFixedList extends GeneralList<
       scrollElement,
       rootMarginTop = 0,
       rootMarginBottom = 0,
-    } = this.props;
+    } = this.props as P;
 
     // Validate
 
@@ -120,7 +121,7 @@ export default class FullWindowFixedList extends GeneralList<
     };
   };
 
-  constructor(props: FullWindowFixedListProps) {
+  constructor(props: P) {
     super(props);
 
     const {
@@ -154,7 +155,7 @@ export default class FullWindowFixedList extends GeneralList<
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
       scrollState: this.initialArrayTemplate.map(() => false),
       topRenderedRowRelativeIndex: 0,
-    };
+    } as S;
   }
 
   componentDidMount() {
@@ -220,7 +221,7 @@ export default class FullWindowFixedList extends GeneralList<
     }
   };
 
-  componentDidUpdate(prevProps: FullWindowFixedListProps) {
+  shouldResetList = (prevProps: P) => {
     const {
       rowHeight,
       column,
@@ -232,7 +233,8 @@ export default class FullWindowFixedList extends GeneralList<
       rootMarginBottom,
       rootMarginTop,
     } = this.props;
-    if (
+
+    return (
       prevProps.data !== data ||
       prevProps.windowHeight !== windowHeight ||
       prevProps.scrollElement !== scrollElement ||
@@ -242,7 +244,11 @@ export default class FullWindowFixedList extends GeneralList<
       prevProps.additionalRenderedRow !== additionalRenderedRow ||
       prevProps.rootMarginBottom !== rootMarginBottom ||
       prevProps.rootMarginTop !== rootMarginTop
-    ) {
+    );
+  };
+
+  componentDidUpdate(prevProps: P) {
+    if (this.shouldResetList(prevProps)) {
       const {
         rowToDataIndexMap,
         rowPositions,
@@ -255,6 +261,7 @@ export default class FullWindowFixedList extends GeneralList<
         windowHeight,
         scrollListener,
       } = this.initializeProperties();
+      const { scrollElement } = this.props;
 
       this.rowToDataIndexMap = rowToDataIndexMap;
       this.rowPositions = rowPositions;
@@ -304,7 +311,6 @@ export default class FullWindowFixedList extends GeneralList<
       rowComponent,
       rowTagName,
       rowClassName,
-      scrollElement,
     } = this.props;
 
     const { renderedRowIndex, scrollState } = this.state;
@@ -352,4 +358,125 @@ export default class FullWindowFixedList extends GeneralList<
       </ListTag>
     );
   }
+}
+
+interface FullWindowVariableListProps extends FullWindowListProps {
+  rowHeights: number[];
+}
+
+export class FullWindowVariableList extends FullWindowList<
+  FullWindowVariableListProps,
+  ReactRecycledListState
+> {
+  initializeProperties = (constructor: boolean = false) => {
+    const {
+      rowHeight,
+      rowHeights,
+      column,
+      rowColumns,
+      data,
+      additionalRenderedRow,
+      serverWindowHeight,
+      scrollElement,
+      rootMarginTop = 0,
+      rootMarginBottom = 0,
+    } = this.props;
+
+    // Validate
+
+    if (rowColumns) {
+      if (
+        rowColumns.reduce((acc, current) => acc + current, 0) !== data.length
+      ) {
+        throw Error(
+          "The total number of data item calculated from rowColumns does not match the length of your input data"
+        );
+      }
+      if (rowColumns.length !== rowHeights.length) {
+        throw Error(
+          "The number of rows provided from rowHeights does not match the number of rows provided from rowColumns"
+        );
+      }
+    } else if (column) {
+      const rows = Math.ceil(data.length / column);
+      if (rows !== rowHeights.length) {
+        throw Error(
+          "The number of rows provided from rowHeights does not match the number of rows calculated from column"
+        );
+      }
+    } else if (rowHeights.length !== data.length) {
+      throw Error(
+        "The number of rows provided from rowHeights does not match the number of rows calculated from your input data"
+      );
+    }
+
+    let calculatedWindowHeight = 0;
+    let scrollListener;
+
+    if (constructor && serverWindowHeight !== undefined) {
+      calculatedWindowHeight = serverWindowHeight;
+    } else if ("scrollElement" in this.props) {
+      if (scrollElement) {
+        calculatedWindowHeight = parseInt(
+          window.getComputedStyle(scrollElement).height
+        );
+        scrollListener = scrollElement;
+      } else calculatedWindowHeight = 0;
+    } else {
+      calculatedWindowHeight = window.innerHeight;
+      scrollListener = window;
+    }
+
+    calculatedWindowHeight = Math.max(
+      0,
+      calculatedWindowHeight - rootMarginTop - rootMarginBottom
+    );
+
+    const calculatedRowColumns = rowColumns
+      ? rowColumns
+      : column
+      ? Array(rowHeights.length).fill(column)
+      : Array(rowHeights.length).fill(1);
+
+    const rowToDataIndexMap = mapRowIndexToDataIndex(
+      calculatedRowColumns,
+      data.length
+    );
+    const rowPositions = calculateRowPositions(rowHeights);
+    const totalRows = rowHeights.length;
+
+    const numOfVisibleRow = Math.ceil(calculatedWindowHeight / rowHeight);
+    const numOfInvisibleRowOnEachDirection =
+      additionalRenderedRow || numOfVisibleRow ? 1 : 0;
+    let totalNumOfRenderedRows =
+      numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
+    if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
+    const initialArrayTemplate = Array(totalNumOfRenderedRows).fill(null);
+
+    const fullHeight = rowHeights.reduce((acc, current) => acc + current, 0);
+
+    return {
+      rowToDataIndexMap,
+      rowPositions,
+      totalRows,
+      initialArrayTemplate,
+      fullHeight,
+      totalNumOfRenderedRows,
+      numOfInvisibleRowOnEachDirection,
+      rowHeights,
+      windowHeight: calculatedWindowHeight,
+      scrollListener,
+    };
+  };
+  constructor(props: FullWindowVariableListProps) {
+    super(props);
+  }
+
+  getTopViewportRowIndex = (scrollTop: number) => {
+    return sortedLastIndex(this.rowPositions, scrollTop) - 1;
+  };
+
+  getBottomViewportRowIndex = (viewportBottom: number) => {
+    return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
+  };
 }

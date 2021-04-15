@@ -45,22 +45,3 @@ export interface ReactRecycledListState {
   topRenderedRowRelativeIndex: number;
   scrollState: boolean[];
 }
-
-export interface ReactRecycledFullWindowListProps {
-  width: string | number;
-  data: any[];
-  rowHeight: number;
-  rowComponent: React.ElementType<RowProps>;
-  column?: number;
-  rowColumns?: number[];
-  additionalRenderedRow?: number;
-  listWindowClassName?: string;
-  listClassName?: string;
-  listTagName?: string;
-  rowTagName?: string;
-  rowClassName?: string;
-  useScrollingIndicator?: boolean;
-  scrollInterval?: number;
-  onRenderedRowChange?: OnRecycleCallBack;
-  onVisibleRowChange?: OnScrollCallBack;
-}

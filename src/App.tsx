@@ -6,8 +6,12 @@ import VariableSizeList from "./VariableSizeList";
 import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
-import ResponsiveContainer from "./ResponsiveContainer";
-import FullWindowFixedList from "./FullWindowScroll";
+import ResponsiveContainer, {
+  FullWindowResponsiveContainer,
+} from "./ResponsiveContainer";
+import FullWindowFixedList, {
+  FullWindowVariableList,
+} from "./FullWindowScroll";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -248,6 +252,7 @@ function FullWindow() {
   const [data, setData] = React.useState(initialData);
   const [elementHasMounted, setElementHasMounted] = React.useState(false);
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
+  const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
   React.useEffect(() => {
     if (ref.current) setElementHasMounted(true);
     else setElementHasMounted(false);
@@ -256,6 +261,39 @@ function FullWindow() {
   // if the scrollContainer is not window, then use fullist.getBoundingClientRect.top - targetScrollContainer.getBoundingClientRect.top
   return (
     <div className="App">
+      <button
+        style={{
+          position: "fixed",
+          zIndex: 100,
+          top: 0,
+        }}
+        onClick={() =>
+          setData(
+            Array(data.length + 3)
+              .fill(null)
+              .map((_, index) => index)
+          )
+        }
+      >
+        + Data
+      </button>
+      <button
+        style={{
+          position: "fixed",
+          left: 100,
+          zIndex: 100,
+          top: 0,
+        }}
+        onClick={() =>
+          setData(
+            Array(data.length - 3)
+              .fill(null)
+              .map((_, index) => index)
+          )
+        }
+      >
+        - data
+      </button>
       <div
         style={{
           height: 600,
@@ -266,7 +304,7 @@ function FullWindow() {
       </div>
       <div
         style={{
-          height: 300,
+          height: "50vh",
           width: "100%",
           overflowY: "scroll",
         }}
@@ -274,13 +312,21 @@ function FullWindow() {
       >
         <div
           style={{
-            height: 200,
+            height: 1000,
             width: "100%",
           }}
         >
           something
         </div>
-        <FullWindowFixedList
+        <FullWindowResponsiveContainer
+
+          render={() => {
+            return <div>awdawdawd</div>;
+          }}
+        />
+        {/* <FullWindowVariableList
+          rowHeights={heights}
+          rowColumns={columns}
           scrollElement={ref.current}
           data={data}
           rowHeight={100}
@@ -288,9 +334,12 @@ function FullWindow() {
           // rowColumns={columns}
           rowComponent={Row}
           width={"100%"}
-        />
+        /> */}
       </div>
-      <FullWindowFixedList
+      <div>dawdnwajkd</div>
+      {/* <FullWindowVariableList
+        rowHeights={heights}
+        rowColumns={columns}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
@@ -299,7 +348,8 @@ function FullWindow() {
         width={"100%"}
         rootMarginTop={0}
         rootMarginBottom={0}
-      />
+        useScrollingIndicator
+      /> */}
       <div
         style={{
           height: 500,
@@ -316,6 +366,7 @@ function FullWindowDemo() {
   const listref = React.useRef() as any;
   const [data, setData] = React.useState(initialData);
   const [test, setTest] = React.useState(false);
+
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
   return (
     <div className="App">
@@ -370,7 +421,7 @@ function FullWindowDemo() {
           Scroll
         </button>
       </div>
-      <FullWindowFixedList
+      {/* <FullWindowFixedList
         ref={listref}
         data={data}
         rowHeight={100}
@@ -380,6 +431,11 @@ function FullWindowDemo() {
         width={"100%"}
         rootMarginTop={0}
         rootMarginBottom={0}
+      /> */}
+      <FullWindowResponsiveContainer
+        render={() => {
+          return <div>awdawdawd</div>;
+        }}
       />
       <div
         style={{
@@ -392,4 +448,5 @@ function FullWindowDemo() {
   );
 }
 
+// need to make responsive window scroll as well as variable height window scroll
 export default FullWindow;

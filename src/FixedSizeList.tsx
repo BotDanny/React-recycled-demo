@@ -120,9 +120,9 @@ export default class FixedList extends GeneralList<
     };
   }
 
-  componentDidUpdate(prevProps: FixedListProps) {
+  shouldResetList = (prevProps: FixedListProps) => {
     const currentProp = this.props;
-    if (prevProps === currentProp) return;
+    if (prevProps === currentProp) return false;
     const {
       rowHeight,
       column,
@@ -131,38 +131,16 @@ export default class FixedList extends GeneralList<
       data,
       additionalRenderedRow,
     } = currentProp;
-    if (
+
+    return (
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
       prevProps.height !== height ||
       prevProps.data !== data ||
       prevProps.additionalRenderedRow !== additionalRenderedRow
-    ) {
-      const {
-        rowToDataIndexMap,
-        rowPositions,
-        totalRows,
-        initialArrayTemplate,
-        fullHeight,
-        totalNumOfRenderedRows,
-        numOfInvisibleRowOnEachDirection,
-        rowHeights,
-        windowHeight
-      } = this.initializeProperties();
-
-      this.rowToDataIndexMap = rowToDataIndexMap;
-      this.rowPositions = rowPositions;
-      this.totalRows = totalRows;
-      this.initialArrayTemplate = initialArrayTemplate;
-      this.fullHeight = fullHeight;
-      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
-      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-      this.rowHeights = rowHeights;
-      this.windowHeight = windowHeight;
-      this.resetList();
-    }
-  }
+    );
+  };
 
   getTopViewportRowIndex = (scrollTop: number) => {
     return Math.floor(scrollTop / this.props.rowHeight);

@@ -26,6 +26,8 @@ export default abstract class General<
   abstract numOfInvisibleRowOnEachDirection: number;
   abstract getTopViewportRowIndex(scrollTop: number): number;
   abstract getBottomViewportRowIndex(scrollTop: number): number;
+  abstract shouldResetList(prevProps: P): boolean;
+  abstract initializeProperties(): any;
 
   constructor(props: P) {
     super(props);
@@ -124,6 +126,33 @@ export default abstract class General<
       });
     }
   };
+
+  componentDidUpdate(prevProps: P) {
+    if (this.shouldResetList(prevProps)) {
+      const {
+        rowToDataIndexMap,
+        rowPositions,
+        totalRows,
+        initialArrayTemplate,
+        fullHeight,
+        totalNumOfRenderedRows,
+        numOfInvisibleRowOnEachDirection,
+        windowHeight,
+        rowHeights
+      } = this.initializeProperties();
+
+      this.rowToDataIndexMap = rowToDataIndexMap;
+      this.rowPositions = rowPositions;
+      this.totalRows = totalRows;
+      this.initialArrayTemplate = initialArrayTemplate;
+      this.fullHeight = fullHeight;
+      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
+      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+      this.rowHeights = rowHeights;
+      this.windowHeight = windowHeight;
+      this.resetList();
+    }
+  }
 
   getResetViewportBottom = () => {
     return this.prevScroll + this.windowHeight;
