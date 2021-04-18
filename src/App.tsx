@@ -12,6 +12,7 @@ import ResponsiveContainer, {
 import FullWindowFixedList, {
   FullWindowVariableList,
 } from "./FullWindowScroll";
+import Root from "./Root";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -33,7 +34,7 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
   return [heights, columns];
 }
 
-const initialData = Array(50)
+const initialData = Array(300)
   .fill(null)
   .map((_, index) => index);
 
@@ -120,9 +121,7 @@ function FixedListDemo() {
       <button
         onClick={() =>
           setData(
-            Array(data.length - 3)
-              .fill(null)
-              .map((_, index) => index)
+            Array(data.length ).fill(randInt(1, 10))
           )
         }
       >
@@ -137,7 +136,7 @@ function FixedListDemo() {
       </button>
       <FixedList
         ref={childRef}
-        height={300}
+        height={600}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
@@ -149,6 +148,7 @@ function FixedListDemo() {
         //   console.log(props);
         // }}
         // useScrollingIndicator
+        // additionalRenderedRow={1}
       />
     </div>
   );
@@ -157,24 +157,28 @@ function FixedListDemo() {
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, dataEndIndex, column, isScrolling } = props;
   const dataSection = data.slice(dataIndex, dataEndIndex);
-  let xs: 12 | 6 | 4 | 3 = 12;
-  if (column === 2) xs = 6;
-  else if (column === 3) xs = 4;
-  else if (column === 4) xs = 3;
-  console.log(`item ${data[dataIndex]}`);
-  React.useEffect(() => {
-    console.log(`${dataIndex} mounted`);
-    return () => {
-      console.log(`${dataIndex} unmounted`);
-    };
-  }, []);
+  // let xs: 12 | 6 | 4 | 3 = 12;
+  // if (column === 2) xs = 6;
+  // else if (column === 3) xs = 4;
+  // else if (column === 4) xs = 3;
+  // console.log(`item ${data[dataIndex]}`);
+  // React.useEffect(() => {
+  //   console.log(`${dataIndex} mounted`);
+  //   return () => {
+  //     console.log(`${dataIndex} unmounted`);
+  //   };
+  // }, []);
   return (
     <>
       {dataSection.map((dataItem, index) => {
         return (
-          <Grid key={index} xs={xs}>
+          <div key={index} style={{
+            width: "30%",
+            height: "100%",
+            textAlign: "center"
+          }}>
             {`item ${isScrolling ? "scrolling" : dataItem}`}
-          </Grid>
+          </div>
         );
       })}
     </>
@@ -182,7 +186,7 @@ const Row = React.memo(function (props: RowProps) {
 });
 
 function ReactWindow() {
-  const data = Array(150)
+  const data = Array(300)
     .fill(null)
     .map((_, index) => index);
   const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
@@ -191,8 +195,8 @@ function ReactWindow() {
       <FixedSizeGrid
         columnCount={3}
         columnWidth={650}
-        height={300}
-        rowCount={150 / 3}
+        height={600}
+        rowCount={300 / 3}
         rowHeight={100}
         width={1900}
         // width="100%"
@@ -213,8 +217,8 @@ const ReactWindowRow = React.memo(function (props: any) {
   // }, []);
   return (
     <div className="react-recycled-row" style={style}>
-      <Grid key={rowIndex + columnIndex} xs={4}>
-        Item {rowIndex + columnIndex}
+      <Grid key={rowIndex * 3 + columnIndex} xs={4}>
+        Item {rowIndex * 3 + columnIndex}
       </Grid>
     </div>
   );
@@ -421,7 +425,7 @@ function FullWindowDemo() {
           Scroll
         </button>
       </div>
-      {/* <FullWindowFixedList
+      <FullWindowFixedList
         ref={listref}
         data={data}
         rowHeight={100}
@@ -431,12 +435,12 @@ function FullWindowDemo() {
         width={"100%"}
         rootMarginTop={0}
         rootMarginBottom={0}
-      /> */}
-      <FullWindowResponsiveContainer
+      />
+      {/* <FullWindowResponsiveContainer
         render={() => {
           return <div>awdawdawd</div>;
         }}
-      />
+      /> */}
       <div
         style={{
           height: 300,
@@ -449,4 +453,4 @@ function FullWindowDemo() {
 }
 
 // need to make responsive window scroll as well as variable height window scroll
-export default FullWindow;
+export default Root;

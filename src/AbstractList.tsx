@@ -295,7 +295,7 @@ export default abstract class General<
         style={{
           height: this.windowHeight,
           overflowY: "scroll",
-          width,
+          width: width || "100%",
         }}
         onScroll={this.onScroll}
         ref={this.listWindowRef}

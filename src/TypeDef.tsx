@@ -8,7 +8,7 @@ export interface RowProps {
 }
 
 export interface ReactRecycledListProps {
-  width: string | number;
+  width?: string | number;
   data: any[];
   rowHeight: number;
   rowComponent: React.ElementType<RowProps>;
