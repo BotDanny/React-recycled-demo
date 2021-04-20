@@ -127,6 +127,13 @@ export default abstract class General<
     }
   };
 
+  componentDidMount() {
+    const {initalScrollTop} = this.props;
+    if (initalScrollTop) {
+      this.manualScroll(initalScrollTop as number)
+    }
+  }
+
   componentDidUpdate(prevProps: P) {
     if (this.shouldResetList(prevProps)) {
       const {
@@ -223,10 +230,13 @@ export default abstract class General<
     this.manualScroll(targetPosition);
   };
 
+  scrolTo = (scrollTop: number) => {
+    this.manualScroll(scrollTop);
+  }
+
   manualScroll = (targetPosition: number) => {
     if (this.listWindowRef.current) {
       this.listWindowRef.current.scrollTop = targetPosition;
-      this.recycle(targetPosition);
     }
   };
 

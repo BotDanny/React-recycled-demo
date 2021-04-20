@@ -1,10 +1,12 @@
 import { calculateRowPositions, mapRowIndexToDataIndex } from "./utils";
-import {
-  ReactRecycledListProps,
-  ReactRecycledListState,
-} from "./TypeDef";
+import { ReactRecycledListProps, ReactRecycledListState } from "./TypeDef";
 import GeneralList from "./AbstractList";
-import { RowToDataIndexMap, classNames, sortedFirstIndex, sortedLastIndex } from "./utils";
+import {
+  RowToDataIndexMap,
+  classNames,
+  sortedFirstIndex,
+  sortedLastIndex,
+} from "./utils";
 import { RowProps } from "./TypeDef";
 import React from "react";
 
@@ -13,7 +15,7 @@ interface FullWindowListProps extends ReactRecycledListProps {
   rootMarginBottom?: number;
   windowHeight?: number;
   serverWindowHeight?: number;
-  scrollElement?: HTMLElement | undefined | null;
+  scrollRef?: React.MutableRefObject<HTMLElement | undefined | null>;
 }
 
 export default class FullWindowList<
@@ -30,6 +32,7 @@ export default class FullWindowList<
   numOfInvisibleRowOnEachDirection: number;
   totalRows: number;
   timeOut: any;
+  initialScrolling: boolean;
   fullListRef: React.RefObject<HTMLElement>;
   scrollListener: HTMLElement | (Window & typeof globalThis) | undefined;
   listWindowRef: any;
@@ -44,7 +47,7 @@ export default class FullWindowList<
       data,
       additionalRenderedRow,
       serverWindowHeight,
-      scrollElement,
+      scrollRef,
       rootMarginTop = 0,
       rootMarginBottom = 0,
     } = this.props as P;
@@ -66,12 +69,12 @@ export default class FullWindowList<
 
     if (constructor && serverWindowHeight !== undefined) {
       calculatedWindowHeight = serverWindowHeight;
-    } else if ("scrollElement" in this.props) {
-      if (scrollElement) {
+    } else if ("scrollRef" in this.props) {
+      if (scrollRef?.current) {
         calculatedWindowHeight = parseInt(
-          window.getComputedStyle(scrollElement).height
+          window.getComputedStyle(scrollRef.current).height
         );
-        scrollListener = scrollElement;
+        scrollListener = scrollRef.current;
       } else calculatedWindowHeight = 0;
     } else {
       calculatedWindowHeight = window.innerHeight;
@@ -150,6 +153,7 @@ export default class FullWindowList<
     this.rowHeights = rowHeights;
     this.windowHeight = windowHeight;
     this.scrollListener = scrollListener;
+    this.initialScrolling = false;
 
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
@@ -160,6 +164,10 @@ export default class FullWindowList<
 
   componentDidMount() {
     this.attachScrollListener();
+    const { initalScrollTop } = this.props;
+    if (initalScrollTop) {
+      this.manualScroll(initalScrollTop as number);
+    }
   }
 
   componentWillUnmount() {
@@ -178,6 +186,7 @@ export default class FullWindowList<
   getScrollTop = () => {
     const { rootMarginTop = 0 } = this.props;
     const recycledList = this.fullListRef.current as HTMLElement;
+    if (!recycledList) return window.scrollY;
     const distanceBetweenScrollContainerAndWindow =
       this.scrollListener === window
         ? 0
@@ -193,9 +202,15 @@ export default class FullWindowList<
   onScroll = () => {
     if (this.fullListRef) {
       const scrollTop = this.getScrollTop();
+      console.log(scrollTop);
       this.recycle(scrollTop);
     }
   };
+
+  // getRelativeScrollTop = (scrollTop: number) => {
+  //   const { rootMarginTop = 0 } = this.props;
+  //   scrollTop - distanceToWindowTopFromTopOfList // this should be it1
+  // }
 
   manualScroll = (targetPosition: number) => {
     const { rootMarginTop = 0 } = this.props;
@@ -204,20 +219,18 @@ export default class FullWindowList<
       if (this.scrollListener === window) {
         const distanceToWindowTopFromTopOfList =
           recycledList.getBoundingClientRect().top + window.scrollY;
-        this.scrollListener.scrollTo(
-          0,
-          distanceToWindowTopFromTopOfList + targetPosition - rootMarginTop
-        );
+        window.scrollTo({
+          top:
+            distanceToWindowTopFromTopOfList + targetPosition - rootMarginTop,
+        });
       } else {
         const customElement = this.scrollListener as HTMLElement;
         const distanceToElementTopFromTopOfList =
           recycledList.getBoundingClientRect().top -
           customElement.getBoundingClientRect().top;
-
         customElement.scrollTop =
           distanceToElementTopFromTopOfList + targetPosition - rootMarginTop;
       }
-      this.recycle(targetPosition);
     }
   };
 
@@ -229,7 +242,7 @@ export default class FullWindowList<
       windowHeight,
       data,
       additionalRenderedRow,
-      scrollElement,
+      scrollRef,
       rootMarginBottom,
       rootMarginTop,
     } = this.props;
@@ -237,7 +250,7 @@ export default class FullWindowList<
     return (
       prevProps.data !== data ||
       prevProps.windowHeight !== windowHeight ||
-      prevProps.scrollElement !== scrollElement ||
+      prevProps.scrollRef?.current !== scrollRef?.current ||
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
@@ -261,7 +274,7 @@ export default class FullWindowList<
         windowHeight,
         scrollListener,
       } = this.initializeProperties();
-      const { scrollElement } = this.props;
+      const { scrollRef } = this.props;
 
       this.rowToDataIndexMap = rowToDataIndexMap;
       this.rowPositions = rowPositions;
@@ -274,7 +287,7 @@ export default class FullWindowList<
       this.windowHeight = windowHeight;
       this.scrollListener = scrollListener;
       this.resetList();
-      if (prevProps.scrollElement !== scrollElement) {
+      if (prevProps.scrollRef !== scrollRef) {
         this.attachScrollListener();
       }
     }
@@ -377,7 +390,7 @@ export class FullWindowVariableList extends FullWindowList<
       data,
       additionalRenderedRow,
       serverWindowHeight,
-      scrollElement,
+      scrollRef,
       rootMarginTop = 0,
       rootMarginBottom = 0,
     } = this.props;
@@ -415,12 +428,12 @@ export class FullWindowVariableList extends FullWindowList<
 
     if (constructor && serverWindowHeight !== undefined) {
       calculatedWindowHeight = serverWindowHeight;
-    } else if ("scrollElement" in this.props) {
-      if (scrollElement) {
+    } else if ("scrollRef" in this.props) {
+      if (scrollRef?.current) {
         calculatedWindowHeight = parseInt(
-          window.getComputedStyle(scrollElement).height
+          window.getComputedStyle(scrollRef.current).height
         );
-        scrollListener = scrollElement;
+        scrollListener = scrollRef;
       } else calculatedWindowHeight = 0;
     } else {
       calculatedWindowHeight = window.innerHeight;
@@ -478,5 +491,33 @@ export class FullWindowVariableList extends FullWindowList<
 
   getBottomViewportRowIndex = (viewportBottom: number) => {
     return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
+  };
+
+  shouldResetList = (prevProps: FullWindowVariableListProps) => {
+    const {
+      rowHeight,
+      rowHeights,
+      column,
+      rowColumns,
+      windowHeight,
+      data,
+      additionalRenderedRow,
+      scrollRef,
+      rootMarginBottom,
+      rootMarginTop,
+    } = this.props;
+
+    return (
+      prevProps.data !== data ||
+      prevProps.windowHeight !== windowHeight ||
+      prevProps.scrollRef?.current !== scrollRef?.current ||
+      prevProps.rowHeight !== rowHeight ||
+      prevProps.rowHeights !== rowHeights ||
+      prevProps.column !== column ||
+      prevProps.rowColumns !== rowColumns ||
+      prevProps.additionalRenderedRow !== additionalRenderedRow ||
+      prevProps.rootMarginBottom !== rootMarginBottom ||
+      prevProps.rootMarginTop !== rootMarginTop
+    );
   };
 }

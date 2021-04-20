@@ -19,8 +19,12 @@ export default function Index() {
       <SideNav />
       <main>
         <Switch>
-          {examples.map(({ label, route }) => {
-            return <Route path={route}>{label}</Route>;
+          {examples.map(({ label, route, component }) => {
+            return (
+              <Route path={route}>
+                {component && component}
+              </Route>
+            );
           })}
         </Switch>
       </main>

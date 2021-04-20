@@ -12,6 +12,7 @@ export interface ReactRecycledListProps {
   data: any[];
   rowHeight: number;
   rowComponent: React.ElementType<RowProps>;
+  initalScrollTop?: number;
   column?: number;
   rowColumns?: number[];
   additionalRenderedRow?: number;

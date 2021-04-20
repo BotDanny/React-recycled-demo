@@ -9,9 +9,17 @@ import {
   Typography,
 } from "@material-ui/core";
 import "./root.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import SimpleList from "./pages/SimpleList";
+import SimpleGrid from "./pages/SimpleGrid";
+import VariableRowHeight from "./pages/VariableRowHeight";
+import VariableColumn from "./pages/VariableColumn";
+import FullWindow from "./pages/FullWindow";
+import VariableRowHeightColumn from "./pages/VariableRowHeightColumn";
+import CustomWindow from "./pages/CustomWindow";
 
 export default function SideNav() {
+  const { pathname } = useLocation();
   return (
     <div>
       <Drawer variant="permanent" anchor="left">
@@ -30,7 +38,14 @@ export default function SideNav() {
             <ListItemText primary="Examples" className="first-level" />
           </ListItem>
           {examples.map(({ label, route }) => (
-            <ListItem button key={label} className="second-level" component={Link} to={route}>
+            <ListItem
+              button
+              key={label}
+              className="second-level"
+              component={Link}
+              to={route}
+              selected={pathname === route}
+            >
               <ListItemText primary={label} />
             </ListItem>
           ))}
@@ -41,7 +56,14 @@ export default function SideNav() {
             <ListItemText primary="Components" className="first-level" />
           </ListItem>
           {components.map(({ label, route }) => (
-            <ListItem button key={label} className="second-level" component={Link} to={route}>
+            <ListItem
+              button
+              key={label}
+              className="second-level"
+              component={Link}
+              to={route}
+              selected={pathname === route}
+            >
               <ListItemText primary={label} />
             </ListItem>
           ))}
@@ -52,26 +74,39 @@ export default function SideNav() {
 }
 
 export const examples = [
-    { label: "Simple List", route: "/simple-list" },
-    { label: "Simple Grid", route: "/simple-grid" },
-    { label: "Variable row height", route: "/variable-row-height" },
-    { label: "Variable column", route: "/variable-column" },
-    { label: "Full window", route: "/full-window" },
-    { label: "Custom window", route: "/custom-window" },
-    { label: "Responsive List/Grid", route: "/responsive-list/grid" },
-    { label: "Responsive window", route: "/responsive-window" },
-    { label: "Lazy loading", route: "/lazy-loading" },
-    { label: "Dynamic loading", route: "/dynamic-loading" },
-    { label: "Scroll indicator", route: "/scroll-indicator" },
-    { label: "Scroll to", route: "/scroll-to" },
-  ];
-  
-  export const components = [
-    { label: "FixedSizeList", route: "/fixedsizelist" },
-    { label: "VariableSizeList", route: "/variablesizelist" },
-    { label: "FixedSizeWindowList", route: "/fixedsizewindowlist" },
-    { label: "VariableSizeWindowList", route: "/variablesizewindowList" },
-    { label: "ResponsiveContainer", route: "/rResponsivecontainer" },
-    { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer" },
-  ];
-  
+  { label: "Simple List", route: "/simple-list", component: SimpleList },
+  { label: "Simple Grid", route: "/simple-grid", component: SimpleGrid },
+  {
+    label: "Variable row height",
+    route: "/variable-row-height",
+    component: VariableRowHeight,
+  },
+  {
+    label: "Variable column",
+    route: "/variable-column",
+    component: VariableColumn,
+  },
+  {
+    label: "Variable row height and column ",
+    route: "/variable-height-column",
+    component: VariableRowHeightColumn,
+  },
+  { label: "Full window", route: "/full-window", component: FullWindow },
+  { label: "Custom window", route: "/custom-window", component: CustomWindow },
+  { label: "Responsive List/Grid", route: "/responsive-list/grid" },
+  { label: "Responsive window", route: "/responsive-window" },
+  { label: "Lazy loading", route: "/lazy-loading" },
+  { label: "Dynamic loading", route: "/dynamic-loading" },
+  { label: "Scroll indicator", route: "/scroll-indicator" },
+  { label: "Scroll to", route: "/scroll-to" },
+  { label: "Styling", route: "/styling" },
+];
+
+export const components = [
+  { label: "FixedSizeList", route: "/fixedsizelist" },
+  { label: "VariableSizeList", route: "/variablesizelist" },
+  { label: "FixedSizeWindowList", route: "/fixedsizewindowlist" },
+  { label: "VariableSizeWindowList", route: "/variablesizewindowList" },
+  { label: "ResponsiveContainer", route: "/rResponsivecontainer" },
+  { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer" },
+];

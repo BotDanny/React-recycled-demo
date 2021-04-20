@@ -143,7 +143,6 @@ function FixedListDemo() {
         // rowColumns={columns}
         rowComponent={Row}
         width={"100%"}
-        column={3}
         // onVisibleRowChange={(props) => {
         //   console.log(props);
         // }}
@@ -372,6 +371,7 @@ function FullWindowDemo() {
   const [test, setTest] = React.useState(false);
 
   const ref = React.useRef<HTMLElement>() as React.RefObject<HTMLDivElement>;
+
   return (
     <div className="App">
       <div>dawdaagfwf</div>
@@ -379,7 +379,6 @@ function FullWindowDemo() {
         style={{
           height: 600,
           width: "100%",
-          overflowY: "scroll",
         }}
         ref={ref}
       >
@@ -435,6 +434,7 @@ function FullWindowDemo() {
         width={"100%"}
         rootMarginTop={0}
         rootMarginBottom={0}
+        initalScrollTop={500}
       />
       {/* <FullWindowResponsiveContainer
         render={() => {

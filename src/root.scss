@@ -3,38 +3,61 @@
 }
 
 .root-content {
-  .site-title {
-    padding: 10px 20px;
-  }
+  .MuiDrawer-root {
+    * {
+      color: #000000;
+    }
+    .site-title {
+      padding: 10px 20px;
+    }
 
-  .first-level {
-    span {
-      font-weight: 500;
+    .first-level {
+      span {
+        font-weight: 500;
+      }
+    }
+
+    .second-level {
+      padding-left: 30px;
     }
   }
 
-  .second-level {
-      padding-left: 30px;
-  }
   main {
-      padding-left: 270px;
-      display: flex;
+    padding-left: 270px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    .half-section {
+      width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .code-wrapper {
+      padding: 20px;
+      background-color: #282c34;
+    }
+
+    pre {
+      margin: 0;
+    }
   }
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-   }
-   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(13deg, #f9d4ff 14%,#c7ceff 64%);
-    border-radius: 10px;
-   }
-   ::-webkit-scrollbar-thumb:hover{
-    background: linear-gradient(13deg, #c7ceff 14%,#f9d4ff 64%);
-   }
-   ::-webkit-scrollbar-track{
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: inset 7px 10px 12px #f0f0f0;
-   }
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #adadad;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #7a7a7a;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: inset 7px 10px 12px #f0f0f0;
+}
