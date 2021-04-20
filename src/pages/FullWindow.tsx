@@ -3,7 +3,7 @@ import FixedList from "../FixedSizeList";
 import { RowProps } from "../TypeDef";
 import Highlight from "react-highlight.js";
 import GeneralPage from "./GeneralPage";
-import FullWindowFixedList from "../FullWindowScroll";
+import { FullWindowFixedList } from "../Export";
 
 export default function FullWindow() {
   return (
@@ -25,9 +25,7 @@ function FullWindowDemo() {
     .fill(null)
     .map((_, index) => `item ${index}`);
 
-  return (
-    <FullWindowFixedList rowComponent={Row} data={data} rowHeight={100} />
-  );
+  return <FullWindowFixedList rowComponent={Row} data={data} rowHeight={100}/>;
 }
 
 const Row = React.memo(function (props: RowProps) {

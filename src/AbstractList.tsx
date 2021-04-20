@@ -40,7 +40,7 @@ export default abstract class General<
     if (!onVisibleRowChange) return;
 
     const bottomVisibleRowIndex = this.getBottomViewportRowIndex(
-      scrollTop + this.windowHeight
+      scrollTop + this.windowHeight //view port bottom position
     );
 
     if (bottomVisibleRowIndex === this.prevBottomVisibleRow) return;

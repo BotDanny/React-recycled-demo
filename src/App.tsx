@@ -9,9 +9,7 @@ import { RowProps } from "./TypeDef";
 import ResponsiveContainer, {
   FullWindowResponsiveContainer,
 } from "./ResponsiveContainer";
-import FullWindowFixedList, {
-  FullWindowVariableList,
-} from "./FullWindowScroll";
+import {FullWindowFixedList} from "./Export";
 import Root from "./Root";
 
 function randInt(min: number, max: number) {

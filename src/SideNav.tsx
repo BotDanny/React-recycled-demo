@@ -100,6 +100,7 @@ export const examples = [
   { label: "Scroll indicator", route: "/scroll-indicator" },
   { label: "Scroll to", route: "/scroll-to" },
   { label: "Styling", route: "/styling" },
+  { label: "Server side rendering", route: "/styling" },
 ];
 
 export const components = [

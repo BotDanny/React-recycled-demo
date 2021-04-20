@@ -10,7 +10,7 @@ import {
 import { RowProps } from "./TypeDef";
 import React from "react";
 
-interface FullWindowListProps extends ReactRecycledListProps {
+export interface FullWindowFixedListProps extends ReactRecycledListProps {
   rootMarginTop?: number;
   rootMarginBottom?: number;
   windowHeight?: number;
@@ -18,8 +18,8 @@ interface FullWindowListProps extends ReactRecycledListProps {
   scrollRef?: React.MutableRefObject<HTMLElement | undefined | null>;
 }
 
-export default class FullWindowList<
-  P extends FullWindowListProps,
+export default class FullWindowFixedList<
+  P extends FullWindowFixedListProps,
   S extends ReactRecycledListState
 > extends GeneralList<P, S> {
   rowPositions: number[];
@@ -202,15 +202,9 @@ export default class FullWindowList<
   onScroll = () => {
     if (this.fullListRef) {
       const scrollTop = this.getScrollTop();
-      console.log(scrollTop);
       this.recycle(scrollTop);
     }
   };
-
-  // getRelativeScrollTop = (scrollTop: number) => {
-  //   const { rootMarginTop = 0 } = this.props;
-  //   scrollTop - distanceToWindowTopFromTopOfList // this should be it1
-  // }
 
   manualScroll = (targetPosition: number) => {
     const { rootMarginTop = 0 } = this.props;
@@ -250,7 +244,7 @@ export default class FullWindowList<
     return (
       prevProps.data !== data ||
       prevProps.windowHeight !== windowHeight ||
-      prevProps.scrollRef?.current !== scrollRef?.current ||
+      (scrollRef && scrollRef.current !== this.scrollListener) ||
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
@@ -260,48 +254,57 @@ export default class FullWindowList<
     );
   };
 
+  resetProperties = () => {
+    const {
+      rowToDataIndexMap,
+      rowPositions,
+      totalRows,
+      initialArrayTemplate,
+      fullHeight,
+      totalNumOfRenderedRows,
+      numOfInvisibleRowOnEachDirection,
+      rowHeights,
+      windowHeight,
+      scrollListener,
+    } = this.initializeProperties();
+    const { scrollRef } = this.props;
+
+    this.rowToDataIndexMap = rowToDataIndexMap;
+    this.rowPositions = rowPositions;
+    this.totalRows = totalRows;
+    this.initialArrayTemplate = initialArrayTemplate;
+    this.fullHeight = fullHeight;
+    this.totalNumOfRenderedRows = totalNumOfRenderedRows;
+    this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+    this.rowHeights = rowHeights;
+    this.windowHeight = windowHeight;
+    if (scrollRef && scrollRef.current !== this.scrollListener) {
+      this.scrollListener = scrollListener;
+      this.attachScrollListener();
+    }
+  };
+
   componentDidUpdate(prevProps: P) {
     if (this.shouldResetList(prevProps)) {
-      const {
-        rowToDataIndexMap,
-        rowPositions,
-        totalRows,
-        initialArrayTemplate,
-        fullHeight,
-        totalNumOfRenderedRows,
-        numOfInvisibleRowOnEachDirection,
-        rowHeights,
-        windowHeight,
-        scrollListener,
-      } = this.initializeProperties();
-      const { scrollRef } = this.props;
-
-      this.rowToDataIndexMap = rowToDataIndexMap;
-      this.rowPositions = rowPositions;
-      this.totalRows = totalRows;
-      this.initialArrayTemplate = initialArrayTemplate;
-      this.fullHeight = fullHeight;
-      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
-      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-      this.rowHeights = rowHeights;
-      this.windowHeight = windowHeight;
-      this.scrollListener = scrollListener;
+      this.resetProperties();
       this.resetList();
-      if (prevProps.scrollRef !== scrollRef) {
-        this.attachScrollListener();
-      }
     }
   }
 
+  setCustomScrollRef = () => {
+    this.resetProperties();
+    this.resetList();
+  };
+
   getTopViewportRowIndex = (scrollTop: number) => {
-    return Math.floor(scrollTop / this.props.rowHeight);
+    return Math.max(Math.floor(scrollTop / this.props.rowHeight), 0);
   };
 
   getBottomViewportRowIndex = (viewportBottom: number) => {
     let viewportBottomRow = viewportBottom / this.props.rowHeight;
     if (Number.isInteger(viewportBottomRow)) viewportBottomRow -= 1;
     else viewportBottomRow = Math.floor(viewportBottomRow);
-    return viewportBottomRow;
+    return Math.min(viewportBottomRow, this.totalRows - 1);
   };
 
   getResetViewportBottom = () => {
@@ -371,153 +374,4 @@ export default class FullWindowList<
       </ListTag>
     );
   }
-}
-
-interface FullWindowVariableListProps extends FullWindowListProps {
-  rowHeights: number[];
-}
-
-export class FullWindowVariableList extends FullWindowList<
-  FullWindowVariableListProps,
-  ReactRecycledListState
-> {
-  initializeProperties = (constructor: boolean = false) => {
-    const {
-      rowHeight,
-      rowHeights,
-      column,
-      rowColumns,
-      data,
-      additionalRenderedRow,
-      serverWindowHeight,
-      scrollRef,
-      rootMarginTop = 0,
-      rootMarginBottom = 0,
-    } = this.props;
-
-    // Validate
-
-    if (rowColumns) {
-      if (
-        rowColumns.reduce((acc, current) => acc + current, 0) !== data.length
-      ) {
-        throw Error(
-          "The total number of data item calculated from rowColumns does not match the length of your input data"
-        );
-      }
-      if (rowColumns.length !== rowHeights.length) {
-        throw Error(
-          "The number of rows provided from rowHeights does not match the number of rows provided from rowColumns"
-        );
-      }
-    } else if (column) {
-      const rows = Math.ceil(data.length / column);
-      if (rows !== rowHeights.length) {
-        throw Error(
-          "The number of rows provided from rowHeights does not match the number of rows calculated from column"
-        );
-      }
-    } else if (rowHeights.length !== data.length) {
-      throw Error(
-        "The number of rows provided from rowHeights does not match the number of rows calculated from your input data"
-      );
-    }
-
-    let calculatedWindowHeight = 0;
-    let scrollListener;
-
-    if (constructor && serverWindowHeight !== undefined) {
-      calculatedWindowHeight = serverWindowHeight;
-    } else if ("scrollRef" in this.props) {
-      if (scrollRef?.current) {
-        calculatedWindowHeight = parseInt(
-          window.getComputedStyle(scrollRef.current).height
-        );
-        scrollListener = scrollRef;
-      } else calculatedWindowHeight = 0;
-    } else {
-      calculatedWindowHeight = window.innerHeight;
-      scrollListener = window;
-    }
-
-    calculatedWindowHeight = Math.max(
-      0,
-      calculatedWindowHeight - rootMarginTop - rootMarginBottom
-    );
-
-    const calculatedRowColumns = rowColumns
-      ? rowColumns
-      : column
-      ? Array(rowHeights.length).fill(column)
-      : Array(rowHeights.length).fill(1);
-
-    const rowToDataIndexMap = mapRowIndexToDataIndex(
-      calculatedRowColumns,
-      data.length
-    );
-    const rowPositions = calculateRowPositions(rowHeights);
-    const totalRows = rowHeights.length;
-
-    const numOfVisibleRow = Math.ceil(calculatedWindowHeight / rowHeight);
-    const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || numOfVisibleRow ? 1 : 0;
-    let totalNumOfRenderedRows =
-      numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
-    if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
-    const initialArrayTemplate = Array(totalNumOfRenderedRows).fill(null);
-
-    const fullHeight = rowHeights.reduce((acc, current) => acc + current, 0);
-
-    return {
-      rowToDataIndexMap,
-      rowPositions,
-      totalRows,
-      initialArrayTemplate,
-      fullHeight,
-      totalNumOfRenderedRows,
-      numOfInvisibleRowOnEachDirection,
-      rowHeights,
-      windowHeight: calculatedWindowHeight,
-      scrollListener,
-    };
-  };
-  constructor(props: FullWindowVariableListProps) {
-    super(props);
-  }
-
-  getTopViewportRowIndex = (scrollTop: number) => {
-    return sortedLastIndex(this.rowPositions, scrollTop) - 1;
-  };
-
-  getBottomViewportRowIndex = (viewportBottom: number) => {
-    return sortedFirstIndex(this.rowPositions, viewportBottom) - 1;
-  };
-
-  shouldResetList = (prevProps: FullWindowVariableListProps) => {
-    const {
-      rowHeight,
-      rowHeights,
-      column,
-      rowColumns,
-      windowHeight,
-      data,
-      additionalRenderedRow,
-      scrollRef,
-      rootMarginBottom,
-      rootMarginTop,
-    } = this.props;
-
-    return (
-      prevProps.data !== data ||
-      prevProps.windowHeight !== windowHeight ||
-      prevProps.scrollRef?.current !== scrollRef?.current ||
-      prevProps.rowHeight !== rowHeight ||
-      prevProps.rowHeights !== rowHeights ||
-      prevProps.column !== column ||
-      prevProps.rowColumns !== rowColumns ||
-      prevProps.additionalRenderedRow !== additionalRenderedRow ||
-      prevProps.rootMarginBottom !== rootMarginBottom ||
-      prevProps.rootMarginTop !== rootMarginTop
-    );
-  };
 }

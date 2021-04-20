@@ -59,7 +59,7 @@ const Row = React.memo(function (props: RowProps) {
 
 const code = `import { VariableList } from "react-recycled-list";
 
-// function for generating randow row heights and columns
+// Function for generating randow row heights and columns
 // Each row will have height between 60 and 140 px and column between 1 and 4
 function generateRamdomRowHeightAndColumn(dataLength: number) {
     const heights: number[] = [];
