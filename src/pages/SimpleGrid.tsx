@@ -59,6 +59,7 @@ const Row = React.memo(function (props) {
     const { data, dataIndex: dataStartIndex, dataEndIndex } = props;
 
     // You are given the start and end index of the data in this row. You style and arrange the columns yourself
+    // Note the data item at dataEndIndex is not included in the row. If dataIndex = 0 and dataEndIndex = 3 then the data in this row is 0, 1 and 2
 
     const rowData = data.slice(dataStartIndex, dataEndIndex);
     // Note you don't have to use in-line styling, you can style it however you want

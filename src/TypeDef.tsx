@@ -28,17 +28,19 @@ export interface ReactRecycledListProps {
 }
 
 export type OnRecycleCallBack = (renderInfo: {
-  topRenderedRowIndex: number;
+  firstRenderedRowIndex: number;
   firstRenderedDataIndex: number;
-  bottomRenderedRowIndex: number;
+  lastRenderedRowIndex: number;
   lastRenderedDataIndex: number;
+  lastRowIndex: number;
 }) => void;
 
 export type OnScrollCallBack = (renderInfo: {
-  topVisibleRowIndex: number;
+  firstVisibleRowIndex: number;
   firstVisibleDataIndex: number;
-  bottomVisibleRowIndex: number;
+  lastVisibleRowIndex: number;
   lastVisibleDataIndex: number;
+  lastRowIndex: number;
 }) => void;
 
 export interface ReactRecycledListState {

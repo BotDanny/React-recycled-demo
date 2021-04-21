@@ -6,11 +6,10 @@ import VariableSizeList from "./VariableSizeList";
 import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
-import ResponsiveContainer, {
-  FullWindowResponsiveContainer,
-} from "./ResponsiveContainer";
+import ResponsiveContainer from "./ResponsiveContainer";
 import {FullWindowFixedList} from "./Export";
 import Root from "./Root";
+import FullWindowResponsiveContainer from "./FullWindowResponsiveContainer";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;

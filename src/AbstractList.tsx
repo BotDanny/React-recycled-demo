@@ -39,23 +39,24 @@ export default abstract class General<
     const { onVisibleRowChange } = this.props;
     if (!onVisibleRowChange) return;
 
-    const bottomVisibleRowIndex = this.getBottomViewportRowIndex(
+    const lastVisibleRowIndex = this.getBottomViewportRowIndex(
       scrollTop + this.windowHeight //view port bottom position
     );
 
-    if (bottomVisibleRowIndex === this.prevBottomVisibleRow) return;
-    const topVisibleRowIndex = this.getTopViewportRowIndex(scrollTop);
-    const firstVisibleDataIndex = this.rowToDataIndexMap[topVisibleRowIndex][0];
+    if (lastVisibleRowIndex === this.prevBottomVisibleRow) return;
+    const firstVisibleRowIndex = this.getTopViewportRowIndex(scrollTop);
+    const firstVisibleDataIndex = this.rowToDataIndexMap[firstVisibleRowIndex][0];
 
     const lastVisibleDataIndex =
-      this.rowToDataIndexMap[bottomVisibleRowIndex][1] - 1;
+      this.rowToDataIndexMap[lastVisibleRowIndex][1] - 1;
     onVisibleRowChange({
-      topVisibleRowIndex,
+      firstVisibleRowIndex,
       firstVisibleDataIndex,
-      bottomVisibleRowIndex,
+      lastVisibleRowIndex,
       lastVisibleDataIndex,
+      lastRowIndex: this.totalRows - 1
     });
-    this.prevBottomVisibleRow = bottomVisibleRowIndex;
+    this.prevBottomVisibleRow = lastVisibleRowIndex;
   };
 
   recycle = (scrollTop: number) => {
@@ -268,13 +269,14 @@ export default abstract class General<
 
     if (onRenderedRowChange) {
       const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
-      const bottomRowIndex =
+      const lastRenderedRowIndex =
         newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
       onRenderedRowChange({
-        topRenderedRowIndex: topRowIndex,
+        firstRenderedRowIndex: topRowIndex,
         firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
-        bottomRenderedRowIndex: bottomRowIndex,
-        lastRenderedDataIndex: this.rowToDataIndexMap[bottomRowIndex][1] - 1,
+        lastRenderedRowIndex: lastRenderedRowIndex,
+        lastRenderedDataIndex: this.rowToDataIndexMap[lastRenderedRowIndex][1] - 1,
+        lastRowIndex: this.totalRows - 1
       });
     }
   };
