@@ -5,7 +5,7 @@ import Highlight from "react-highlight.js";
 import GeneralPage from "./GeneralPage";
 import { Button } from "@material-ui/core";
 
-export default function LazyLoading() {
+export default function LazyLoadingAdvanced() {
   return <GeneralPage code={code} Demo={LazyLoadingDemo} />;
 }
 
@@ -47,7 +47,7 @@ function LazyLoadingDemo() {
       ...store.data,
       [page]: newData,
     };
-    const nextPage = page + 1
+    const nextPage = page + 1;
     const hasNextPage = nextPage <= 5;
     if (hasNextPage) {
       newStoreData[nextPage] = [undefined];
@@ -89,20 +89,13 @@ function LazyLoadingDemo() {
   const listData = Object.values(store.data).flat();
 
   return (
-    <div>
-      <FixedList
-        height={500}
-        rowComponent={Row}
-        data={listData}
-        rowHeight={100}
-        onRenderedRowChange={onRenderedRowChange}
-      />
-      <Button variant="contained" color="primary" onClick={() => {
-        setStore(initialStore)
-      }}>
-        Reset data
-      </Button>
-    </div>
+    <FixedList
+      height={500}
+      rowComponent={Row}
+      data={listData}
+      rowHeight={100}
+      onRenderedRowChange={onRenderedRowChange}
+    />
   );
 }
 
@@ -170,23 +163,6 @@ function LazyLoadingDemo() {
     // If the last row is rendered (NOT visible yet!) and we are not already loading data, we fetch new data
     // If you want to fetch data when the last row is visible then use onVisibleRowChange
     if (lastRenderedRowIndex === lastRowIndex) {
-      if (store.isLoading === false) {
-        setStore({ ...store, isLoading: true });
-        fetchData(store.nextPage, onFetchDataSuccess)
-      }
-    }
-  };
-
-  const onVisibleRowChange = (renderInfo) => {
-    const {
-      firstVisibleRowIndex,
-      firstVisibleDataIndex,
-      lastVisibleRowIndex,
-      lastVisibleDataIndex,
-      lastRowIndex,
-    } = renderInfo;
-    // If the last row becomes visible and we are not already loading data, we fetch new data
-    if (lastVisibleRowIndex === lastRowIndex) {
       if (store.isLoading === false) {
         setStore({ ...store, isLoading: true });
         fetchData(store.nextPage, onFetchDataSuccess)

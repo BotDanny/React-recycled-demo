@@ -19,7 +19,8 @@ import VariableRowHeightColumn from "./pages/VariableRowHeightColumn";
 import CustomWindow from "./pages/CustomWindow";
 import ResponsiveContainerPage from "./pages/ResponsiveContainer";
 import FullWindowResponsiveContainerPage from "./pages/FullWindowResponsiveContainer";
-import LazyLoading from "./pages/LazyLoading";
+import LazyLoadingAdvanced from "./pages/LazyLoadingAdvanced";
+import LazyLoadingSimple from "./pages/LazyLoadingSimple";
 
 export default function SideNav() {
   const { pathname } = useLocation();
@@ -98,8 +99,8 @@ export const examples = [
   { label: "Custom window", route: "/custom-window", component: CustomWindow },
   { label: "Responsive List/Grid", route: "/responsive-list/grid", component: ResponsiveContainerPage},
   { label: "Responsive window", route: "/responsive-window", component: FullWindowResponsiveContainerPage },
-  { label: "Infinite loading simple example ", route: "/lazy-loading-simple", component: LazyLoading },
-  { label: "Infinite loading advanced example ", route: "/lazy-loading-adcance", component: LazyLoading },
+  { label: "Infinite loading simple example ", route: "/lazy-loading-simple", component: LazyLoadingSimple },
+  { label: "Infinite loading advanced example ", route: "/lazy-loading-adcance", component: LazyLoadingAdvanced },
   { label: "Dynamic loading", route: "/dynamic-loading" },
   { label: "Scroll indicator", route: "/scroll-indicator" },
   { label: "Scroll to", route: "/scroll-to" },
