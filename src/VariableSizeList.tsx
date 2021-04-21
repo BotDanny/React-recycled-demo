@@ -130,9 +130,17 @@ export default class VariableList extends GeneralList<
     this.windowHeight = windowHeight;
     this.listWindowRef = React.createRef();
 
+    const initialRenderedRowIndex = this.initialArrayTemplate.map(
+      (_, index) => index
+    );
+    const initialScrollState = this.initialArrayTemplate.map(() => false);
+
+    this.onListWillRecycle(initialRenderedRowIndex, initialScrollState, 0);
+    this.onScrollChange(0);
+
     this.state = {
-      renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
-      scrollState: this.initialArrayTemplate.map(() => false),
+      renderedRowIndex: initialRenderedRowIndex,
+      scrollState: initialScrollState,
       topRenderedRowRelativeIndex: 0,
     };
   }

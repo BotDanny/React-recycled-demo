@@ -23,28 +23,48 @@ export interface ReactRecycledListProps {
   rowClassName?: string;
   useScrollingIndicator?: boolean;
   scrollInterval?: number;
-  onRenderedRowChange?: OnRecycleCallBack;
-  onVisibleRowChange?: OnScrollCallBack;
+  onRenderedRowChange?: onRenderedRowChangeCallBack;
+  onVisibleRowChange?: onVisibleRowChangeCallBack;
 }
 
-export type OnRecycleCallBack = (renderInfo: {
+export interface RenderInfo {
   firstRenderedRowIndex: number;
   firstRenderedDataIndex: number;
   lastRenderedRowIndex: number;
   lastRenderedDataIndex: number;
   lastRowIndex: number;
-}) => void;
+}
 
-export type OnScrollCallBack = (renderInfo: {
+export interface VisibilityInfo {
   firstVisibleRowIndex: number;
   firstVisibleDataIndex: number;
   lastVisibleRowIndex: number;
   lastVisibleDataIndex: number;
   lastRowIndex: number;
-}) => void;
+}
+
+export type onRenderedRowChangeCallBack = (renderInfo: RenderInfo) => void;
+
+export type onVisibleRowChangeCallBack = (renderInfo: VisibilityInfo) => void;
 
 export interface ReactRecycledListState {
   renderedRowIndex: number[];
   topRenderedRowRelativeIndex: number;
   scrollState: boolean[];
+}
+
+export const noRowRenderInfo: RenderInfo = {
+  firstRenderedRowIndex: -1,
+  firstRenderedDataIndex: -1,
+  lastRenderedRowIndex: -1,
+  lastRenderedDataIndex: -1,
+  lastRowIndex: -1,
+}
+
+export const noRowVisibilityInfo: VisibilityInfo = {
+  firstVisibleRowIndex: -1,
+  firstVisibleDataIndex: -1,
+  lastVisibleRowIndex: -1,
+  lastVisibleDataIndex: -1,
+  lastRowIndex: -1,
 }

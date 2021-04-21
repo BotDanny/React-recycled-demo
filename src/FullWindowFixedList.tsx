@@ -155,6 +155,8 @@ export default class FullWindowFixedList<
     this.scrollListener = scrollListener;
     this.initialScrolling = false;
 
+    // Need to triger callback for onrenderedrowchange
+
     this.state = {
       renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
       scrollState: this.initialArrayTemplate.map(() => false),

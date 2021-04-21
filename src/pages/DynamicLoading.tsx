@@ -9,7 +9,7 @@ export default function DynamicLoading() {
   return <GeneralPage code={code} Demo={DynamicLoadingDemo} />;
 }
 
-const numberOfItemPerPage = 20;
+const numberOfItemPerPage = 10;
 function fetchData(page: number, onSuccess: any) {
   setTimeout(() => {
     const data = [];
@@ -25,44 +25,50 @@ function fetchData(page: number, onSuccess: any) {
   }, 1500);
 }
 
-const initialStore: {
-  data: { [key: string]: any[] };
-  nextPage: number;
-  isLoading: boolean;
-} = {
-  data: {
-    1: Array(numberOfItemPerPage)
-      .fill(null)
-      .map(() => undefined),
-  },
-  nextPage: 1,
-  isLoading: false,
+type PageData = {
+  [key: string]: {
+    isLoading: boolean;
+    hasLoaded: boolean;
+    data: any[];
+  };
 };
 
+function populateInitialPage() {
+  const page: PageData = {};
+  for (let i = 1; i <= 10; i++) {
+    page[i] = {
+      isLoading: false,
+      hasLoaded: false,
+      data: Array(numberOfItemPerPage)
+        .fill(null)
+        .map(() => undefined),
+    };
+  }
+  return page;
+}
+
+function getPageFromDataIndex(index: number) {
+    return Math.floor(index / numberOfItemPerPage) + 1
+}
+const initialPagedData = populateInitialPage();
+
 function DynamicLoadingDemo() {
-  const [store, setStore] = React.useState(initialStore);
+  const [pagedData, setPagedData] = React.useState(initialPagedData);
 
   const onFetchDataSuccess = (newData: any[], page: number) => {
-    const newStoreData: { [key: string]: any[] } = {
-      ...store.data,
-      [page]: newData,
+    const newPagedData: PageData = {
+      ...pagedData,
+      [page]: {
+        data: newData,
+        hasLoaded: true,
+      },
     };
-    const nextPage = page + 1;
-    const hasNextPage = nextPage <= 5;
-    if (hasNextPage) {
-      newStoreData[nextPage] = [undefined];
-    }
-    setStore({
-      ...store,
-      data: newStoreData,
-      isLoading: false,
-      nextPage: nextPage,
-    });
+    setPagedData(newPagedData);
   };
 
-  React.useEffect(() => {
-    fetchData(store.nextPage, onFetchDataSuccess);
-  }, []);
+  const dataList = Object.values(pagedData)
+    .map(({ data }) => data)
+    .flat();
 
   const onRenderedRowChange = (renderInfo: {
     firstRenderedRowIndex: number;
@@ -78,21 +84,22 @@ function DynamicLoadingDemo() {
       lastRowIndex,
       lastRenderedDataIndex,
     } = renderInfo;
-    if (lastRenderedDataIndex === lastRowIndex) {
-      if (store.isLoading === false && store.nextPage <= 5) {
-        setStore({ ...store, isLoading: true });
-        fetchData(store.nextPage, onFetchDataSuccess);
-      }
+    const firstRenderedDataPage = getPageFromDataIndex(firstRenderedDataIndex);
+    if (!pagedData[firstRenderedDataPage].hasLoaded && !pagedData[firstRenderedDataPage].isLoading) {
+        setPagedData({...pagedData, [firstRenderedDataPage]: {isLoading: true}})
+        fetchData(firstRenderedDataPage, onFetchDataSuccess)
+    }
+    const lastRenderedDataPage = getPageFromDataIndex(lastRenderedDataIndex);
+    if (!pagedData[lastRenderedDataPage].hasLoaded && !pagedData[lastRenderedDataPage].isLoading) {
+        setPagedData({...pagedData, [lastRenderedDataIndex]: {isLoading: true}})
+        fetchData(lastRenderedDataPage, onFetchDataSuccess)
     }
   };
-
-  const listData = Object.values(store.data).flat();
-
   return (
     <FixedList
       height={500}
       rowComponent={Row}
-      data={listData}
+      data={dataList}
       rowHeight={100}
       onRenderedRowChange={onRenderedRowChange}
     />

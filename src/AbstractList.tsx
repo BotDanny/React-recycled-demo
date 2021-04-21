@@ -1,6 +1,8 @@
 import { withStyles } from "@material-ui/core";
 import React from "react";
 import {
+  noRowRenderInfo,
+  noRowVisibilityInfo,
   ReactRecycledListProps,
   ReactRecycledListState,
   RowProps,
@@ -35,17 +37,97 @@ export default abstract class General<
     this.prevBottomVisibleRow = 0;
   }
 
+  componentDidMount() {
+    const { initalScrollTop } = this.props;
+    if (initalScrollTop) {
+      this.manualScroll(initalScrollTop as number);
+    }
+  }
+
+  componentDidUpdate(prevProps: P) {
+    if (this.shouldResetList(prevProps)) {
+      const {
+        rowToDataIndexMap,
+        rowPositions,
+        totalRows,
+        initialArrayTemplate,
+        fullHeight,
+        totalNumOfRenderedRows,
+        numOfInvisibleRowOnEachDirection,
+        windowHeight,
+        rowHeights,
+      } = this.initializeProperties();
+
+      this.rowToDataIndexMap = rowToDataIndexMap;
+      this.rowPositions = rowPositions;
+      this.totalRows = totalRows;
+      this.initialArrayTemplate = initialArrayTemplate;
+      this.fullHeight = fullHeight;
+      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
+      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
+      this.rowHeights = rowHeights;
+      this.windowHeight = windowHeight;
+      this.resetList();
+    }
+  }
+
+  onListWillRecycle = (
+    newRenderedRowIndex: number[],
+    newScrollState: boolean[],
+    newTopRenderedRowRelativeIndex: number
+  ) => {
+    const { useScrollingIndicator, onRenderedRowChange } = this.props;
+    if (useScrollingIndicator) {
+      this.setState({
+        scrollState: newScrollState,
+      });
+      this._debounceScrollState();
+    }
+
+    if (onRenderedRowChange) {
+      if (this.totalNumOfRenderedRows === 0) {
+        onRenderedRowChange(noRowRenderInfo);
+        return;
+      }
+      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
+      const lastRenderedRowIndex =
+        newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
+      onRenderedRowChange({
+        firstRenderedRowIndex: topRowIndex,
+        firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
+        lastRenderedRowIndex: lastRenderedRowIndex,
+        lastRenderedDataIndex:
+          this.rowToDataIndexMap[lastRenderedRowIndex][1] - 1,
+        lastRowIndex: this.totalRows - 1,
+      });
+    }
+  };
+
   onScrollChange = (scrollTop: number) => {
     const { onVisibleRowChange } = this.props;
     if (!onVisibleRowChange) return;
 
-    const lastVisibleRowIndex = this.getBottomViewportRowIndex(
+    if (this.totalNumOfRenderedRows === 0) {
+      onVisibleRowChange(noRowVisibilityInfo);
+      this.prevBottomVisibleRow = -1
+      return;
+    }
+
+    let lastVisibleRowIndex = this.getBottomViewportRowIndex(
       scrollTop + this.windowHeight //view port bottom position
     );
 
+    if (this.fullHeight < this.windowHeight) {
+      lastVisibleRowIndex = this.getBottomViewportRowIndex(
+        scrollTop + this.fullHeight //view port bottom position
+      );
+    }
+
     if (lastVisibleRowIndex === this.prevBottomVisibleRow) return;
     const firstVisibleRowIndex = this.getTopViewportRowIndex(scrollTop);
-    const firstVisibleDataIndex = this.rowToDataIndexMap[firstVisibleRowIndex][0];
+    const firstVisibleDataIndex = this.rowToDataIndexMap[
+      firstVisibleRowIndex
+    ][0];
 
     const lastVisibleDataIndex =
       this.rowToDataIndexMap[lastVisibleRowIndex][1] - 1;
@@ -54,7 +136,7 @@ export default abstract class General<
       firstVisibleDataIndex,
       lastVisibleRowIndex,
       lastVisibleDataIndex,
-      lastRowIndex: this.totalRows - 1
+      lastRowIndex: this.totalRows - 1,
     });
     this.prevBottomVisibleRow = lastVisibleRowIndex;
   };
@@ -117,8 +199,8 @@ export default abstract class General<
 
       this.onListWillRecycle(
         newRenderedRowIndex,
-        newTopRenderedRowRelativeIndex,
-        newScrollState
+        newScrollState,
+        newTopRenderedRowRelativeIndex
       );
 
       this.setState({
@@ -126,44 +208,6 @@ export default abstract class General<
         topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
       });
     }
-  };
-
-  componentDidMount() {
-    const {initalScrollTop} = this.props;
-    if (initalScrollTop) {
-      this.manualScroll(initalScrollTop as number)
-    }
-  }
-
-  componentDidUpdate(prevProps: P) {
-    if (this.shouldResetList(prevProps)) {
-      const {
-        rowToDataIndexMap,
-        rowPositions,
-        totalRows,
-        initialArrayTemplate,
-        fullHeight,
-        totalNumOfRenderedRows,
-        numOfInvisibleRowOnEachDirection,
-        windowHeight,
-        rowHeights
-      } = this.initializeProperties();
-
-      this.rowToDataIndexMap = rowToDataIndexMap;
-      this.rowPositions = rowPositions;
-      this.totalRows = totalRows;
-      this.initialArrayTemplate = initialArrayTemplate;
-      this.fullHeight = fullHeight;
-      this.totalNumOfRenderedRows = totalNumOfRenderedRows;
-      this.numOfInvisibleRowOnEachDirection = numOfInvisibleRowOnEachDirection;
-      this.rowHeights = rowHeights;
-      this.windowHeight = windowHeight;
-      this.resetList();
-    }
-  }
-
-  getResetViewportBottom = () => {
-    return this.prevScroll + this.windowHeight;
   };
 
   resetList = () => {
@@ -198,18 +242,15 @@ export default abstract class General<
 
     this.onListWillRecycle(
       newRenderedRowIndex,
-      newTopRenderedRowRelativeIndex,
-      newScrollState
+      newScrollState,
+      newTopRenderedRowRelativeIndex
     );
     this.setState({
       renderedRowIndex: newRenderedRowIndex,
       topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
     });
 
-    if (this.fullHeight - this.windowHeight < this.prevScroll) {
-      this.prevScroll = this.fullHeight - this.windowHeight;
-      this.prevBottomVisibleRow = this.totalRows - 1;
-    }
+    this.onScrollChange(this.prevScroll);
   };
 
   onScroll = (event: React.UIEvent<HTMLElement>) => {
@@ -233,7 +274,7 @@ export default abstract class General<
 
   scrolTo = (scrollTop: number) => {
     this.manualScroll(scrollTop);
-  }
+  };
 
   manualScroll = (targetPosition: number) => {
     if (this.listWindowRef.current) {
@@ -245,6 +286,10 @@ export default abstract class General<
     return ((n % m) + m) % m;
   };
 
+  getResetViewportBottom = () => {
+    return this.prevScroll + this.windowHeight;
+  };
+
   _debounceScrollState = () => {
     clearTimeout(this.timeOut);
     this.timeOut = setTimeout(() => {
@@ -252,33 +297,6 @@ export default abstract class General<
         scrollState: this.initialArrayTemplate.map(() => false),
       });
     }, this.props.scrollInterval || 250);
-  };
-
-  onListWillRecycle = (
-    newRenderedRowIndex: number[],
-    newTopRenderedRowRelativeIndex: number,
-    newScrollState: boolean[]
-  ) => {
-    const { useScrollingIndicator, onRenderedRowChange } = this.props;
-    if (useScrollingIndicator) {
-      this.setState({
-        scrollState: newScrollState,
-      });
-      this._debounceScrollState();
-    }
-
-    if (onRenderedRowChange) {
-      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
-      const lastRenderedRowIndex =
-        newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
-      onRenderedRowChange({
-        firstRenderedRowIndex: topRowIndex,
-        firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
-        lastRenderedRowIndex: lastRenderedRowIndex,
-        lastRenderedDataIndex: this.rowToDataIndexMap[lastRenderedRowIndex][1] - 1,
-        lastRowIndex: this.totalRows - 1
-      });
-    }
   };
 
   render() {
@@ -306,7 +324,7 @@ export default abstract class General<
         )}
         style={{
           height: this.windowHeight,
-          overflowY: "scroll",
+          overflowY: "auto",
           width: width || "100%",
         }}
         onScroll={this.onScroll}

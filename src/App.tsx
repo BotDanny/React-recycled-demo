@@ -7,7 +7,7 @@ import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";
 import ResponsiveContainer from "./ResponsiveContainer";
-import {FullWindowFixedList} from "./Export";
+import { FullWindowFixedList } from "./Export";
 import Root from "./Root";
 import FullWindowResponsiveContainer from "./FullWindowResponsiveContainer";
 
@@ -31,7 +31,7 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
   return [heights, columns];
 }
 
-const initialData = Array(300)
+const initialData = Array(6)
   .fill(null)
   .map((_, index) => index);
 
@@ -45,7 +45,7 @@ function App() {
       <button
         onClick={() =>
           setData(
-            Array(data.length + 3)
+            Array(data.length + 1)
               .fill(null)
               .map((_, index) => index)
           )
@@ -56,7 +56,7 @@ function App() {
       <button
         onClick={() =>
           setData(
-            Array(data.length - 3)
+            Array(data.length - 1)
               .fill(null)
               .map((_, index) => index)
           )
@@ -80,7 +80,7 @@ function App() {
       </button>
       <VariableSizeList
         ref={childRef}
-        height={test}
+        height={500}
         data={data}
         rowHeight={100}
         // rowHeights={data.map(() => 100)}
@@ -107,7 +107,7 @@ function FixedListDemo() {
       <button
         onClick={() =>
           setData(
-            Array(data.length + 3)
+            Array(data.length + 1)
               .fill(null)
               .map((_, index) => index)
           )
@@ -118,7 +118,9 @@ function FixedListDemo() {
       <button
         onClick={() =>
           setData(
-            Array(data.length ).fill(randInt(1, 10))
+            Array(data.length - 1)
+              .fill(null)
+              .map((_, index) => index)
           )
         }
       >
@@ -133,16 +135,16 @@ function FixedListDemo() {
       </button>
       <FixedList
         ref={childRef}
-        height={600}
+        height={500}
         data={data}
         rowHeight={100}
         // rowHeights={heights}
         // rowColumns={columns}
         rowComponent={Row}
-        width={"100%"}
         // onVisibleRowChange={(props) => {
         //   console.log(props);
         // }}
+        onRenderedRowChange={(prop) => {console.log(prop)}}
         // useScrollingIndicator
         // additionalRenderedRow={1}
       />
@@ -168,11 +170,14 @@ const Row = React.memo(function (props: RowProps) {
     <>
       {dataSection.map((dataItem, index) => {
         return (
-          <div key={index} style={{
-            width: "30%",
-            height: "100%",
-            textAlign: "center"
-          }}>
+          <div
+            key={index}
+            style={{
+              width: "30%",
+              height: "100%",
+              textAlign: "center",
+            }}
+          >
             {`item ${isScrolling ? "scrolling" : dataItem}`}
           </div>
         );
@@ -319,7 +324,6 @@ function FullWindow() {
           something
         </div>
         <FullWindowResponsiveContainer
-
           render={() => {
             return <div>awdawdawd</div>;
           }}
@@ -450,4 +454,4 @@ function FullWindowDemo() {
 }
 
 // need to make responsive window scroll as well as variable height window scroll
-export default Root;
+export default FixedListDemo;
