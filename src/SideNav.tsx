@@ -109,6 +109,7 @@ export const examples = [
   { label: "Dynamic loading", route: "/dynamic-loading", component: DynamicLoading },
   { label: "Scroll indicator", route: "/scroll-indicator", component: ScrollIndicator },
   { label: "Scroll to", route: "/scroll-to", component: ScrollTo },
+  { label: "Scroll restoration", route: "/scroll-restoration" },
   { label: "Styling", route: "/styling" },
   { label: "Server side rendering", route: "/styling" },
   
