@@ -83,7 +83,7 @@ export default function SideNav() {
 
 export const examples = [
   { label: "Simple List", route: "/simple-list", component: SimpleList },
-  { label: "VS React window", route: "/react-window", component: ReactWindowComparison },
+//   { label: "VS React window", route: "/react-window", component: ReactWindowComparison },
   { label: "Simple Grid", route: "/simple-grid", component: SimpleGrid },
   {
     label: "Variable row height",
