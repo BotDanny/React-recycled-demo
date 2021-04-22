@@ -1,21 +1,21 @@
 {
   "files": {
-    "main.css": "/BotDanny/React-recycled-demo/static/css/main.04a0ca6e.chunk.css",
-    "main.js": "/BotDanny/React-recycled-demo/static/js/main.9524ebe7.chunk.js",
-    "main.js.map": "/BotDanny/React-recycled-demo/static/js/main.9524ebe7.chunk.js.map",
-    "runtime-main.js": "/BotDanny/React-recycled-demo/static/js/runtime-main.57f66cfb.js",
-    "runtime-main.js.map": "/BotDanny/React-recycled-demo/static/js/runtime-main.57f66cfb.js.map",
-    "static/js/2.ff3873ca.chunk.js": "/BotDanny/React-recycled-demo/static/js/2.ff3873ca.chunk.js",
-    "static/js/2.ff3873ca.chunk.js.map": "/BotDanny/React-recycled-demo/static/js/2.ff3873ca.chunk.js.map",
-    "static/js/3.22eca7d0.chunk.js": "/BotDanny/React-recycled-demo/static/js/3.22eca7d0.chunk.js",
-    "static/js/3.22eca7d0.chunk.js.map": "/BotDanny/React-recycled-demo/static/js/3.22eca7d0.chunk.js.map",
-    "index.html": "/BotDanny/React-recycled-demo/index.html",
-    "static/css/main.04a0ca6e.chunk.css.map": "/BotDanny/React-recycled-demo/static/css/main.04a0ca6e.chunk.css.map",
-    "static/js/2.ff3873ca.chunk.js.LICENSE.txt": "/BotDanny/React-recycled-demo/static/js/2.ff3873ca.chunk.js.LICENSE.txt"
+    "main.css": "/BotDanny/react-recycled-demo/static/css/main.04a0ca6e.chunk.css",
+    "main.js": "/BotDanny/react-recycled-demo/static/js/main.9524ebe7.chunk.js",
+    "main.js.map": "/BotDanny/react-recycled-demo/static/js/main.9524ebe7.chunk.js.map",
+    "runtime-main.js": "/BotDanny/react-recycled-demo/static/js/runtime-main.1961b050.js",
+    "runtime-main.js.map": "/BotDanny/react-recycled-demo/static/js/runtime-main.1961b050.js.map",
+    "static/js/2.8f7e892e.chunk.js": "/BotDanny/react-recycled-demo/static/js/2.8f7e892e.chunk.js",
+    "static/js/2.8f7e892e.chunk.js.map": "/BotDanny/react-recycled-demo/static/js/2.8f7e892e.chunk.js.map",
+    "static/js/3.22eca7d0.chunk.js": "/BotDanny/react-recycled-demo/static/js/3.22eca7d0.chunk.js",
+    "static/js/3.22eca7d0.chunk.js.map": "/BotDanny/react-recycled-demo/static/js/3.22eca7d0.chunk.js.map",
+    "index.html": "/BotDanny/react-recycled-demo/index.html",
+    "static/css/main.04a0ca6e.chunk.css.map": "/BotDanny/react-recycled-demo/static/css/main.04a0ca6e.chunk.css.map",
+    "static/js/2.8f7e892e.chunk.js.LICENSE.txt": "/BotDanny/react-recycled-demo/static/js/2.8f7e892e.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.57f66cfb.js",
-    "static/js/2.ff3873ca.chunk.js",
+    "static/js/runtime-main.1961b050.js",
+    "static/js/2.8f7e892e.chunk.js",
     "static/css/main.04a0ca6e.chunk.css",
     "static/js/main.9524ebe7.chunk.js"
   ]
