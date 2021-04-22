@@ -42,22 +42,15 @@ function FullWindowResponsiveContainerDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, dataEndIndex, column } = props;
+  const { data, dataIndex, dataEndIndex, column, style } = props;
   const rowData = data.slice(dataIndex, dataEndIndex);
-
-  const rowStyle = {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-  };
 
   const columnStyle = {
     width: column === 1 ? "100%" : "50%",
     textAlign: "center" as any,
   };
   return (
-    <div key={dataIndex} style={rowStyle}>
+    <div style={style} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}
@@ -90,22 +83,15 @@ function FullWindowResponsiveContainerDemo() {
 }
 
 const Row = React.memo(function (props) {
-    const { data, dataIndex: dataStartIndex, dataEndIndex, column } = props;
+    const { data, dataIndex: dataStartIndex, dataEndIndex, column, style } = props;
     const rowData = data.slice(dataStartIndex, dataEndIndex);
-  
-    const rowStyle = {
-      height: "100%",
-      width: "100%",
-      display: "flex",
-      alignItems: "center",
-    };
-  
+
     const columnStyle = {
       width: column === 1? "100%" : "50%",
       textAlign: "center",
     };
     return (
-      <div key={dataIndex} style={rowStyle}>
+      <div style={style} className="react-recycled-row">
                         {rowData.map((item) => <div style={columnStyle}>{item}</div>)}
             </div>
     );

@@ -22,6 +22,8 @@
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  text-align: center;
+  width: 100%;
 }
 
 .MuiGrid-root {

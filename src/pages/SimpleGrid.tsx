@@ -25,22 +25,15 @@ function SimpleGridDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, dataEndIndex } = props;
+  const { data, dataIndex, dataEndIndex, style } = props;
   const rowData = data.slice(dataIndex, dataEndIndex);
-
-  const rowStyle = {
-    height: "100%",
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-  };
 
   const columnStyle = {
     width: "25%",
     textAlign: "center" as any,
   };
   return (
-    <div key={dataIndex} style={rowStyle}>
+    <div style={style} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}
@@ -56,25 +49,19 @@ function SimpleGridDemo() {
 }
 
 const Row = React.memo(function (props) {
-    const { data, dataIndex: dataStartIndex, dataEndIndex } = props;
+    const { data, dataIndex: dataStartIndex, dataEndIndex, style } = props;
 
     // You are given the start and end index of the data in this row. You style and arrange the columns yourself
     // Note the data item at dataEndIndex is not included in the row. If dataIndex = 0 and dataEndIndex = 3 then the data in this row is 0, 1 and 2
 
     const rowData = data.slice(dataStartIndex, dataEndIndex);
-    // Note you don't have to use in-line styling, you can style it however you want
-    const rowStyle = {
-        height: "100%",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-    };
+
     const columnStyle = {
         width: "25%",
         textAlign: "center",
     };
     return (
-        <div key={dataIndex} style={rowStyle}>
+        <div style={style} className="react-recycled-row">
                             {rowData.map((item) => <div style={columnStyle} key={item}>{item}</div>)}
                  </div>
     )

@@ -21,7 +21,7 @@ function SimpleListDemo() {
 
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, index, style } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
   React.useEffect(() => {
     console.log("render");
@@ -29,7 +29,7 @@ const Row = React.memo(function (props: RowProps) {
       console.log("unmount");
     };
   }, []);
-  return <div key={0} style={style as any} className="react-recycled-row">{value}</div>;
+  return <div style={style as any} className="react-recycled-row">{value}</div>;
 });
 
 const code = `import { FixedList } from "react-recycled-list";
@@ -44,10 +44,11 @@ function SimpleListDemo() {
 // Use React.memo or React pure component to prevent unncessary render
 const Row = React.memo(function (props) {
   // the data here is the same data that is passed into the FixedList
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
 
   // Note, the css you see in the demo above is not defined here, check the code sandbox for more
 
   const value = data[dataIndex];
-  return <div>{value}</div>;
+  // Important!, make sure you inline-style your component with the style props that's been provided. It contains top, height, and position
+  return <div style={style} className="react-recycled-row">{value}</div>;
 })`;

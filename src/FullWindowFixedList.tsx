@@ -356,27 +356,22 @@ export default class FullWindowFixedList<
           const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
           const startDataIndex = dataIndexInfo[0];
           const endDataIndex = dataIndexInfo[1];
+          const style = {
+            position: "absolute",
+            top: this.rowPositions[absoluteRowIndex],
+            height: this.rowHeights[absoluteRowIndex],
+          };
           return (
-            <RowTag
+            <RowComponent
               key={index}
-              style={{
-                position: "absolute",
-                top: this.rowPositions[absoluteRowIndex],
-                height: this.rowHeights[absoluteRowIndex],
-                width: "100%",
-                boxSizing: "border-box",
-              }}
-              className={classNames("react-recycled-row", rowClassName)}
-            >
-              <RowComponent
-                data={data}
-                dataIndex={startDataIndex}
-                dataEndIndex={endDataIndex}
-                row={absoluteRowIndex}
-                column={endDataIndex - startDataIndex}
-                isScrolling={scrollState[index]}
-              />
-            </RowTag>
+              style={style as React.CSSProperties}
+              data={data}
+              dataIndex={startDataIndex}
+              dataEndIndex={endDataIndex}
+              row={absoluteRowIndex}
+              column={endDataIndex - startDataIndex}
+              isScrolling={scrollState[index]}
+            />
           );
         })}
       </ListTag>

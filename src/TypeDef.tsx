@@ -1,3 +1,8 @@
+interface inLineStyle {
+  position: string;
+  top: number;
+  height: number;
+}
 export interface RowProps {
   data: any[];
   row: number;
@@ -5,8 +10,7 @@ export interface RowProps {
   dataEndIndex: number;
   column: number;
   isScrolling: boolean;
-  style?: any;
-  index?: any;
+  style: React.CSSProperties;
 }
 
 export interface ReactRecycledListProps {

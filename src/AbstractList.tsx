@@ -344,12 +344,10 @@ export default abstract class General<
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
             const startDataIndex = dataIndexInfo[0];
             const endDataIndex = dataIndexInfo[1];
-            const style: any = {
+            const style = {
               position: "absolute",
               top: this.rowPositions[absoluteRowIndex],
               height: this.rowHeights[absoluteRowIndex],
-              width: "100%",
-              boxSizing: "border-box",
             };
             return (
               <RowComponent
@@ -360,7 +358,7 @@ export default abstract class General<
                 row={absoluteRowIndex}
                 column={endDataIndex - startDataIndex}
                 isScrolling={scrollState[index]}
-                style={style}
+                style={style as React.CSSProperties}
               />
             );
           })}

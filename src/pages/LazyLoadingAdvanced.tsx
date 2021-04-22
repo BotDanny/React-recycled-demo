@@ -100,10 +100,10 @@ function LazyLoadingDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
   const displayValue = value === undefined ? "loading" : value;
-  return <div key={dataIndex}>{displayValue}</div>;
+  return <div style={style} className="react-recycled-row">{displayValue}</div>;
 });
 
 const code = `import { FixedList } from "react-recycled-list";
@@ -183,8 +183,8 @@ function LazyLoadingDemo() {
   );
 }
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
   const displayValue = value === undefined ? "loading" : value;
-  return <div key={dataIndex}>{displayValue}</div>;
+  return <div style={style} className="react-recycled-row">{displayValue}</div>;
 })`;

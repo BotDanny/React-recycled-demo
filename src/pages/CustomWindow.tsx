@@ -52,14 +52,12 @@ function CustomWindowDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
   return (
     <div
-      key={dataIndex}
-      style={{
-        textAlign: "center",
-      }}
+      style={style}
+      className="react-recycled-row"
     >
       {value}
     </div>
@@ -114,7 +112,7 @@ function CustomWindowDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
-  return <div key={dataIndex}>{value}</div>;
+  return <div style={style} className="react-recycled-row">{value}</div>;
 });`;

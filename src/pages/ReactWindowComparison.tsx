@@ -42,11 +42,10 @@ function SimpleListDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
   const value = data[dataIndex];
   return (
     <div
-      key={dataIndex}
       style={{
         textAlign: "center",
       }}
@@ -68,10 +67,10 @@ function SimpleListDemo() {
 // Use React.memo or React pure component to prevent unncessary render
 const Row = React.memo(function (props) {
   // the data here is the same data that is passed into the FixedList
-  const { data, dataIndex } = props;
+  const { data, dataIndex, style } = props;
 
   // Note, the css you see in the demo above is not defined here, check the code sandbox for more
 
   const value = data[dataIndex];
-  return <div>{value}</div>;
+  return <div style={style} className="react-recycled-row">{value}</div>;
 })`;
