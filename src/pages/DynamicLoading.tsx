@@ -10,6 +10,7 @@ export default function DynamicLoading() {
 }
 
 const numberOfItemPerPage = 10;
+const numberOfPages = 10;
 function fetchData(page: number, onSuccess: any) {
   setTimeout(() => {
     const data = [];
@@ -22,7 +23,7 @@ function fetchData(page: number, onSuccess: any) {
       data.push(`item ${i + 1}`);
     }
     onSuccess(data, page);
-  }, 1500);
+  }, 1000);
 }
 
 type PageData = {
@@ -35,7 +36,7 @@ type PageData = {
 
 function populateInitialPage() {
   const page: PageData = {};
-  for (let i = 1; i <= 10; i++) {
+  for (let i = 1; i <= numberOfPages; i++) {
     page[i] = {
       isLoading: false,
       hasLoaded: false,
@@ -46,29 +47,27 @@ function populateInitialPage() {
   }
   return page;
 }
+const initialPagedData = populateInitialPage();
 
 function getPageFromDataIndex(index: number) {
-    return Math.floor(index / numberOfItemPerPage) + 1
+  return Math.floor(index / numberOfItemPerPage) + 1;
 }
-const initialPagedData = populateInitialPage();
 
 function DynamicLoadingDemo() {
   const [pagedData, setPagedData] = React.useState(initialPagedData);
 
   const onFetchDataSuccess = (newData: any[], page: number) => {
-    const newPagedData: PageData = {
-      ...pagedData,
-      [page]: {
-        data: newData,
-        hasLoaded: true,
-      },
-    };
-    setPagedData(newPagedData);
+    setPagedData((pagedData) => {
+      return {
+        ...pagedData,
+        [page]: {
+          data: newData,
+          hasLoaded: true,
+          isLoading: false,
+        },
+      };
+    });
   };
-
-  const dataList = Object.values(pagedData)
-    .map(({ data }) => data)
-    .flat();
 
   const onRenderedRowChange = (renderInfo: {
     firstRenderedRowIndex: number;
@@ -78,23 +77,34 @@ function DynamicLoadingDemo() {
     lastRowIndex: number;
   }) => {
     const {
-      firstRenderedRowIndex,
       firstRenderedDataIndex,
-      lastRenderedRowIndex,
-      lastRowIndex,
       lastRenderedDataIndex,
     } = renderInfo;
-    const firstRenderedDataPage = getPageFromDataIndex(firstRenderedDataIndex);
-    if (!pagedData[firstRenderedDataPage].hasLoaded && !pagedData[firstRenderedDataPage].isLoading) {
-        setPagedData({...pagedData, [firstRenderedDataPage]: {isLoading: true}})
-        fetchData(firstRenderedDataPage, onFetchDataSuccess)
-    }
-    const lastRenderedDataPage = getPageFromDataIndex(lastRenderedDataIndex);
-    if (!pagedData[lastRenderedDataPage].hasLoaded && !pagedData[lastRenderedDataPage].isLoading) {
-        setPagedData({...pagedData, [lastRenderedDataIndex]: {isLoading: true}})
-        fetchData(lastRenderedDataPage, onFetchDataSuccess)
-    }
+
+    const currentTopPage = getPageFromDataIndex(firstRenderedDataIndex);
+    const currentBottomPage = getPageFromDataIndex(lastRenderedDataIndex);
+    const currentPages = [currentTopPage, currentBottomPage];
+
+    if (currentTopPage === currentBottomPage) currentPages.pop();
+
+    currentPages.forEach((page) => {
+      if (!pagedData[page].hasLoaded && !pagedData[page].isLoading) {
+        setPagedData({
+          ...pagedData,
+          [page]: { ...pagedData[page], isLoading: true },
+        });
+
+        fetchData(page, onFetchDataSuccess);
+      }
+    });
   };
+  const dataList = React.useMemo(
+    () =>
+      Object.values(pagedData)
+        .map(({ data }) => data)
+        .flat(),
+    [pagedData]
+  );
   return (
     <FixedList
       height={500}
@@ -116,78 +126,97 @@ const Row = React.memo(function (props: RowProps) {
 const code = `import { FixedList } from "react-recycled-list";
 
 // This is a rather complicated example
-// The key point is to utilize onRenderedRowChange or onVisibleRowChange to load your data
+// The key point is to paginate your data, and utilize onRenderedRowChange or onVisibleRowChange to load your data
 
 const numberOfItemPerPage = 20;
 
-// Just a simulation of an API call
+const numberOfItemPerPage = 10;
+const numberOfPages = 10;
+// Simulation of an API
 function fetchData(page, onSuccess) {
   setTimeout(() => {
     const data = [];
     const startDataIndex = (page - 1) * numberOfItemPerPage;
-    const endDataIndex = startDataIndex + numberOfItemPerPage
-    for (let i = startDataIndex; i < endDataIndex; i++) {
+    for (
+      let i = startDataIndex;
+      i < startDataIndex + numberOfItemPerPage;
+      i++
+    ) {
       data.push(\`item \${i + 1}\`);
     }
     onSuccess(data, page);
-  }, 2000);
+  }, 1000);
 }
 
-// Use a map to store the data (you do not have to do the same, the implementation is up to you)
-const initialStore = {
-  data: { 1: Array(numberOfItemPerPage).fill(null).map(() => undefined) },
-  nextPage: 0,
-  isLoading: false,
-};
+function populateInitialPage() {
+    const page: PageData = {};
+    for (let i = 1; i <= numberOfPages; i++) {
+      page[i] = {
+        isLoading: false,
+        hasLoaded: false,
+        data: Array(numberOfItemPerPage)
+          .fill(null)
+          .map(() => undefined),
+      };
+    }
+    return page;
+}
+const initialPagedData = populateInitialPage();
 
+function getPageFromDataIndex(index: number) {
+    return Math.floor(index / numberOfItemPerPage) + 1;
+}
+  
 function DynamicLoadingDemo() {
-  const [store, setStore] = React.useState(initialStore);
+    const [pagedData, setPagedData] = React.useState(initialPagedData);
+  
+    const onFetchDataSuccess = (newData, page) => {
+      // Becareful of stale state!
+      setPagedData((pagedData) => {
+        return {
+          ...pagedData,
+          [page]: {
+            data: newData,
+            hasLoaded: true,
+            isLoading: false,
+          },
+        };
+      });
+    };
+  
+    const onRenderedRowChange = (renderInfo) => {
+      const {
+        firstRenderedDataIndex,
+        lastRenderedDataIndex,
+      } = renderInfo;
+  
+      const currentTopPage = getPageFromDataIndex(firstRenderedDataIndex);
+      const currentBottomPage = getPageFromDataIndex(lastRenderedDataIndex);
+      const currentPages = [currentTopPage, currentBottomPage];
+  
+      if (currentTopPage === currentBottomPage) currentPages.pop();
+  
+      currentPages.forEach((page) => {
+        if (!pagedData[page].hasLoaded && !pagedData[page].isLoading) {
+          setPagedData({
+            ...pagedData,
+            [page]: { ...pagedData[page], isLoading: true },
+          });
+          fetchData(page, onFetchDataSuccess);
+        }
+      });
+    };
+    const dataList = Object.values(pagedData).map(({ data }) => data).flat();
 
-  const onFetchDataSuccess = (newData, page) => {
-    const newStoreData = { ...store.data, [page]: newData };
-    // For demo purpose I set the max page to be 5
-    const nextPage = page + 1
-    const hasNextPage = nextPage <= 5;
-    if (hasNextPage) {
-      newStoreData[nextPage] = [undefined];
-    }
-    setStore({ ...store, data: newStoreData, isLoading: false, nextPage: nextPage });
-  };
-
-  React.useEffect(() => {
-    // Initial fetch
-    fetchData(store.nextPage, onFetchDataSuccess)
-  }, [])
-
-  const onRenderedRowChange = (renderInfo) => {
-    const {
-      firstRenderedRowIndex,
-      firstRenderedDataIndex,
-      lastRenderedRowIndex,
-      lastRenderedDataIndex,
-      lastRowIndex,
-    } = renderInfo;
-    // If the last row is rendered (NOT visible yet!) and we are not already loading data, we fetch new data
-    // If you want to fetch data when the last row is visible then use onVisibleRowChange
-    if (lastRenderedRowIndex === lastRowIndex) {
-      if (store.isLoading === false) {
-        setStore({ ...store, isLoading: true });
-        fetchData(store.nextPage, onFetchDataSuccess)
-      }
-    }
-  };
-
-  const listData = Object.values(store.data).flat();
-
-  return (
-    <FixedList
-              height={500}
-              rowComponent={Row}
-              data={listData}
-              rowHeight={100}
-              onRenderedRowChange={onRenderedRowChange}
-        />
-  );
+    return (
+      <FixedList
+                    height={500}
+                    rowComponent={Row}
+                    data={dataList}
+                    rowHeight={100}
+                    onRenderedRowChange={onRenderedRowChange}
+            />
+    );
 }
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex } = props;

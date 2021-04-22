@@ -19,6 +19,7 @@ function LazyLoadingDemo() {
   const [isLoading, setIsLoading] = React.useState(false);
 
   const loadData = () => {
+    setIsLoading(true);
     setTimeout(() => {
       const newData = [...data];
       const startIndex = data.length;

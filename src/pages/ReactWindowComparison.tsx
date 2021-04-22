@@ -3,12 +3,34 @@ import FixedList from "../FixedSizeList";
 import { RowProps } from "../TypeDef";
 import Highlight from "react-highlight.js";
 import GeneralPage from "./GeneralPage";
-import { Avatar, Chip, CircularProgress } from "@material-ui/core";
+import { FixedSizeGrid, FixedSizeList } from "react-window";
 
-export default function SimpleList() {
-  return <GeneralPage code={code} Demo={SimpleListDemo} />;
+export default function ReactWindowComparison() {
+  return <GeneralPage code={code} Demo={ReactWindow} />;
 }
 
+function ReactWindow() {
+  const data = Array(1000)
+    .fill(null)
+    .map((_, index) => index);
+  // const [heights, columns] = generateRamdomRowHeightAndColumn(data.length);
+  return (
+    <div className="App">
+      <FixedSizeList height={500} itemSize={100} width="100%" itemCount={data.length}>
+        {ReactWindowRow}
+      </FixedSizeList>
+    </div>
+  );
+}
+
+const ReactWindowRow = React.memo(function (props: any) {
+  const { index, style } = props;
+  return (
+    <div className="react-recycled-row" style={style}>
+      {`item ${index}`}
+    </div>
+  );
+});
 function SimpleListDemo() {
   const data = Array(1000)
     .fill(null)
@@ -19,17 +41,19 @@ function SimpleListDemo() {
   );
 }
 
-
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, index, style } = props;
+  const { data, dataIndex } = props;
   const value = data[dataIndex];
-  React.useEffect(() => {
-    console.log("render");
-    return () => {
-      console.log("unmount");
-    };
-  }, []);
-  return <div key={0} style={style as any} className="react-recycled-row">{value}</div>;
+  return (
+    <div
+      key={dataIndex}
+      style={{
+        textAlign: "center",
+      }}
+    >
+      {value}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";

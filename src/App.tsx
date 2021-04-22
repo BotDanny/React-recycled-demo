@@ -210,12 +210,6 @@ function ReactWindow() {
 
 const ReactWindowRow = React.memo(function (props: any) {
   const { columnIndex, rowIndex, style } = props;
-  // React.useEffect(() => {
-  //   console.log(`${index} mounted`);
-  //   return () => {
-  //     console.log(`${index} unmounted`);
-  //   };
-  // }, []);
   return (
     <div className="react-recycled-row" style={style}>
       <Grid key={rowIndex * 3 + columnIndex} xs={4}>
@@ -454,4 +448,4 @@ function FullWindowDemo() {
 }
 
 // need to make responsive window scroll as well as variable height window scroll
-export default FixedListDemo;
+export default Root;

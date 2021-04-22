@@ -83,7 +83,7 @@ export default class VariableList extends GeneralList<
 
     const numOfVisibleRow = Math.ceil(height / rowHeight);
     const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || Math.ceil(numOfVisibleRow / 2);
+      additionalRenderedRow || 1;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;

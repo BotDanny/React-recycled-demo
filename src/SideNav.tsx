@@ -21,6 +21,10 @@ import ResponsiveContainerPage from "./pages/ResponsiveContainer";
 import FullWindowResponsiveContainerPage from "./pages/FullWindowResponsiveContainer";
 import LazyLoadingAdvanced from "./pages/LazyLoadingAdvanced";
 import LazyLoadingSimple from "./pages/LazyLoadingSimple";
+import ReactWindowComparison from "./pages/ReactWindowComparison";
+import DynamicLoading from "./pages/DynamicLoading";
+import ScrollIndicator from "./pages/ScrollIndicator";
+import ScrollTo from "./pages/ScrollTo";
 
 export default function SideNav() {
   const { pathname } = useLocation();
@@ -79,6 +83,7 @@ export default function SideNav() {
 
 export const examples = [
   { label: "Simple List", route: "/simple-list", component: SimpleList },
+  { label: "VS React window", route: "/react-window", component: ReactWindowComparison },
   { label: "Simple Grid", route: "/simple-grid", component: SimpleGrid },
   {
     label: "Variable row height",
@@ -99,13 +104,14 @@ export const examples = [
   { label: "Custom window", route: "/custom-window", component: CustomWindow },
   { label: "Responsive List/Grid", route: "/responsive-list/grid", component: ResponsiveContainerPage},
   { label: "Responsive window", route: "/responsive-window", component: FullWindowResponsiveContainerPage },
-  { label: "Infinite loading simple example ", route: "/lazy-loading-simple", component: LazyLoadingSimple },
-  { label: "Infinite loading advanced example ", route: "/lazy-loading-adcance", component: LazyLoadingAdvanced },
-  { label: "Dynamic loading", route: "/dynamic-loading" },
-  { label: "Scroll indicator", route: "/scroll-indicator" },
-  { label: "Scroll to", route: "/scroll-to" },
+  { label: "Simple Infinite loading", route: "/lazy-loading-simple", component: LazyLoadingSimple },
+  { label: "Advanced Infinite loading", route: "/lazy-loading-advance", component: LazyLoadingAdvanced },
+  { label: "Dynamic loading", route: "/dynamic-loading", component: DynamicLoading },
+  { label: "Scroll indicator", route: "/scroll-indicator", component: ScrollIndicator },
+  { label: "Scroll to", route: "/scroll-to", component: ScrollTo },
   { label: "Styling", route: "/styling" },
   { label: "Server side rendering", route: "/styling" },
+  
 ];
 
 export const components = [

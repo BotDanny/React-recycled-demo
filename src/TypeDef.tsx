@@ -5,6 +5,8 @@ export interface RowProps {
   dataEndIndex: number;
   column: number;
   isScrolling: boolean;
+  style?: any;
+  index?: any;
 }
 
 export interface ReactRecycledListProps {

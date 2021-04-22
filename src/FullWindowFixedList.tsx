@@ -182,6 +182,12 @@ export default class FullWindowFixedList<
     if (this.scrollListener) {
       this.scrollListener.removeEventListener("scroll", this.onScroll);
       this.scrollListener.addEventListener("scroll", this.onScroll);
+      // this.onListWillRecycle(
+      //   this.state.renderedRowIndex,
+      //   this.state.scrollState,
+      //   this.state.topRenderedRowRelativeIndex
+      // );
+      // this.onScrollChange(this.prevScroll);
     }
   };
 
@@ -256,7 +262,7 @@ export default class FullWindowFixedList<
     );
   };
 
-  resetProperties = () => {
+  resetListAndRef = () => {
     const {
       rowToDataIndexMap,
       rowPositions,
@@ -284,18 +290,17 @@ export default class FullWindowFixedList<
       this.scrollListener = scrollListener;
       this.attachScrollListener();
     }
+    this.resetList();
   };
 
   componentDidUpdate(prevProps: P) {
     if (this.shouldResetList(prevProps)) {
-      this.resetProperties();
-      this.resetList();
+      this.resetListAndRef();
     }
   }
 
   setCustomScrollRef = () => {
-    this.resetProperties();
-    this.resetList();
+    this.resetListAndRef();
   };
 
   getTopViewportRowIndex = (scrollTop: number) => {
@@ -353,6 +358,7 @@ export default class FullWindowFixedList<
           const endDataIndex = dataIndexInfo[1];
           return (
             <RowTag
+              key={index}
               style={{
                 position: "absolute",
                 top: this.rowPositions[absoluteRowIndex],

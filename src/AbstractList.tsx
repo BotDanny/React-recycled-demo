@@ -14,7 +14,8 @@ export default abstract class General<
   S extends ReactRecycledListState
 > extends React.PureComponent<P, S> {
   prevScroll: number;
-  prevBottomVisibleRow: number;
+  prevLastVisibleRow: number;
+  prevLastRenderedRow: number;
   abstract listWindowRef: any;
   abstract rowHeights: number[];
   abstract rowPositions: number[];
@@ -34,7 +35,8 @@ export default abstract class General<
   constructor(props: P) {
     super(props);
     this.prevScroll = 0;
-    this.prevBottomVisibleRow = 0;
+    this.prevLastVisibleRow = -1;
+    this.prevLastRenderedRow = -1;
   }
 
   componentDidMount() {
@@ -89,9 +91,11 @@ export default abstract class General<
         onRenderedRowChange(noRowRenderInfo);
         return;
       }
-      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
+
       const lastRenderedRowIndex =
         newRenderedRowIndex[this.mod(newTopRenderedRowRelativeIndex - 1)];
+      if (lastRenderedRowIndex === this.prevLastRenderedRow) return;
+      const topRowIndex = newRenderedRowIndex[newTopRenderedRowRelativeIndex];
       onRenderedRowChange({
         firstRenderedRowIndex: topRowIndex,
         firstRenderedDataIndex: this.rowToDataIndexMap[topRowIndex][0],
@@ -100,6 +104,7 @@ export default abstract class General<
           this.rowToDataIndexMap[lastRenderedRowIndex][1] - 1,
         lastRowIndex: this.totalRows - 1,
       });
+      this.prevLastRenderedRow = lastRenderedRowIndex;
     }
   };
 
@@ -109,7 +114,7 @@ export default abstract class General<
 
     if (this.totalNumOfRenderedRows === 0) {
       onVisibleRowChange(noRowVisibilityInfo);
-      this.prevBottomVisibleRow = -1
+      this.prevLastVisibleRow = -1;
       return;
     }
 
@@ -123,7 +128,7 @@ export default abstract class General<
       );
     }
 
-    if (lastVisibleRowIndex === this.prevBottomVisibleRow) return;
+    if (lastVisibleRowIndex === this.prevLastVisibleRow) return;
     const firstVisibleRowIndex = this.getTopViewportRowIndex(scrollTop);
     const firstVisibleDataIndex = this.rowToDataIndexMap[
       firstVisibleRowIndex
@@ -138,7 +143,7 @@ export default abstract class General<
       lastVisibleDataIndex,
       lastRowIndex: this.totalRows - 1,
     });
-    this.prevBottomVisibleRow = lastVisibleRowIndex;
+    this.prevLastVisibleRow = lastVisibleRowIndex;
   };
 
   recycle = (scrollTop: number) => {
@@ -245,12 +250,11 @@ export default abstract class General<
       newScrollState,
       newTopRenderedRowRelativeIndex
     );
+    this.onScrollChange(this.prevScroll);
     this.setState({
       renderedRowIndex: newRenderedRowIndex,
       topRenderedRowRelativeIndex: newTopRenderedRowRelativeIndex,
     });
-
-    this.onScrollChange(this.prevScroll);
   };
 
   onScroll = (event: React.UIEvent<HTMLElement>) => {
@@ -272,7 +276,7 @@ export default abstract class General<
     this.manualScroll(targetPosition);
   };
 
-  scrolTo = (scrollTop: number) => {
+  scrollTo = (scrollTop: number) => {
     this.manualScroll(scrollTop);
   };
 
@@ -311,7 +315,6 @@ export default abstract class General<
       rowClassName,
     } = this.props;
     const { renderedRowIndex, scrollState } = this.state;
-    console.log("render");
 
     const ListTag: any = listTagName || "div";
     const RowTag: any = rowTagName || "div";
@@ -341,26 +344,24 @@ export default abstract class General<
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
             const startDataIndex = dataIndexInfo[0];
             const endDataIndex = dataIndexInfo[1];
+            const style: any = {
+              position: "absolute",
+              top: this.rowPositions[absoluteRowIndex],
+              height: this.rowHeights[absoluteRowIndex],
+              width: "100%",
+              boxSizing: "border-box",
+            };
             return (
-              <RowTag
-                style={{
-                  position: "absolute",
-                  top: this.rowPositions[absoluteRowIndex],
-                  height: this.rowHeights[absoluteRowIndex],
-                  width: "100%",
-                  boxSizing: "border-box",
-                }}
-                className={classNames("react-recycled-row", rowClassName)}
-              >
-                <RowComponent
-                  data={data}
-                  dataIndex={startDataIndex}
-                  dataEndIndex={endDataIndex}
-                  row={absoluteRowIndex}
-                  column={endDataIndex - startDataIndex}
-                  isScrolling={scrollState[index]}
-                />
-              </RowTag>
+              <RowComponent
+                key={index}
+                data={data}
+                dataIndex={startDataIndex}
+                dataEndIndex={endDataIndex}
+                row={absoluteRowIndex}
+                column={endDataIndex - startDataIndex}
+                isScrolling={scrollState[index]}
+                style={style}
+              />
             );
           })}
         </ListTag>
