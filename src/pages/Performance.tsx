@@ -55,8 +55,14 @@ export default function Performance() {
         </Tabs>
       </AppBar>
       <Box p={3} pb={1}>
-        <Alert severity="error" variant="filled" style={{justifyContent: "center"}}>
-          Attention! When measuring performance, make sure to use a production build and an incognito window! 
+        <Alert
+          severity="warning"
+          variant="filled"
+          style={{ justifyContent: "center" }}
+        >
+          Warning, using a production build will give you much better
+          performance. To test react-recycled-list to the extreme, turn on CPU
+          throttle in google developer tool
         </Alert>
       </Box>
       <TabPanel value={value} index={0}>
@@ -86,13 +92,11 @@ const chips = Array(15)
   .fill(null)
   .map(() => undefined);
 
-const handleClick = () => {};
-
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, style } = props;
-  const value = data[dataIndex];
+  const { data, dataIndex, top, height } = props;
+  const handleClick = () => {};
   return (
-    <div style={style as any} className="react-recycled-row">
+    <div style={{ top, height } as any} className="react-recycled-row">
       {chips.map((_, index) => (
         <Chip
           key={index}
@@ -110,6 +114,7 @@ const data = Array(500)
   .map((_, index) => undefined);
 
 function NoOptimization() {
+  const handleClick = () => {};
   return (
     <div className="no-optimization-list">
       {data.map((_, index) => (

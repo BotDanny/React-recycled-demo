@@ -20,9 +20,9 @@ function ScrollIndicatorDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, isScrolling, style } = props;
+  const { data, dataIndex, isScrolling, top, height } = props;
   const value = isScrolling? "scrolling" : data[dataIndex];
-  return <div style={style} className="react-recycled-row">{value}</div>;
+  return <div style={{top, height}} className="react-recycled-row">{value}</div>;
 });
 
 const code = `import { FixedList } from "react-recycled-list";
@@ -36,7 +36,7 @@ function ScrollIndicatorDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-    const { data, dataIndex, isScrolling, style } = props;
+    const { data, dataIndex, isScrolling, top, height } = props;
     const value = isScrolling? "scrolling" : data[dataIndex];
-    return <div style={style} className="react-recycled-row">{value}</div>;
+    return <div style={{top, height}} className="react-recycled-row">{value}</div>;
 });`;

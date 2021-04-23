@@ -27,7 +27,7 @@ function VariableRowHeightColumnDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, dataEndIndex, column, style } = props;
+  const { data, dataIndex, dataEndIndex, column, top, height } = props;
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const widthMap: any = {
@@ -42,7 +42,7 @@ const Row = React.memo(function (props: RowProps) {
     textAlign: "center",
   };
   return (
-    <div style={style} className="react-recycled-row">
+    <div style={{top, height}} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}
@@ -82,7 +82,7 @@ function VariableRowHeightColumnDemo() {
 }
   
 const Row = React.memo(function (props) {
-    const { data, dataIndex: dataStartIndex, dataEndIndex, column, style } = props;
+    const { data, dataIndex: dataStartIndex, dataEndIndex, column, top, height } = props;
     const rowData = data.slice(dataStartIndex, dataEndIndex);
 
     const widthMap = {
@@ -98,7 +98,7 @@ const Row = React.memo(function (props) {
     };
 
     return (
-        <div style={style} className="react-recycled-row">
+        <div style={{top, height}} className="react-recycled-row">
                             {rowData.map((item) => <div style={columnStyle} key={item}>{item}</div>)}
                  </div>
     )

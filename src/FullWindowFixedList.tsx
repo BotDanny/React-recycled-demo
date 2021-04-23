@@ -356,21 +356,17 @@ export default class FullWindowFixedList<
           const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
           const startDataIndex = dataIndexInfo[0];
           const endDataIndex = dataIndexInfo[1];
-          const style = {
-            position: "absolute",
-            top: this.rowPositions[absoluteRowIndex],
-            height: this.rowHeights[absoluteRowIndex],
-          };
           return (
             <RowComponent
               key={index}
-              style={style as React.CSSProperties}
               data={data}
               dataIndex={startDataIndex}
               dataEndIndex={endDataIndex}
               row={absoluteRowIndex}
               column={endDataIndex - startDataIndex}
               isScrolling={scrollState[index]}
+              top={this.rowPositions[absoluteRowIndex]}
+              height={this.rowHeights[absoluteRowIndex]}
             />
           );
         })}

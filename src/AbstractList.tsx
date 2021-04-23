@@ -344,11 +344,6 @@ export default abstract class General<
             const dataIndexInfo = this.rowToDataIndexMap[absoluteRowIndex];
             const startDataIndex = dataIndexInfo[0];
             const endDataIndex = dataIndexInfo[1];
-            const style = {
-              position: "absolute",
-              top: this.rowPositions[absoluteRowIndex],
-              height: this.rowHeights[absoluteRowIndex],
-            };
             return (
               <RowComponent
                 key={index}
@@ -358,7 +353,8 @@ export default abstract class General<
                 row={absoluteRowIndex}
                 column={endDataIndex - startDataIndex}
                 isScrolling={scrollState[index]}
-                style={style as React.CSSProperties}
+                top={this.rowPositions[absoluteRowIndex]}
+                height={this.rowHeights[absoluteRowIndex]}
               />
             );
           })}

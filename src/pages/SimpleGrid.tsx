@@ -25,7 +25,7 @@ function SimpleGridDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, dataEndIndex, style } = props;
+  const { data, dataIndex, dataEndIndex, top, height } = props;
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
@@ -33,7 +33,7 @@ const Row = React.memo(function (props: RowProps) {
     textAlign: "center" as any,
   };
   return (
-    <div style={style} className="react-recycled-row">
+    <div style={{top, height}} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}
@@ -49,7 +49,7 @@ function SimpleGridDemo() {
 }
 
 const Row = React.memo(function (props) {
-    const { data, dataIndex: dataStartIndex, dataEndIndex, style } = props;
+    const { data, dataIndex: dataStartIndex, dataEndIndex, top, height } = props;
 
     // You are given the start and end index of the data in this row. You style and arrange the columns yourself
     // Note the data item at dataEndIndex is not included in the row. If dataIndex = 0 and dataEndIndex = 3 then the data in this row is 0, 1 and 2
@@ -61,7 +61,7 @@ const Row = React.memo(function (props) {
         textAlign: "center",
     };
     return (
-        <div style={style} className="react-recycled-row">
+        <div style={{top, height}} className="react-recycled-row">
                             {rowData.map((item) => <div style={columnStyle} key={item}>{item}</div>)}
                  </div>
     )

@@ -21,7 +21,6 @@ import ResponsiveContainerPage from "./pages/ResponsiveContainer";
 import FullWindowResponsiveContainerPage from "./pages/FullWindowResponsiveContainer";
 import LazyLoadingAdvanced from "./pages/LazyLoadingAdvanced";
 import LazyLoadingSimple from "./pages/LazyLoadingSimple";
-import ReactWindowComparison from "./pages/ReactWindowComparison";
 import DynamicLoading from "./pages/DynamicLoading";
 import ScrollIndicator from "./pages/ScrollIndicator";
 import ScrollTo from "./pages/ScrollTo";

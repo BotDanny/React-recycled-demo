@@ -26,11 +26,11 @@ function VariableRowHeightDemo() {
 }
 
 const Row = React.memo(function (props: RowProps) {
-  const { data, dataIndex, style } = props;
+  const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
   return (
     <div
-      style={style}
+      style={{top, height}}
       className="react-recycled-row"
     >
       {value}
@@ -54,8 +54,8 @@ function VariableRowHeightDemo() {
 }
   
 const Row = React.memo(function (props) {
-    const { data, dataIndex, style } = props;
+    const { data, dataIndex, top, height } = props;
     const value = data[dataIndex];
 
-    return <div style={style} className="react-recycled-row">{value}</div>
+    return <div style={{top, height}} className="react-recycled-row">{value}</div>
 });`;

@@ -10,7 +10,8 @@ export interface RowProps {
   dataEndIndex: number;
   column: number;
   isScrolling: boolean;
-  style: React.CSSProperties;
+  top: number;
+  height: number;
 }
 
 export interface ReactRecycledListProps {
