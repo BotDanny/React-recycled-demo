@@ -118,7 +118,7 @@ function NoOptimization() {
   return (
     <div className="no-optimization-list">
       {data.map((_, index) => (
-        <div className="react-recycled-row" key={index} style={{ height: 100 }}>
+        <div className="react-none-recycled-row" key={index} style={{ height: 100 }}>
           {chips.map((_, chipIndex) => (
             <Chip
               key={chipIndex}

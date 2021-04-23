@@ -27,6 +27,17 @@
   position: absolute;
 }
 
+.react-none-recycled-row {
+  border: 1px solid #ffffff;
+  background-color: #282c34;
+  color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  text-align: center;
+  width: 100%;
+}
 .MuiGrid-root {
   text-align: center;
 }

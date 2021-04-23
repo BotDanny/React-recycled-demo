@@ -46,9 +46,7 @@ const Row = React.memo(function (props) {
   // the data here is the same data that is passed into the FixedList
   const { data, dataIndex, top, height } = props;
 
-  // Note, the css you see in the demo above is not defined here, check the code sandbox for more
-
   const value = data[dataIndex];
-  // Important!, make sure you inline-style your component with the style props that's been provided. It contains top, height, and position
+  // Important!, make sure you inline-style your component with the the provided top, height. Also make sure to set your container element to position absolute
   return <div style={{top, height}} className="react-recycled-row">{value}</div>;
 })`;
