@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Switch,
   Typography,
 } from "@material-ui/core";
 import "./root.scss";
@@ -25,9 +26,29 @@ import DynamicLoading from "./pages/DynamicLoading";
 import ScrollIndicator from "./pages/ScrollIndicator";
 import ScrollTo from "./pages/ScrollTo";
 import Performance from "./pages/Performance";
+import Stats from "stats.js";
+var stats = new Stats();
+stats.dom.style.left = "300px";
+stats.dom.style.position = "";
+stats.showPanel(0);
+// document.body.appendChild(stats.dom);
+
+function animate() {
+  stats.begin();
+
+  // monitored code goes here
+
+  stats.end();
+
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
 
 export default function SideNav() {
   const { pathname } = useLocation();
+  React.useEffect(() => {
+    document.getElementById("statsjs")?.appendChild(stats.dom)
+  }, [])
   return (
     <div>
       <Drawer variant="permanent" anchor="left">
@@ -35,7 +56,11 @@ export default function SideNav() {
           React recycled list
         </Typography>
         <Divider />
+        <ListItem id="statsjs">
+          <ListItemText primary="Stats.js" className="first-level" />
+        </ListItem>
         <List>
+          <Divider />
           <ListItem>
             <ListItemText primary="Introduction" className="first-level" />
           </ListItem>
