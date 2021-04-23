@@ -10,7 +10,7 @@ import {
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import React from "react";
 import "./root.scss";
-import SideNav, { examples } from "./SideNav";
+import SideNav, { examples, introductions } from "./SideNav";
 
 export default function Index() {
   const me = React.useRef();
@@ -20,9 +20,18 @@ export default function Index() {
       <main>
         <Switch>
           {examples.map(({ label, route, component }) => {
+            const Page = component as any;
             return (
-              <Route path={route}>
-                {component && component}
+              <Route path={route} exact>
+                {component && <Page />}
+              </Route>
+            );
+          })}
+          {introductions.map(({ label, route, component }) => {
+            const Page = component as any;
+            return (
+              <Route path={route} exact>
+                {component && <Page />}
               </Route>
             );
           })}

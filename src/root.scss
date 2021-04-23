@@ -3,6 +3,20 @@
 }
 
 .root-content {
+  .MuiTabs-flexContainer {
+    justify-content: space-evenly;
+  }
+
+  .MuiTab-root {
+      text-transform: none;
+  }
+
+  .no-optimization-list {
+    height: 800px;
+    width: 100%;
+    overflow-y: auto;
+  }
+
   .MuiDrawer-root {
     * {
       color: #000000;
@@ -42,9 +56,9 @@
     pre {
       margin: 0;
 
-    //   .hljs-comment {
-    //     color: #53c103;
-    //   }
+      //   .hljs-comment {
+      //     color: #53c103;
+      //   }
     }
   }
 }

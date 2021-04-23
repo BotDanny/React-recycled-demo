@@ -19,7 +19,7 @@ function VariableRowHeightColumnDemo() {
       height={400}
       rowComponent={Row}
       data={data}
-      rowHeight={100}
+      rowHeight={80}
       rowColumns={rowColumns}
       rowHeights={rowHeights}
     />

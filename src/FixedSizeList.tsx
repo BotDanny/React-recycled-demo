@@ -65,7 +65,7 @@ export default class FixedList extends GeneralList<
 
     const numOfVisibleRow = Math.ceil(height / rowHeight);
     const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || Math.floor(numOfVisibleRow / 2);
+      additionalRenderedRow || 1;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
