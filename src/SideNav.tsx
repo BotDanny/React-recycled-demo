@@ -29,6 +29,8 @@ import Performance from "./pages/Performance";
 import Stats from "stats.js";
 import ScrollRestoration from "./pages/ScrollRestoration";
 import SSR from "./pages/SSR";
+import WhyPage from "./pages/WhyPage";
+import BeforeYouBegin from "./pages/BeforeYouBegin";
 var stats = new Stats();
 stats.dom.style.left = "300px";
 stats.dom.style.position = "";
@@ -121,8 +123,10 @@ export const introductions = [
   {
     label: "Why use react recycled list",
     route: "/",
+    component: WhyPage
   },
   { label: "Performance demo", route: "/performance", component: Performance },
+  { label: "Before you begin", route: "/QA", component: BeforeYouBegin },
 ];
 
 export const examples = [

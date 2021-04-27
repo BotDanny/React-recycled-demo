@@ -8,7 +8,7 @@
   }
 
   .MuiTab-root {
-      text-transform: none;
+    text-transform: none;
   }
 
   .no-optimization-list {
@@ -34,11 +34,11 @@
   }
 
   .MuiCircularProgress-root {
-      color: #ffffff;
+    color: #ffffff;
   }
 
   main {
-    padding-left: 270px;
+    padding-left: 278px;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -56,10 +56,16 @@
 
     pre {
       margin: 0;
+    }
 
-      //   .hljs-comment {
-      //     color: #53c103;
-      //   }
+    .why-page {
+      a {
+        color: #1976d2;
+      }
+
+      .MuiTypography-body1 {
+          line-height: 2;
+      }
     }
   }
 }

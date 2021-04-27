@@ -30,8 +30,8 @@ export default function Index() {
           {introductions.map(({ label, route, component }) => {
             const Page = component as any;
             return (
-              <Route path={route} exact>
-                {component && <Page />}
+              <Route path={route} exact> 
+                 <Page />
               </Route>
             );
           })}
