@@ -128,8 +128,6 @@ const code = `import { FixedList } from "react-recycled-list";
 // This is a rather complicated example
 // The key point is to paginate your data, and utilize onRenderedRowChange or onVisibleRowChange to load your data
 
-const numberOfItemPerPage = 20;
-
 const numberOfItemPerPage = 10;
 const numberOfPages = 10;
 // Simulation of an API

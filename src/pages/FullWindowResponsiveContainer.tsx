@@ -58,7 +58,7 @@ const Row = React.memo(function (props: RowProps) {
   );
 });
 
-const code = `import { FullWindowResponsiveContainer } from "react-recycled-list";
+const code = `import { FullWindowResponsiveContainer, FullWindowFixedList } from "react-recycled-list";
 
 // Try resizing the window, the column will change on the 1200px break point
 
@@ -69,8 +69,8 @@ function FullWindowResponsiveContainerDemo() {
       const { width, height } = sizeInfo;
       const column = width > 1200 ? 2 : 1;
       return (
-        <FixedList
-                        height={sizeInfo.height}
+        <FullWindowFixedList
+                        windowHeight={sizeInfo.height}
                         rowComponent={Row}
                         data={data}
                         rowHeight={100}

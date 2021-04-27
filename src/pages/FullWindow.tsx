@@ -4,6 +4,7 @@ import { RowProps } from "../TypeDef";
 import Highlight from "react-highlight.js";
 import GeneralPage from "./GeneralPage";
 import { FullWindowFixedList } from "../Export";
+import { Button } from "@material-ui/core";
 
 export default function FullWindow() {
   return (
@@ -14,13 +15,13 @@ export default function FullWindow() {
         </div>
       </div>
       <div className="demo-section half-section">
-        <FullWindowDemo />
+        <FullWindowDemo/>
       </div>
     </>
   );
 }
 
-function FullWindowDemo() {
+function FullWindowDemo(props: any) {
   const data = Array(1000)
     .fill(null)
     .map((_, index) => `item ${index}`);

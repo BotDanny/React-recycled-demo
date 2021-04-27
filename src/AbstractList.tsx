@@ -40,10 +40,15 @@ export default abstract class General<
   }
 
   componentDidMount() {
-    const { initalScrollTop } = this.props;
-    if (initalScrollTop) {
-      this.manualScroll(initalScrollTop as number);
+    const { initialScrollTop } = this.props;
+    if (initialScrollTop) {
+      this.manualScroll(initialScrollTop as number);
     }
+  }
+
+  componentWillUnmount() {
+    const {onUnmount} = this.props;
+    if (onUnmount) onUnmount(this.prevScroll);
   }
 
   componentDidUpdate(prevProps: P) {
@@ -262,6 +267,10 @@ export default abstract class General<
   };
 
   scrollToDataIndex = (targetIndex: number) => {
+    if (targetIndex === -1) {
+      this.manualScroll(targetIndex);
+      return;
+    }
     const targetRow = Object.values(this.rowToDataIndexMap).findIndex(
       (value) => targetIndex >= value[0] && targetIndex < value[1]
     );
@@ -271,6 +280,10 @@ export default abstract class General<
   };
 
   scrollToRow = (targetRow: number) => {
+    if (targetRow === -1) {
+      this.manualScroll(targetRow);
+      return;
+    }
     const targetPosition = this.rowPositions[targetRow];
     validateScrollTo(targetPosition);
     this.manualScroll(targetPosition);
@@ -282,7 +295,9 @@ export default abstract class General<
 
   manualScroll = (targetPosition: number) => {
     if (this.listWindowRef.current) {
-      this.listWindowRef.current.scrollTop = targetPosition;
+      if (targetPosition === -1)
+        this.listWindowRef.current.scrollTop = this.fullHeight;
+      else this.listWindowRef.current.scrollTop = targetPosition;
     }
   };
 
@@ -311,13 +326,10 @@ export default abstract class General<
       data,
       width,
       rowComponent,
-      rowTagName,
-      rowClassName,
     } = this.props;
     const { renderedRowIndex, scrollState } = this.state;
 
     const ListTag: any = listTagName || "div";
-    const RowTag: any = rowTagName || "div";
     const RowComponent: React.ElementType<RowProps> = rowComponent;
     return (
       <div

@@ -29,7 +29,7 @@ export default class FullWindowVariableList extends FullWindowFixedList<
       rowColumns,
       data,
       additionalRenderedRow,
-      serverWindowHeight,
+      serverSideHeight,
       scrollRef,
       rootMarginTop = 0,
       rootMarginBottom = 0,
@@ -66,8 +66,8 @@ export default class FullWindowVariableList extends FullWindowFixedList<
     let calculatedWindowHeight = 0;
     let scrollListener;
 
-    if (constructor && serverWindowHeight !== undefined) {
-      calculatedWindowHeight = serverWindowHeight;
+    if (constructor && serverSideHeight !== undefined) {
+      calculatedWindowHeight = serverSideHeight;
     } else if ("scrollRef" in this.props) {
       if (scrollRef?.current) {
         calculatedWindowHeight = parseInt(

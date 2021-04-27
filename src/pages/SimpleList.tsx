@@ -15,7 +15,7 @@ function SimpleListDemo() {
     .map((_, index) => `item ${index}`);
 
   return (
-    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100} />
+    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100}/>
   );
 }
 
@@ -29,7 +29,7 @@ const Row = React.memo(function (props: RowProps) {
       console.log("unmount");
     };
   }, []);
-  return <div style={{top, height}} className="react-recycled-row">{value}</div>;
+  return <div style={{top, height}} className="react-recycled-row" inlist>{value}</div>;
 });
 
 const code = `import { FixedList } from "react-recycled-list";

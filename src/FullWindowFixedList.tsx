@@ -14,7 +14,7 @@ export interface FullWindowFixedListProps extends ReactRecycledListProps {
   rootMarginTop?: number;
   rootMarginBottom?: number;
   windowHeight?: number;
-  serverWindowHeight?: number;
+  serverSideHeight?: number;
   scrollRef?: React.MutableRefObject<HTMLElement | undefined | null>;
 }
 
@@ -46,7 +46,7 @@ export default class FullWindowFixedList<
       rowColumns,
       data,
       additionalRenderedRow,
-      serverWindowHeight,
+      serverSideHeight,
       scrollRef,
       rootMarginTop = 0,
       rootMarginBottom = 0,
@@ -67,8 +67,8 @@ export default class FullWindowFixedList<
     let calculatedWindowHeight = 0;
     let scrollListener;
 
-    if (constructor && serverWindowHeight !== undefined) {
-      calculatedWindowHeight = serverWindowHeight;
+    if (constructor && serverSideHeight !== undefined) {
+      calculatedWindowHeight = serverSideHeight;
     } else if ("scrollRef" in this.props) {
       if (scrollRef?.current) {
         calculatedWindowHeight = parseInt(
@@ -155,20 +155,28 @@ export default class FullWindowFixedList<
     this.scrollListener = scrollListener;
     this.initialScrolling = false;
 
-    // Need to triger callback for onrenderedrowchange
+    const initialRenderedRowIndex = this.initialArrayTemplate.map(
+      (_, index) => index
+    );
+    const initialScrollState = this.initialArrayTemplate.map(() => false);
+
+    if (!props.initialScrollTop && this.scrollListener) {
+      this.onListWillRecycle(initialRenderedRowIndex, initialScrollState, 0);
+      this.onScrollChange(0);
+    }
 
     this.state = {
-      renderedRowIndex: this.initialArrayTemplate.map((_, index) => index),
-      scrollState: this.initialArrayTemplate.map(() => false),
+      renderedRowIndex: initialRenderedRowIndex,
+      scrollState: initialScrollState,
       topRenderedRowRelativeIndex: 0,
     } as S;
   }
 
   componentDidMount() {
     this.attachScrollListener();
-    const { initalScrollTop } = this.props;
-    if (initalScrollTop) {
-      this.manualScroll(initalScrollTop as number);
+    const { initialScrollTop } = this.props;
+    if (initialScrollTop) {
+      this.manualScroll(initialScrollTop as number);
     }
   }
 
@@ -176,18 +184,14 @@ export default class FullWindowFixedList<
     if (this.scrollListener) {
       this.scrollListener.removeEventListener("scroll", this.onScroll);
     }
+    const { onUnmount } = this.props;
+    if (onUnmount) onUnmount(this.prevScroll);
   }
 
   attachScrollListener = () => {
     if (this.scrollListener) {
       this.scrollListener.removeEventListener("scroll", this.onScroll);
       this.scrollListener.addEventListener("scroll", this.onScroll);
-      // this.onListWillRecycle(
-      //   this.state.renderedRowIndex,
-      //   this.state.scrollState,
-      //   this.state.topRenderedRowRelativeIndex
-      // );
-      // this.onScrollChange(this.prevScroll);
     }
   };
 
@@ -215,6 +219,14 @@ export default class FullWindowFixedList<
   };
 
   manualScroll = (targetPosition: number) => {
+    let parsedTargetPosition = targetPosition;
+    if (targetPosition === -1) {
+      const { rootMarginBottom = 0, rootMarginTop = 0 } = this.props;
+      const fullWindowHeight =
+        this.windowHeight + rootMarginTop + rootMarginBottom;
+      parsedTargetPosition =
+        this.fullHeight + rootMarginBottom + rootMarginTop - fullWindowHeight;
+    }
     const { rootMarginTop = 0 } = this.props;
     if (this.scrollListener) {
       const recycledList = this.fullListRef.current as HTMLElement;
@@ -223,7 +235,9 @@ export default class FullWindowFixedList<
           recycledList.getBoundingClientRect().top + window.scrollY;
         window.scrollTo({
           top:
-            distanceToWindowTopFromTopOfList + targetPosition - rootMarginTop,
+            distanceToWindowTopFromTopOfList +
+            parsedTargetPosition -
+            rootMarginTop,
         });
       } else {
         const customElement = this.scrollListener as HTMLElement;
@@ -231,7 +245,9 @@ export default class FullWindowFixedList<
           recycledList.getBoundingClientRect().top -
           customElement.getBoundingClientRect().top;
         customElement.scrollTop =
-          distanceToElementTopFromTopOfList + targetPosition - rootMarginTop;
+          distanceToElementTopFromTopOfList +
+          parsedTargetPosition -
+          rootMarginTop;
       }
     }
   };
@@ -315,14 +331,11 @@ export default class FullWindowFixedList<
   };
 
   getResetViewportBottom = () => {
-    if (this.fullListRef) {
-      const { rootMarginBottom = 0, rootMarginTop = 0 } = this.props;
-      const scrollTop = this.getScrollTop();
-      const fullWindowHeight =
-        this.windowHeight + rootMarginTop + rootMarginBottom;
-      return scrollTop + fullWindowHeight - rootMarginBottom;
-    }
-    return this.prevScroll + this.windowHeight;
+    const { rootMarginBottom = 0, rootMarginTop = 0 } = this.props;
+    const scrollTop = this.getScrollTop();
+    const fullWindowHeight =
+      this.windowHeight + rootMarginTop + rootMarginBottom;
+    return scrollTop + fullWindowHeight - rootMarginBottom;
   };
 
   render() {
@@ -332,15 +345,12 @@ export default class FullWindowFixedList<
       data,
       width,
       rowComponent,
-      rowTagName,
-      rowClassName,
     } = this.props;
 
     const { renderedRowIndex, scrollState } = this.state;
     console.log("render");
 
     const ListTag: any = listTagName || "div";
-    const RowTag: any = rowTagName || "div";
     const RowComponent: React.ElementType<RowProps> = rowComponent;
     return (
       <ListTag

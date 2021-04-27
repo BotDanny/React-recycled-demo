@@ -19,19 +19,18 @@ export interface ReactRecycledListProps {
   data: any[];
   rowHeight: number;
   rowComponent: React.ElementType<RowProps>;
-  initalScrollTop?: number;
+  initialScrollTop?: number;
   column?: number;
   rowColumns?: number[];
   additionalRenderedRow?: number;
   listWindowClassName?: string;
   listClassName?: string;
   listTagName?: string;
-  rowTagName?: string;
-  rowClassName?: string;
   useScrollingIndicator?: boolean;
   scrollInterval?: number;
   onRenderedRowChange?: onRenderedRowChangeCallBack;
   onVisibleRowChange?: onVisibleRowChangeCallBack;
+  onUnmount?: (scrollTop: number) => void;
 }
 
 export interface RenderInfo {

@@ -64,8 +64,7 @@ export default class FixedList extends GeneralList<
     const totalRows = rowHeights.length;
 
     const numOfVisibleRow = Math.ceil(height / rowHeight);
-    const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || 1;
+    const numOfInvisibleRowOnEachDirection = additionalRenderedRow || 1;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
@@ -118,8 +117,10 @@ export default class FixedList extends GeneralList<
     );
     const initialScrollState = this.initialArrayTemplate.map(() => false);
 
-    this.onListWillRecycle(initialRenderedRowIndex, initialScrollState, 0);
-    this.onScrollChange(0);
+    if (!props.initialScrollTop) {
+      this.onListWillRecycle(initialRenderedRowIndex, initialScrollState, 0);
+      this.onScrollChange(0);
+    }
 
     this.state = {
       renderedRowIndex: initialRenderedRowIndex,

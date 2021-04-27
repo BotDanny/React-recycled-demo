@@ -27,6 +27,8 @@ import ScrollIndicator from "./pages/ScrollIndicator";
 import ScrollTo from "./pages/ScrollTo";
 import Performance from "./pages/Performance";
 import Stats from "stats.js";
+import ScrollRestoration from "./pages/ScrollRestoration";
+import SSR from "./pages/SSR";
 var stats = new Stats();
 stats.dom.style.left = "300px";
 stats.dom.style.position = "";
@@ -57,7 +59,7 @@ export default function SideNav() {
         </Typography>
         <Divider />
         <ListItem id="statsjs">
-          <ListItemText primary="Stats.js" className="first-level" />
+          <ListItemText primary="Stats.js:" className="first-level" />
         </ListItem>
         <List>
           <Divider />
@@ -120,7 +122,7 @@ export const introductions = [
     label: "Why use react recycled list",
     route: "/",
   },
-  { label: "Performance", route: "/performance", component: Performance },
+  { label: "Performance demo", route: "/performance", component: Performance },
 ];
 
 export const examples = [
@@ -142,15 +144,15 @@ export const examples = [
     route: "/variable-height-column",
     component: VariableRowHeightColumn,
   },
-  { label: "Full window", route: "/full-window", component: FullWindow },
-  { label: "Custom window", route: "/custom-window", component: CustomWindow },
+  { label: "Full window list/grid", route: "/full-window", component: FullWindow },
+  { label: "Custom window list/grid", route: "/custom-window", component: CustomWindow },
   {
-    label: "Responsive List/Grid",
+    label: "Responsive list/grid",
     route: "/responsive-list/grid",
     component: ResponsiveContainerPage,
   },
   {
-    label: "Responsive window",
+    label: "Responsive window list/grid",
     route: "/responsive-window",
     component: FullWindowResponsiveContainerPage,
   },
@@ -175,9 +177,9 @@ export const examples = [
     component: ScrollIndicator,
   },
   { label: "Scroll to", route: "/scroll-to", component: ScrollTo },
-  { label: "Scroll restoration", route: "/scroll-restoration" },
-  { label: "Styling", route: "/styling" },
-  { label: "Server side rendering", route: "/styling" },
+  { label: "Scroll restoration", route: "/scroll-restoration", component: ScrollRestoration },
+//   { label: "Usage with React table", route: "/react-table" },
+  { label: "Server side rendering", route: "/ssr", component: SSR },
 ];
 
 export const components = [

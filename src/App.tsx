@@ -429,7 +429,7 @@ function FullWindowDemo() {
         width={"100%"}
         rootMarginTop={0}
         rootMarginBottom={0}
-        initalScrollTop={500}
+        initialScrollTop={500}
       />
       {/* <FullWindowResponsiveContainer
         render={() => {

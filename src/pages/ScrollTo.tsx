@@ -45,6 +45,14 @@ function ScrollToDemo() {
           variant="contained"
           color="secondary"
           style={{ textTransform: "none" }}
+          onClick={() => ref.current?.scrollToRow(-1)}
+        >
+          Scroll to last row
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          style={{ textTransform: "none" }}
           onClick={() => ref.current?.scrollToDataIndex(86)}
         >
           Scroll to 87th data
@@ -71,7 +79,7 @@ const Row = React.memo(function (props: RowProps) {
     textAlign: "center",
   };
   return (
-    <div style={{top, height}} className="react-recycled-row">
+    <div style={{ top, height }} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}
@@ -88,6 +96,7 @@ function ScrollToDemo() {
         <div>
                         <button onClick={() => ref.current?.scrollTo(350)} />
                         <button onClick={() => ref.current?.scrollToRow(9)} />
+                        <button onClick={() => ref.current?.scrollToRow(-1)} />
                         <button onClick={() => ref.current?.scrollToDataIndex(86)} />
                         <FixedList height={300} rowComponent={Row} data={data} rowHeight={100} column={4} ref={ref}/>
                 </div>

@@ -5,7 +5,7 @@ import Highlight from "react-highlight.js";
 import GeneralPage from "./GeneralPage";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { Avatar, Chip } from "@material-ui/core";
-
+import { areEqual } from 'react-window';
 export default function ReactWindowComparison() {
   return <GeneralPage code={code} Demo={ReactWindowDemo} />;
 }
@@ -26,13 +26,13 @@ export function ReactWindowDemo() {
 
 const ReactWindowRow = React.memo(function (props: any) {
   const { index, style } = props;
-  const handleClick = () => {}
+  const handleClick = () => {};
   return (
     <div className="react-recycled-row" style={style}>
-       {chips.map(() => <Chip avatar={<Avatar>M</Avatar>} label="Clickable" onClick={handleClick} />)}
+       {chips.map((_, index) => <Chip key={index} avatar={<Avatar>M</Avatar>} label="Clickable" onClick={handleClick} />)}
     </div>
   );
-});
+}, areEqual);
 
 const chips = Array(15)
   .fill(null)

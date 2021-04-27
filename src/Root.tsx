@@ -23,7 +23,7 @@ export default function Index() {
             const Page = component as any;
             return (
               <Route path={route} exact>
-                {component && <Page />}
+                <Page />
               </Route>
             );
           })}
