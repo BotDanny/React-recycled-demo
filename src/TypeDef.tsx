@@ -22,11 +22,12 @@ export interface ReactRecycledListProps {
   initialScrollTop?: number;
   column?: number;
   rowColumns?: number[];
-  additionalRenderedRow?: number;
-  listWindowClassName?: string;
-  listClassName?: string;
+  offScreenRow?: number;
+  listWindowProps?: object;
+  listWindowTagName?: string;
+  listProps?: object;
   listTagName?: string;
-  useScrollingIndicator?: boolean;
+  useScrollIndicator?: boolean;
   scrollInterval?: number;
   onRenderedRowChange?: onRenderedRowChangeCallBack;
   onVisibleRowChange?: onVisibleRowChangeCallBack;
@@ -51,7 +52,7 @@ export interface VisibilityInfo {
 
 export type onRenderedRowChangeCallBack = (renderInfo: RenderInfo) => void;
 
-export type onVisibleRowChangeCallBack = (renderInfo: VisibilityInfo) => void;
+export type onVisibleRowChangeCallBack = (visibilityInfo: VisibilityInfo) => void;
 
 export interface ReactRecycledListState {
   renderedRowIndex: number[];

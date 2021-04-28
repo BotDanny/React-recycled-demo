@@ -50,7 +50,7 @@ function VariableRowHeightDemo() {
     
     // The rowHeight prop here is an estimate(average) of the height of each row
 
-    return <VariableList height={350} rowComponent={Row} data={data} rowHeight={100} rowHeights={rowHeights}/>;
+    return <VariableList height={350} rowComponent={Row} data={data} rowHeight={80} rowHeights={rowHeights}/>;
 }
   
 const Row = React.memo(function (props) {

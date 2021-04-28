@@ -15,7 +15,7 @@ function ScrollIndicatorDemo() {
     .map((_, index) => `item ${index}`);
 
   return (
-    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100} useScrollingIndicator/>
+    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100} useScrollIndicator/>
   );
 }
 

@@ -45,7 +45,7 @@ export default class FullWindowFixedList<
       column,
       rowColumns,
       data,
-      additionalRenderedRow,
+      offScreenRow,
       serverSideHeight,
       scrollRef,
       rootMarginTop = 0,
@@ -102,7 +102,7 @@ export default class FullWindowFixedList<
 
     const numOfVisibleRow = Math.ceil(calculatedWindowHeight / rowHeight);
     const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || numOfVisibleRow ? 1 : 0;
+      offScreenRow || numOfVisibleRow ? 1 : 0;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
@@ -259,7 +259,7 @@ export default class FullWindowFixedList<
       rowColumns,
       windowHeight,
       data,
-      additionalRenderedRow,
+      offScreenRow,
       scrollRef,
       rootMarginBottom,
       rootMarginTop,
@@ -272,7 +272,7 @@ export default class FullWindowFixedList<
       prevProps.rowHeight !== rowHeight ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
-      prevProps.additionalRenderedRow !== additionalRenderedRow ||
+      prevProps.offScreenRow !== offScreenRow ||
       prevProps.rootMarginBottom !== rootMarginBottom ||
       prevProps.rootMarginTop !== rootMarginTop
     );
@@ -341,7 +341,7 @@ export default class FullWindowFixedList<
   render() {
     const {
       listTagName,
-      listClassName,
+      listProps = {},
       data,
       width,
       rowComponent,
@@ -354,7 +354,7 @@ export default class FullWindowFixedList<
     const RowComponent: React.ElementType<RowProps> = rowComponent;
     return (
       <ListTag
-        className={classNames("react-recycled-list", listClassName)}
+        {...listProps}
         style={{
           height: this.fullHeight,
           position: "relative",

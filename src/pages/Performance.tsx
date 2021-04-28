@@ -15,7 +15,7 @@ import {
 import { ReactWindowDemo } from "./ReactWindowComparison";
 import { Alert } from "@material-ui/lab";
 
-function TabPanel(props: any) {
+export function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
 
   return (

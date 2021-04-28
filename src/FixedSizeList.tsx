@@ -34,7 +34,7 @@ export default class FixedList extends GeneralList<
       rowColumns,
       data,
       height,
-      additionalRenderedRow,
+      offScreenRow,
     } = this.props;
 
     // Validate
@@ -64,7 +64,7 @@ export default class FixedList extends GeneralList<
     const totalRows = rowHeights.length;
 
     const numOfVisibleRow = Math.ceil(height / rowHeight);
-    const numOfInvisibleRowOnEachDirection = additionalRenderedRow || 1;
+    const numOfInvisibleRowOnEachDirection = offScreenRow || 1;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
@@ -138,7 +138,7 @@ export default class FixedList extends GeneralList<
       rowColumns,
       height,
       data,
-      additionalRenderedRow,
+      offScreenRow,
     } = currentProp;
 
     return (
@@ -147,7 +147,7 @@ export default class FixedList extends GeneralList<
       prevProps.rowColumns !== rowColumns ||
       prevProps.height !== height ||
       prevProps.data !== data ||
-      prevProps.additionalRenderedRow !== additionalRenderedRow
+      prevProps.offScreenRow !== offScreenRow
     );
   };
 

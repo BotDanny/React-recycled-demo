@@ -31,6 +31,9 @@ import ScrollRestoration from "./pages/ScrollRestoration";
 import SSR from "./pages/SSR";
 import WhyPage from "./pages/WhyPage";
 import BeforeYouBegin from "./pages/BeforeYouBegin";
+import FixedListDoc from "./pages/FixedListDoc";
+import VariableListDoc from "./pages/VariableListDoc";
+import FullWindowFixedListDoc from './pages/FullWindowFixedList'
 var stats = new Stats();
 stats.dom.style.left = "300px";
 stats.dom.style.position = "";
@@ -187,9 +190,9 @@ export const examples = [
 ];
 
 export const components = [
-  { label: "FixedSizeList", route: "/fixedsizelist" },
-  { label: "VariableSizeList", route: "/variablesizelist" },
-  { label: "FixedSizeWindowList", route: "/fixedsizewindowlist" },
+  { label: "FixedSizeList", route: "/fixedsizelist", component: FixedListDoc },
+  { label: "VariableSizeList", route: "/variablesizelist", component: VariableListDoc },
+  { label: "FullWindowFixedList", route: "/fullWindowFixedList", component: FullWindowFixedListDoc },
   { label: "VariableSizeWindowList", route: "/variablesizewindowList" },
   { label: "ResponsiveContainer", route: "/rResponsivecontainer" },
   { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer" },

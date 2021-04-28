@@ -28,7 +28,7 @@ export default class FullWindowVariableList extends FullWindowFixedList<
       column,
       rowColumns,
       data,
-      additionalRenderedRow,
+      offScreenRow,
       serverSideHeight,
       scrollRef,
       rootMarginTop = 0,
@@ -100,7 +100,7 @@ export default class FullWindowVariableList extends FullWindowFixedList<
 
     const numOfVisibleRow = Math.ceil(calculatedWindowHeight / rowHeight);
     const numOfInvisibleRowOnEachDirection =
-      additionalRenderedRow || numOfVisibleRow ? 1 : 0;
+      offScreenRow || numOfVisibleRow ? 1 : 0;
     let totalNumOfRenderedRows =
       numOfVisibleRow + numOfInvisibleRowOnEachDirection * 2;
     if (totalNumOfRenderedRows > totalRows) totalNumOfRenderedRows = totalRows;
@@ -141,7 +141,7 @@ export default class FullWindowVariableList extends FullWindowFixedList<
       rowColumns,
       windowHeight,
       data,
-      additionalRenderedRow,
+      offScreenRow,
       scrollRef,
       rootMarginBottom,
       rootMarginTop,
@@ -155,7 +155,7 @@ export default class FullWindowVariableList extends FullWindowFixedList<
       prevProps.rowHeights !== rowHeights ||
       prevProps.column !== column ||
       prevProps.rowColumns !== rowColumns ||
-      prevProps.additionalRenderedRow !== additionalRenderedRow ||
+      prevProps.offScreenRow !== offScreenRow ||
       prevProps.rootMarginBottom !== rootMarginBottom ||
       prevProps.rootMarginTop !== rootMarginTop
     );

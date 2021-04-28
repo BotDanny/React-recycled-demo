@@ -83,8 +83,8 @@ export default abstract class General<
     newScrollState: boolean[],
     newTopRenderedRowRelativeIndex: number
   ) => {
-    const { useScrollingIndicator, onRenderedRowChange } = this.props;
-    if (useScrollingIndicator) {
+    const { useScrollIndicator, onRenderedRowChange } = this.props;
+    if (useScrollIndicator) {
       this.setState({
         scrollState: newScrollState,
       });
@@ -321,8 +321,9 @@ export default abstract class General<
   render() {
     const {
       listTagName,
-      listClassName,
-      listWindowClassName,
+      listProps = {},
+      listWindowProps = {},
+      listWindowTagName,
       data,
       width,
       rowComponent,
@@ -330,13 +331,11 @@ export default abstract class General<
     const { renderedRowIndex, scrollState } = this.state;
 
     const ListTag: any = listTagName || "div";
+    const WindowTag: any = listWindowTagName || "div";
     const RowComponent: React.ElementType<RowProps> = rowComponent;
     return (
-      <div
-        className={classNames(
-          "react-recycled-list-window",
-          listWindowClassName
-        )}
+      <WindowTag
+        {...listWindowProps}
         style={{
           height: this.windowHeight,
           overflowY: "auto",
@@ -346,7 +345,7 @@ export default abstract class General<
         ref={this.listWindowRef}
       >
         <ListTag
-          className={classNames("react-recycled-list", listClassName)}
+          {...listProps}
           style={{
             height: this.fullHeight,
             position: "relative",
@@ -371,7 +370,7 @@ export default abstract class General<
             );
           })}
         </ListTag>
-      </div>
+      </WindowTag>
     );
   }
 }
