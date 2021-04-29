@@ -28,7 +28,7 @@ export default function FullWindowFixedListDoc() {
         <FullWindowFixedListDocProps />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <FixedListMethods code={methodsCode} />
+        <FullWindowFixedListMethods />
       </TabPanel>
     </div>
   );
@@ -191,7 +191,8 @@ export function FullWindowFixedListDocProps() {
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="body1">
-          Element used to attach scroll listener. See <Link to="/custom-window">this example</Link> for more detail.
+          Element used to attach scroll listener. See{" "}
+          <Link to="/custom-window">this example</Link> for more detail.
         </Typography>
       </Box>
       <Divider className="divider" />
@@ -228,7 +229,8 @@ export function FullWindowFixedListDocProps() {
         <Typography variant="body1">
           No real effect. This is used in conjunction with
           FullWindowResponsiveContainer to force rerender when window size
-          change.
+          change. See <Link to="/responsive-window">this example</Link> for more
+          detail.
         </Typography>
       </Box>
       <Divider className="divider" />
@@ -444,7 +446,10 @@ export function FullWindowFixedListDocProps() {
       <Box pl={5} pr={5}>
         <Typography variant="body1">
           The initial scroll position of the list when first rendered. If
-          initialScrollTop = -1, then the list will scroll to the bottom.
+          initialScrollTop = -1, then the list will scroll to the bottom. Note
+          the initialScrollTop here is relative to the top of the list, meaning that
+          initialScrollTop = 0 will scroll to the first row in the list. It will not
+          scroll to the top of the window.
         </Typography>
       </Box>
       <Divider className="divider" />
@@ -498,33 +503,6 @@ export function FullWindowFixedListDocProps() {
       </Box>
       <Box pb={3} pt={0} pl={5} pr={5}>
         <Highlight language="js">{listPropsCode}</Highlight>
-      </Box>
-      <Divider className="divider" />
-      <Box pb={3} pt={0} pl={5} pr={5}>
-        <img src={listPropsImg} style={{ height: 200 }} />
-      </Box>
-      <Divider className="divider" />
-      <Box pb={2} pt={2} pl={5} pr={5}>
-        <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listWindowTagName: string, default = "div"
-        </Typography>
-      </Box>
-      <Box pl={5} pr={5}>
-        <Typography variant="body1">
-          The tag name assigned to the list window
-        </Typography>
-      </Box>
-      <Divider className="divider" />
-      <Box pb={2} pt={2} pl={5} pr={5}>
-        <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listWindowProps: object, default = {"{}"}
-        </Typography>
-      </Box>
-      <Box pl={5} pr={5}>
-        <Typography variant="body1">
-          The props assigned to the list window. Usefull for assigning className
-          or accessibility properties. Note that you cannot assign style to it.
-        </Typography>
       </Box>
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -608,3 +586,69 @@ const methodsCode = `function ScrollToDemo() {
                 </div>
     )
 }`;
+
+export function FullWindowFixedListMethods(props: any) {
+  const { code } = props;
+  return (
+    <div className="why-page">
+      <Box p={1} pl={5} pr={5}>
+        <Highlight language="js">{code || methodsCode}</Highlight>
+      </Box>
+      <Divider className="divider" />
+      <Box pl={5} pr={5}>
+        <Typography variant="h6" style={{ fontWeight: 500 }}>
+          scrollTo(scrollTop: number): void
+        </Typography>
+      </Box>
+      <Box pb={2} pt={2} pl={5} pr={5}>
+        <Typography variant="body1">
+          Scroll to the specified position according to the scrollTop value
+          provided. Put scrollTop = -1 to scroll to the bottom of the list. Note
+          the scrollTop here is relative to the top of the list, meaning that
+          scrollTop = 0 will scroll to the first row in the list. It will not
+          scroll to the top of the window.
+        </Typography>
+      </Box>
+      <Divider className="divider" />
+      <Box pl={5} pr={5}>
+        <Typography variant="h6" style={{ fontWeight: 500 }}>
+          scrollToRow(targetRowIndex: number): void
+        </Typography>
+      </Box>
+      <Box pb={0} pt={2} pl={5} pr={5}>
+        <Typography variant="body1">
+          Scroll to the specified row. Note the index starts at 0. Put
+          targetRowIndex = -1 to scroll to the last row of the list.
+        </Typography>
+      </Box>
+      <Divider className="divider" />
+      <Box pl={5} pr={5}>
+        <Typography variant="h6" style={{ fontWeight: 500 }}>
+          scrollToDataIndex(targetDataIndex: number): void
+        </Typography>
+      </Box>
+      <Box pb={0} pt={2} pl={5} pr={5}>
+        <Typography variant="body1">
+          Scroll to the specified row that contains the target data index. Note
+          the index starts at 0. Put scrollToDataIndex = -1 to scroll to the
+          last data item of the list.
+        </Typography>
+      </Box>
+      <Divider className="divider" />
+      <Box pl={5} pr={5}>
+        <Typography variant="h6" style={{ fontWeight: 500 }}>
+          setCustomScrollRef(): void
+        </Typography>
+      </Box>
+      <Box pb={0} pt={2} pl={5} pr={5}>
+        <Typography variant="body1">
+          If you are using a custom scroll window instead of the default global
+          window, then you call this method once your scrollRef is set (i.e.
+          ref.current is set to the appropiate element). See{" "}
+          <Link to="./custom-window">this example</Link> for more detail.
+        </Typography>
+      </Box>
+      <Divider className="divider" />
+    </div>
+  );
+}
