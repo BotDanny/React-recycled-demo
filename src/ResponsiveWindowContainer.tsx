@@ -31,7 +31,7 @@ export default function ResponsiveWindowContainer(
     }
   }, []);
   React.useLayoutEffect(() => {
-    forceRerender(!reRender)
+    forceRerender(!reRender);
   }, [scrollRef?.current, scrollRef]);
   return (
     <>

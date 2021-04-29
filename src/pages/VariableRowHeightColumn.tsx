@@ -12,7 +12,9 @@ function VariableRowHeightColumnDemo() {
     .fill(null)
     .map((_, index) => `item ${index}`);
 
-  const [rowHeights, rowColumns] = generateRamdomRowHeightAndColumn(data.length)
+  const [rowHeights, rowColumns] = generateRamdomRowHeightAndColumn(
+    data.length
+  );
 
   return (
     <VariableList
@@ -42,7 +44,7 @@ const Row = React.memo(function (props: RowProps) {
     textAlign: "center",
   };
   return (
-    <div style={{top, height}} className="react-recycled-row">
+    <div style={{ top, height }} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}
@@ -71,12 +73,11 @@ function generateRamdomRowHeightAndColumn(dataLength: number) {
 }
   
 function VariableRowHeightColumnDemo() {
+    const data = Array(totalNumberOfItems).fill(null).map((_, index) => \`item \${index}\`);
     // For demo purposes I used a random generator. You can however define it whatever you want it to be.
     // The key takeaway is the length of rowHeights must equal to the length of rowColumns
     // And the total number of column calculated from rowColumns must be equal to the length of data
     const [rowHeights, rowColumns] = generateRamdomRowHeightAndColumn(data.length)
-  
-    const data = Array(totalNumberOfItems).fill(null).map((_, index) => \`item \${index}\`);
   
     return <VariableList height={400} rowComponent={Row} data={data} rowHeight={100} rowColumns={rowColumns} rowHeights={rowHeights}/>
 }

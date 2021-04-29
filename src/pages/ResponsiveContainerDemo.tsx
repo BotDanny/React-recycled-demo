@@ -20,7 +20,7 @@ function ResponsiveContainerDemo() {
     const column = width > 1200 ? 2 : 1;
     return (
       <FixedList
-        height={sizeInfo.height}
+        height={height}
         rowComponent={Row}
         data={data}
         rowHeight={100}
@@ -28,12 +28,12 @@ function ResponsiveContainerDemo() {
       />
     );
   };
-
+  
   const resizableContainerStyle = {
     width: "100%",
-    height: 400,
+    height: "50vh",
     resize: "both",
-    overflow: "auto"
+    overflow: "auto",
   };
 
   return (
@@ -48,11 +48,11 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
-    width: column === 1? "100%" : "50%",
+    width: column === 1 ? "100%" : "50%",
     textAlign: "center" as any,
   };
   return (
-    <div style={{top, height}} className="react-recycled-row">
+    <div style={{ top, height }} className="react-recycled-row">
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}
@@ -63,6 +63,7 @@ const Row = React.memo(function (props: RowProps) {
 const code = `import { ResponsiveContainer } from "react-recycled-list";
 
 // Try resizing the list, the column will change on the 1200px break point
+// The height of the list is set to 50% of the height of the view port
 
 function ResponsiveContainerDemo() {
     const data = Array(1000).fill(null).map((_, index) => \`item \${index}\`);
@@ -72,7 +73,7 @@ function ResponsiveContainerDemo() {
       const column = width > 1200 ? 2 : 1;
       return (
         <FixedList
-                        height={sizeInfo.height}
+                        height={height}
                         rowComponent={Row}
                         data={data}
                         rowHeight={100}
@@ -80,10 +81,10 @@ function ResponsiveContainerDemo() {
                 />
       );
     };
-  
+    // Important! If you want to use padding, then make sure to set box-sizing to border box on the parent element of the ResponsiveContainer
     const resizableContainerStyle = {
       width: "100%",
-      height: 400,
+      height: "50vh",
       resize: "both",
       overflow: "auto"
     };

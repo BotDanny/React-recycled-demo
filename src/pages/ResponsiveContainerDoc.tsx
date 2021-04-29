@@ -5,7 +5,7 @@ import Highlight from "react-highlight.js";
 import listPropsImg from "./listProps.png";
 import { Link } from "react-router-dom";
 
-export default function ResponsiveWindowContainerDoc() {
+export default function ResponsiveContainerDoc() {
   return (
     <div className="why-page">
       <Box p={1} pl={5} pr={5}>
@@ -24,34 +24,12 @@ export default function ResponsiveWindowContainerDoc() {
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="body1">
           A function that renders the list based on the given height and width.
-          If a custom window is used, then the height and width passed into this
-          function will be the height and width of the element that the
-          scrollRef points to. Otherwise, it would be the height and width of
-          the global window object. See{" "}
-          <Link to="./custom-window">default window example</Link> or{" "}
-          <Link to="./custom-window">custom window example</Link> for more
-          detail.
+          The given height and width is the height and width of the parent
+          element of ResponsiveContainer.
         </Typography>
       </Box>
       <Box pb={3} pt={0} pl={5} pr={5}>
         <Highlight language="js">{dataCode}</Highlight>
-      </Box>
-      <Divider className="divider" />
-      <Box pl={5} pr={5}>
-        <Typography variant="h6" style={{ fontWeight: 500 }}>
-          scrollRef:{" "}
-          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
-            React ref object
-          </span>
-        </Typography>
-      </Box>
-      <Box pb={2} pt={2} pl={5} pr={5}>
-        <Typography variant="body1">
-          The element that you use to attach the scroll listener. This is
-          usefull when you want to use a custom window list/grid. See{" "}
-          <Link to="./responsive-custom-window">this example</Link> for more
-          detail.
-        </Typography>
       </Box>
       <Divider className="divider" />
       <Box pl={5} pr={5}>
@@ -120,7 +98,7 @@ export default function ResponsiveWindowContainerDoc() {
   );
 }
 
-const code1 = `import { ResponsiveWindowContainer } from "react-recycled-list;`;
+const code1 = `import { ResponsiveContainer } from "react-recycled-list;`;
 
 const dataCode = `const renderList = (sizeInfo) => {
     const { width, height } = sizeInfo;
