@@ -23,8 +23,8 @@ export default function WhyPage() {
           , react-recycled-list only renders the rows that are visible to the
           user to improve performance. However, react-recycled-list has a
           different approach compared to traditional windowing library. The main
-          difference is that react-recycled-list does not manipulate the DOM
-          directly, meaning it does not add or remove any DOM node. Instead,
+          difference is that react-recycled-list keeps the integrity of the DOM
+          tree, meaning it does not add or remove any DOM node. Instead,
           whenever a row goes off screen, its DOM will be “recycled” to the
           appropriate position by an update to its absolute position. This
           allows react-recycled-list to truly keep a constant amount of DOM and
@@ -62,7 +62,7 @@ export default function WhyPage() {
             <Typography variant="body1">
               In the worst case scenario (when your row component is extremely
               simple), react-recycled-list will on average be at least 30% more
-              performant than other traditional windowing library.
+              performant than traditional windowing library.
             </Typography>
           </Box>
           <Box p={0.5} pl={3}>
@@ -70,7 +70,7 @@ export default function WhyPage() {
               The performance advantave of react-recycled-list increases as the
               complexity of the row component increases. If your row component
               is expensive to render, then it is very common for
-              react-recycled-list to have more than 100% or even 200% the
+              react-recycled-list to have more than 100%, 200% or even 300%+ the
               performance (in terms of scripting time and rendering time) of
               traditional windowing library. It also produces noticeably less
               flickering in fast scrolling.
@@ -145,8 +145,9 @@ export default function WhyPage() {
       </Box>
       <Box p={3} pt={2} pb={3} pl={5} pr={5}>
         <Typography variant="body1">
-          Another caveat of react-recycled-list it that it only supports vertical list/scrolling.
-          If you are looking for horizontal scrolling, then{" "}
+          Another caveat of react-recycled-list it that it only supports
+          vertical list/scrolling. If you are looking for horizontal scrolling,
+          then{" "}
           <a href="https://github.com/bvaughn/react-window" target="blank">
             react-window
           </a>{" "}

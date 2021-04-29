@@ -112,6 +112,7 @@ const code = `import { FixedList } from "react-recycled-list";
 // The key point is to utilize onRenderedRowChange or onVisibleRowChange to load your data
 
 const numberOfItemPerPage = 20;
+const numberOfPages = 5;
 
 // Just a simulation of an API call
 function fetchData(page, onSuccess) {
@@ -140,8 +141,9 @@ function LazyLoadingDemo() {
     const newStoreData = { ...store.data, [page]: newData };
     // For demo purpose I set the max page to be 5
     const nextPage = page + 1
-    const hasNextPage = nextPage <= 5;
+    const hasNextPage = nextPage <= numberOfPages;
     if (hasNextPage) {
+      // If there is a next page, add a empty data item to the next page. This empty data item will be rendered as "loading..."
       newStoreData[nextPage] = [undefined];
     }
     setStore({ ...store, data: newStoreData, isLoading: false, nextPage: nextPage });
