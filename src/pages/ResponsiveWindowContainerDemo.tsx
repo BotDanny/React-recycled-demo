@@ -1,10 +1,10 @@
 import React from "react";
 import { RowProps } from "../TypeDef";
 import Highlight from "react-highlight.js";
-import FullWindowResponsiveContainer from "../FullWindowResponsiveContainer";
+import ResponsiveWindowContainer from "../ResponsiveWindowContainer";
 import { FullWindowFixedList } from "../Export";
 
-export default function FullWindowResponsiveContainerPage() {
+export default function ResponsiveWindowContainerDemoPage() {
   return (
     <>
       <div className="code-section half-section">
@@ -13,13 +13,13 @@ export default function FullWindowResponsiveContainerPage() {
         </div>
       </div>
       <div className="demo-section half-section">
-        <FullWindowResponsiveContainerDemo />
+        <ResponsiveWindowContainerDemo />
       </div>
     </>
   );
 }
 
-function FullWindowResponsiveContainerDemo() {
+function ResponsiveWindowContainerDemo() {
   const data = Array(1000)
     .fill(null)
     .map((_, index) => `item ${index}`);
@@ -38,7 +38,7 @@ function FullWindowResponsiveContainerDemo() {
       />
     );
   };
-  return <FullWindowResponsiveContainer render={renderList} />;
+  return <ResponsiveWindowContainer render={renderList} />;
 }
 
 const Row = React.memo(function (props: RowProps) {
@@ -58,11 +58,11 @@ const Row = React.memo(function (props: RowProps) {
   );
 });
 
-const code = `import { FullWindowResponsiveContainer, FullWindowFixedList } from "react-recycled-list";
+const code = `import { ResponsiveWindowContainer, FullWindowFixedList } from "react-recycled-list";
 
 // Try resizing the window, the column will change on the 1200px break point
 
-function FullWindowResponsiveContainerDemo() {
+function ResponsiveWindowContainerDemo() {
     const data = Array(1000).fill(null).map((_, index) => \`item \${index}\`);
   
     const renderList = (sizeInfo) => {
@@ -70,7 +70,7 @@ function FullWindowResponsiveContainerDemo() {
       const column = width > 1200 ? 2 : 1;
       return (
         <FullWindowFixedList
-                        windowHeight={sizeInfo.height}
+                        windowHeight={height}
                         rowComponent={Row}
                         data={data}
                         rowHeight={100}
@@ -79,7 +79,7 @@ function FullWindowResponsiveContainerDemo() {
       );
     };
   
-    return <FullWindowResponsiveContainer render={renderList} />;
+    return <ResponsiveWindowContainer render={renderList} />;
 }
 
 const Row = React.memo(function (props) {

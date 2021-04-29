@@ -3,32 +3,36 @@ import { useResizeDetector } from "react-resize-detector";
 import { classNames } from "./utils";
 import { addListener, removeListener } from "resize-detector";
 import { ResponsiveContainerProps } from "./ResponsiveContainer";
-interface FullWindowResponsiveContainerProps extends ResponsiveContainerProps {
-  scrollContainerRef?: React.MutableRefObject<any>;
+interface ResponsiveWindowContainerProps extends ResponsiveContainerProps {
+  scrollRef?: React.MutableRefObject<any>;
 }
 
-export default function FullWindowResponsiveContainer(
-  props: FullWindowResponsiveContainerProps
+export default function ResponsiveWindowContainer(
+  props: ResponsiveWindowContainerProps
 ) {
   const {
     render,
     debounceResize,
     debounceInterval,
     serverSideHeight,
-    scrollContainerRef,
+    scrollRef,
   } = props;
   const targetRef = React.useRef<HTMLDivElement>();
   const { width, height } = useResizeDetector({
     refreshMode: debounceResize ? "debounce" : undefined,
     refreshRate: debounceInterval ? debounceInterval : 100,
-    targetRef: "scrollContainerRef" in props ? scrollContainerRef : targetRef,
+    targetRef: "scrollRef" in props ? scrollRef : targetRef,
   });
   const [hasMounted, setHasMounted] = React.useState(false);
-  React.useEffect(() => {
+  const [reRender, forceRerender] = React.useState(true);
+  React.useLayoutEffect(() => {
     if (serverSideHeight !== undefined) {
-      setHasMounted(true);
+      setHasMounted(!hasMounted);
     }
-  });
+  }, []);
+  React.useLayoutEffect(() => {
+    forceRerender(!reRender)
+  }, [scrollRef?.current, scrollRef]);
   return (
     <>
       {render({

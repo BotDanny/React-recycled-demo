@@ -19,7 +19,7 @@ import FullWindow from "./pages/FullWindow";
 import VariableRowHeightColumn from "./pages/VariableRowHeightColumn";
 import CustomWindow from "./pages/CustomWindow";
 import ResponsiveContainerPage from "./pages/ResponsiveContainer";
-import FullWindowResponsiveContainerPage from "./pages/FullWindowResponsiveContainer";
+import ResponsiveWindowContainerDemoPage from "./pages/ResponsiveWindowContainerDemo";
 import LazyLoadingAdvanced from "./pages/LazyLoadingAdvanced";
 import LazyLoadingSimple from "./pages/LazyLoadingSimple";
 import DynamicLoading from "./pages/DynamicLoading";
@@ -35,6 +35,8 @@ import FixedListDoc from "./pages/FixedListDoc";
 import VariableListDoc from "./pages/VariableListDoc";
 import FullWindowFixedListDoc from './pages/FullWindowFixedListDoc'
 import FullWindowVariableListDoc from "./pages/FullWindowVariableList";
+import ResponsiveWindowContainerDoc from "./pages/ResponsiveWindowContainerDoc";
+import ResponsiveCustomWindow from "./pages/ResponsiveCustomWindow";
 var stats = new Stats();
 stats.dom.style.left = "300px";
 stats.dom.style.position = "";
@@ -162,7 +164,12 @@ export const examples = [
   {
     label: "Responsive window list/grid",
     route: "/responsive-window",
-    component: FullWindowResponsiveContainerPage,
+    component: ResponsiveWindowContainerDemoPage,
+  },
+  {
+    label: "Responsive custom window",
+    route: "/responsive-custom-window",
+    component: ResponsiveCustomWindow,
   },
   {
     label: "Simple Infinite loading",
@@ -194,7 +201,7 @@ export const components = [
   { label: "FixedSizeList", route: "/fixedsizelist", component: FixedListDoc },
   { label: "VariableSizeList", route: "/variablesizelist", component: VariableListDoc },
   { label: "FullWindowFixedList", route: "/fullWindowFixedList", component: FullWindowFixedListDoc },
-  { label: "VariableSizeWindowList", route: "/variablesizewindowList", component: FullWindowVariableListDoc },
+  { label: "FullWindowVariableList ", route: "/variablesizewindowList", component: FullWindowVariableListDoc },
   { label: "ResponsiveContainer", route: "/rResponsivecontainer" },
-  { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer" },
+  { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer", component: ResponsiveWindowContainerDoc },
 ];

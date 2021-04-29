@@ -41,7 +41,9 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          data: Array{"<any>"}, <span className="required">required*</span>
+          data: <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+          Array{"<any>"}, {" "}
+          </span><span className="required">required*</span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -56,7 +58,11 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          rowHeights: Array{"<number>"},{" "}
+          rowHeights:
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            {" "}
+            Array{"<number>"},{" "}
+          </span>
           <span className="required">required*</span>
         </Typography>
       </Box>
@@ -76,7 +82,11 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          rowHeight: number, <span className="required">required*</span>
+          rowHeight:
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number,
+          </span>{" "}
+          <span className="required">required*</span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -91,7 +101,11 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          rowComponent: React component,{" "}
+          rowComponent:
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            {" "}
+            React component,{" "}
+          </span>
           <span className="required">required*</span>
         </Typography>
       </Box>
@@ -170,10 +184,10 @@ function VariableListDocProps() {
           </li>
           <Box p={0.5} pl={3}>
             <Typography variant="body1">
-              Indicate if the current row being scrolled. If your component is
-              very expensive to render and the user is scrolling fast, you can
-              render a lighter component to increase performance. When the user
-              stops scrolling then you can render the full component.
+              Indicate if the current row is being scrolled. If your component
+              is very expensive to render and the user is scrolling fast, you
+              can render a lighter component to increase performance. When the
+              user stops scrolling then you can render the full component.
             </Typography>
           </Box>
           <li>
@@ -208,7 +222,11 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          height: number, <span className="required">required*</span>
+          height:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number,
+          </span>{" "}
+          <span className="required">required*</span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -217,7 +235,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          column: number
+          column:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number
+          </span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -228,7 +249,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          rowColumns: Array{"<number>"}
+          rowColumns:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            Array{"<number>"}
+          </span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -244,7 +268,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          offScreenRow: number, default = 1
+          offScreenRow:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number, default = 1
+          </span>
         </Typography>
       </Box>
       <Box pb={2} pt={2} pl={5} pr={5}>
@@ -259,7 +286,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          onRenderedRowChange: {"(renderInfo) => void"}
+          onRenderedRowChange:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            {"(renderInfo) => void"}
+          </span>
         </Typography>
       </Box>
       <Box pb={0} pt={2} pl={5} pr={5}>
@@ -329,7 +359,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          onVisibleRowChange: {"(visibilityInfo) => void"}
+          onVisibleRowChange:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            {"(visibilityInfo) => void"}
+          </span>
         </Typography>
       </Box>
       <Box pb={0} pt={2} pl={5} pr={5}>
@@ -396,7 +429,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          onUnmount: {"(scrollTop: number) => void"}
+          onUnmount:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            {"(scrollTop: number) => void"}
+          </span>
         </Typography>
       </Box>
       <Box pb={0} pt={2} pl={5} pr={5}>
@@ -409,19 +445,28 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          initialScrollTop: number, default = 0
+          initialScrollTop:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number, default = 0
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
         <Typography variant="body1">
           The initial scroll position of the list when first rendered. If
-          initialScrollTop = -1, then the list will scroll to the bottom.
+          initialScrollTop = -1, then the list will scroll to the bottom. Note
+          the initialScrollTop here is relative to the top of the list, meaning
+          that initialScrollTop = 0 will scroll to the first row in the list. It
+          will not scroll to the top of the window.
         </Typography>
       </Box>
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          useScrollingIndicator: boolean, default = false
+          useScrollingIndicator:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            boolean, default = false
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -434,7 +479,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          scrollInterval: number, default = 250
+          scrollInterval:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            number, default = 250
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -446,7 +494,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listTagName: string, default = "div"
+          listTagName:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            string, default = "div"
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -457,7 +508,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listProps: object, default = {"{}"}
+          listProps:
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            object, default = {"{}"}
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -477,7 +531,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listWindowTagName: string, default = "div"
+          listWindowTagName:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            string, default = "div"
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -488,7 +545,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          listWindowProps: object, default = {"{}"}
+          listWindowProps:
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            object, default = {"{}"}
+          </span>
         </Typography>
       </Box>
       <Box pl={5} pr={5}>
@@ -500,7 +560,10 @@ function VariableListDocProps() {
       <Divider className="divider" />
       <Box pb={2} pt={2} pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          width: string | number, default = {`"100%"`}
+          width:{" "}
+          <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
+            string | number, default = {`"100%"`}
+          </span>
         </Typography>
       </Box>
       <Box pb={3} pl={5} pr={5}>

@@ -22,11 +22,11 @@ export default function ResponsiveContainer(props: ResponsiveContainerProps) {
     refreshRate: debounceInterval ? debounceInterval : 100,
   });
   const [hasMounted, setHasMounted] = React.useState(false);
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (serverSideHeight !== undefined) {
       setHasMounted(true);
     }
-  });
+  }, []);
   return (
     <div
       className={classNames("react-recycled-responsive-container", className)}

@@ -9,7 +9,7 @@ import { RowProps } from "./TypeDef";
 import ResponsiveContainer from "./ResponsiveContainer";
 import { FullWindowFixedList } from "./Export";
 import Root from "./Root";
-import FullWindowResponsiveContainer from "./FullWindowResponsiveContainer";
+import ResponsiveWindowContainer from "./ResponsiveWindowContainer";
 
 function randInt(min: number, max: number) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -317,7 +317,7 @@ function FullWindow() {
         >
           something
         </div>
-        <FullWindowResponsiveContainer
+        <ResponsiveWindowContainer
           render={() => {
             return <div>awdawdawd</div>;
           }}
@@ -431,7 +431,7 @@ function FullWindowDemo() {
         rootMarginBottom={0}
         initialScrollTop={500}
       />
-      {/* <FullWindowResponsiveContainer
+      {/* <ResponsiveWindowContainer
         render={() => {
           return <div>awdawdawd</div>;
         }}

@@ -44,6 +44,7 @@ function CustomWindowDemo() {
         rowHeight={100}
         scrollRef={scrollRef}
         ref={listRef as any}
+        column={2}
       />
       <div style={fillerStyle}>some random ui</div>
       <div style={fillerStyle}>some random ui</div>
