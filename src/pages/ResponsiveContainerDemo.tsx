@@ -1,9 +1,6 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import ResponsiveContainer from "../ResponsiveContainer";
+import React from 'react';
+import { FixedList, RowProps, ResponsiveContainer } from 'react-recycled-list';
+import GeneralPage from './GeneralPage';
 
 export default function ResponsiveContainerPage() {
   return <GeneralPage code={code} Demo={ResponsiveContainerDemo} />;
@@ -28,12 +25,12 @@ function ResponsiveContainerDemo() {
       />
     );
   };
-  
+
   const resizableContainerStyle = {
-    width: "100%",
-    height: "50vh",
-    resize: "both",
-    overflow: "auto",
+    width: '100%',
+    height: '50vh',
+    resize: 'both',
+    overflow: 'auto'
   };
 
   return (
@@ -48,11 +45,11 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
-    width: column === 1 ? "100%" : "50%",
-    textAlign: "center" as any,
+    width: column === 1 ? '100%' : '50%',
+    textAlign: 'center' as any
   };
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}

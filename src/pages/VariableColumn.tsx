@@ -1,15 +1,15 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage, { randInt } from "./GeneralPage";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import GeneralPage, { randInt } from './GeneralPage';
 
 export default function VariableColumn() {
   return <GeneralPage code={code} Demo={VariableColumnDemo} />;
 }
 
 function VariableColumnDemo() {
-  const columnsInEachRow = Array(300).fill(null).map(() => randInt(1, 4));
+  const columnsInEachRow = Array(300)
+    .fill(null)
+    .map(() => randInt(1, 4));
   const totalNumberOfItems = columnsInEachRow.reduce(
     (acc, column) => column + acc,
     0
@@ -34,18 +34,18 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const widthMap: any = {
-      1: "100%",
-      2: "50%",
-      3: "33.33%",
-      4: "25%"
-  }
+    1: '100%',
+    2: '50%',
+    3: '33.33%',
+    4: '25%'
+  };
 
   const columnStyle = {
     width: widthMap[column],
-    textAlign: "center",
+    textAlign: 'center'
   };
   return (
-    <div style={{top, height}} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}

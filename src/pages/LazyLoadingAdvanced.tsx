@@ -1,9 +1,6 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Button } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import GeneralPage from './GeneralPage';
 
 export default function LazyLoadingAdvanced() {
   return <GeneralPage code={code} Demo={LazyLoadingDemo} />;
@@ -33,10 +30,10 @@ const initialStore: {
   data: {
     1: Array(numberOfItemPerPage)
       .fill(null)
-      .map(() => undefined),
+      .map(() => undefined)
   },
   nextPage: 1,
-  isLoading: false,
+  isLoading: false
 };
 
 function LazyLoadingDemo() {
@@ -45,7 +42,7 @@ function LazyLoadingDemo() {
   const onFetchDataSuccess = (newData: any[], page: number) => {
     const newStoreData: { [key: string]: any[] } = {
       ...store.data,
-      [page]: newData,
+      [page]: newData
     };
     const nextPage = page + 1;
     const hasNextPage = nextPage <= 5;
@@ -56,7 +53,7 @@ function LazyLoadingDemo() {
       ...store,
       data: newStoreData,
       isLoading: false,
-      nextPage: nextPage,
+      nextPage: nextPage
     });
   };
 
@@ -76,7 +73,7 @@ function LazyLoadingDemo() {
       firstRenderedDataIndex,
       lastRenderedRowIndex,
       lastRowIndex,
-      lastRenderedDataIndex,
+      lastRenderedDataIndex
     } = renderInfo;
     if (lastRenderedDataIndex === lastRowIndex) {
       if (store.isLoading === false && store.nextPage <= 5) {
@@ -102,8 +99,12 @@ function LazyLoadingDemo() {
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
-  const displayValue = value === undefined ? "loading" : value;
-  return <div style={{top, height}} className="react-recycled-row">{displayValue}</div>;
+  const displayValue = value === undefined ? 'loading' : value;
+  return (
+    <div style={{ top, height }} className='react-recycled-row'>
+      {displayValue}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";

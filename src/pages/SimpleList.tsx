@@ -1,9 +1,6 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Avatar, Chip, CircularProgress } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import GeneralPage from './GeneralPage';
 
 export default function SimpleList() {
   return <GeneralPage code={code} Demo={SimpleListDemo} />;
@@ -15,21 +12,18 @@ function SimpleListDemo() {
     .map((_, index) => `item ${index}`);
 
   return (
-    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100}/>
+    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100} />
   );
 }
-
 
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
-  React.useEffect(() => {
-    console.log("render");
-    return () => {
-      console.log("unmount");
-    };
-  }, []);
-  return <div style={{top, height}} className="react-recycled-row" inlist>{value}</div>;
+  return (
+    <div style={{ top, height }} className='react-recycled-row' inlist>
+      {value}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";

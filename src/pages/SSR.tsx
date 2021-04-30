@@ -1,16 +1,12 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { FullWindowFixedList } from "../Export";
+import React from 'react';
+import Highlight from 'react-highlight.js';
 
 export default function SSR() {
   return (
     <>
-      <div className="code-section half-section">
-        <div className="code-wrapper">
-          <Highlight language="js">{code}</Highlight>
+      <div className='code-section half-section'>
+        <div className='code-wrapper'>
+          <Highlight language='js'>{code}</Highlight>
         </div>
       </div>
     </>

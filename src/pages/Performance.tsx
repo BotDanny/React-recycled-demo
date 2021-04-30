@@ -1,8 +1,5 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
 import {
   AppBar,
   Avatar,
@@ -10,17 +7,17 @@ import {
   Chip,
   Tab,
   Tabs,
-  Typography,
-} from "@material-ui/core";
-import { ReactWindowDemo } from "./ReactWindowComparison";
-import { Alert } from "@material-ui/lab";
+  Typography
+} from '@material-ui/core';
+import { ReactWindowDemo } from './ReactWindowComparison';
+import { Alert } from '@material-ui/lab';
 
 export function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -43,22 +40,22 @@ export default function Performance() {
   };
   return (
     <div>
-      <AppBar position="static">
+      <AppBar position='static'>
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="simple tabs example"
+          aria-label='simple tabs example'
         >
-          <Tab label="With react-recycled-list" />
-          <Tab label="Without react-recycled-list" />
-          <Tab label="With react-window" />
+          <Tab label='With react-recycled-list' />
+          <Tab label='Without react-recycled-list' />
+          <Tab label='With react-window' />
         </Tabs>
       </AppBar>
       <Box p={3} pb={1}>
         <Alert
-          severity="warning"
-          variant="filled"
-          style={{ justifyContent: "center" }}
+          severity='warning'
+          variant='filled'
+          style={{ justifyContent: 'center' }}
         >
           Warning, using a production build will give you much better
           performance. To test react-recycled-list to the extreme, turn on CPU
@@ -96,12 +93,12 @@ const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const handleClick = () => {};
   return (
-    <div style={{ top, height } as any} className="react-recycled-row">
+    <div style={{ top, height } as any} className='react-recycled-row'>
       {chips.map((_, index) => (
         <Chip
           key={index}
           avatar={<Avatar>M</Avatar>}
-          label="Clickable"
+          label='Clickable'
           onClick={handleClick}
         />
       ))}
@@ -116,14 +113,18 @@ const data = Array(500)
 function NoOptimization() {
   const handleClick = () => {};
   return (
-    <div className="no-optimization-list">
+    <div className='no-optimization-list'>
       {data.map((_, index) => (
-        <div className="react-none-recycled-row" key={index} style={{ height: 100 }}>
+        <div
+          className='react-none-recycled-row'
+          key={index}
+          style={{ height: 100 }}
+        >
           {chips.map((_, chipIndex) => (
             <Chip
               key={chipIndex}
               avatar={<Avatar>M</Avatar>}
-              label="Clickable"
+              label='Clickable'
               onClick={handleClick}
             />
           ))}

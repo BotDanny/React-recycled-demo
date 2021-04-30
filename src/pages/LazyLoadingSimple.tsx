@@ -1,9 +1,6 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Button } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import GeneralPage from './GeneralPage';
 
 export default function LazyLoadingSimple() {
   return <GeneralPage code={code} Demo={LazyLoadingDemo} />;
@@ -44,7 +41,7 @@ function LazyLoadingDemo() {
       firstRenderedDataIndex,
       lastRenderedRowIndex,
       lastRowIndex,
-      lastRenderedDataIndex,
+      lastRenderedDataIndex
     } = renderInfo;
     if (lastRenderedDataIndex === lastRowIndex) {
       if (isLoading === false) {
@@ -67,8 +64,12 @@ function LazyLoadingDemo() {
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
-  const displayValue = value === undefined ? "loading" : value;
-  return <div style={{top, height}} className="react-recycled-row">{displayValue}</div>;
+  const displayValue = value === undefined ? 'loading' : value;
+  return (
+    <div style={{ top, height }} className='react-recycled-row'>
+      {displayValue}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";

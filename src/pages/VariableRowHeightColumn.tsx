@@ -1,7 +1,6 @@
-import React from "react";
-import VariableList from "../VariableSizeList";
-import { RowProps } from "../TypeDef";
-import GeneralPage, { generateRamdomRowHeightAndColumn } from "./GeneralPage";
+import React from 'react';
+import { VariableList, RowProps } from 'react-recycled-list';
+import GeneralPage, { generateRamdomRowHeightAndColumn } from './GeneralPage';
 
 export default function VariableRowHeightColumn() {
   return <GeneralPage code={code} Demo={VariableRowHeightColumnDemo} />;
@@ -33,18 +32,18 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const widthMap: any = {
-    1: "100%",
-    2: "50%",
-    3: "33.33%",
-    4: "25%",
+    1: '100%',
+    2: '50%',
+    3: '33.33%',
+    4: '25%'
   };
 
   const columnStyle = {
     width: widthMap[column],
-    textAlign: "center",
+    textAlign: 'center'
   };
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}

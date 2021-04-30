@@ -1,8 +1,10 @@
-import React from "react";
-import { RowProps } from "../TypeDef";
-import GeneralPage from "./GeneralPage";
-import { FullWindowFixedList } from "../Export";
-import ResponsiveWindowContainer from "../ResponsiveWindowContainer";
+import React from 'react';
+import GeneralPage from './GeneralPage';
+import {
+  FullWindowFixedList,
+  ResponsiveWindowContainer,
+  RowProps
+} from 'react-recycled-list';
 
 export default function ResponsiveCustomWindow() {
   return <GeneralPage code={code} Demo={ResponsiveCustomWindowDemo} />;
@@ -21,13 +23,13 @@ function ResponsiveCustomWindowDemo() {
 
   const containerStyle = {
     height: 500,
-    width: "100%",
-    overflowY: "scroll" as any,
+    width: '100%',
+    overflowY: 'scroll' as any
   };
 
   const fillerStyle = {
-    textAlign: "center" as any,
-    padding: 20,
+    textAlign: 'center' as any,
+    padding: 20
   };
   const renderList = (sizeInfo: { width: number; height: number }) => {
     return (
@@ -47,10 +49,7 @@ function ResponsiveCustomWindowDemo() {
     <div ref={scrollRef as any} style={containerStyle}>
       <div style={fillerStyle}>some random ui</div>
       <div style={fillerStyle}>some random ui</div>
-      <ResponsiveWindowContainer
-        render={renderList}
-        scrollRef={scrollRef}
-      />
+      <ResponsiveWindowContainer render={renderList} scrollRef={scrollRef} />
       <div style={fillerStyle}>some random ui</div>
       <div style={fillerStyle}>some random ui</div>
     </div>
@@ -62,11 +61,11 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
-    width: column === 1? "100%": "50%",
-    textAlign: "center" as any,
+    width: column === 1 ? '100%' : '50%',
+    textAlign: 'center' as any
   };
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}

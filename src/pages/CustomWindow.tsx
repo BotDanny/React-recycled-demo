@@ -1,10 +1,6 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { FullWindowFixedList } from "../Export";
-import { Button, ButtonGroup } from "@material-ui/core";
+import React from 'react';
+import GeneralPage from './GeneralPage';
+import { FullWindowFixedList, RowProps } from 'react-recycled-list';
 
 export default function CustomWindow() {
   return <GeneralPage code={code} Demo={CustomWindowDemo} />;
@@ -25,13 +21,13 @@ function CustomWindowDemo() {
 
   const containerStyle = {
     height: 500,
-    width: "100%",
-    overflowY: "scroll" as any,
+    width: '100%',
+    overflowY: 'scroll' as any
   };
 
   const fillerStyle = {
-    textAlign: "center" as any,
-    padding: 20,
+    textAlign: 'center' as any,
+    padding: 20
   };
 
   return (
@@ -55,7 +51,7 @@ const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {value}
     </div>
   );

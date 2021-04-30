@@ -1,24 +1,14 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import {
-  AppBar,
-  Avatar,
-  Box,
-  Chip,
-  Tab,
-  Tabs,
-  Typography,
-} from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import Highlight from 'react-highlight.js';
+import { AppBar, Box, Tab, Tabs, Typography } from '@material-ui/core';
 
 function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
 
   return (
     <div
-      role="tabpanel"
+      role='tabpanel'
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
@@ -41,31 +31,31 @@ export default function ScrollRestoration() {
   };
   return (
     <div>
-      <AppBar position="static">
+      <AppBar position='static'>
         <Tabs
           value={value}
           onChange={handleChange}
-          aria-label="simple tabs example"
+          aria-label='simple tabs example'
         >
-          <Tab label="tab 1" />
-          <Tab label="tab 2" />
+          <Tab label='tab 1' />
+          <Tab label='tab 2' />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <div className="demo-section half-section">
+        <div className='demo-section half-section'>
           <SimpleList
             initialScrollTop={prevScrol}
             setPrevScrollTop={setPrevScrollTop}
           />
         </div>
-        <div className="code-section half-section">
-          <div className="code-wrapper">
-            <Highlight language="js">{code}</Highlight>
+        <div className='code-section half-section'>
+          <div className='code-wrapper'>
+            <Highlight language='js'>{code}</Highlight>
           </div>
         </div>
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <Typography variant="h6">
+        <Typography variant='h6'>
           Go back to tab 1 and the scroll position should restore
         </Typography>
       </TabPanel>
@@ -99,7 +89,7 @@ const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {value}
     </div>
   );

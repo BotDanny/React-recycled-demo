@@ -1,21 +1,17 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { FullWindowFixedList } from "../Export";
-import { Button } from "@material-ui/core";
+import React from 'react';
+import Highlight from 'react-highlight.js';
+import { FullWindowFixedList, RowProps } from 'react-recycled-list';
 
 export default function FullWindow() {
   return (
     <>
-      <div className="code-section half-section">
-        <div className="code-wrapper">
-          <Highlight language="js">{code}</Highlight>
+      <div className='code-section half-section'>
+        <div className='code-wrapper'>
+          <Highlight language='js'>{code}</Highlight>
         </div>
       </div>
-      <div className="demo-section half-section">
-        <FullWindowDemo/>
+      <div className='demo-section half-section'>
+        <FullWindowDemo />
       </div>
     </>
   );
@@ -26,17 +22,14 @@ function FullWindowDemo(props: any) {
     .fill(null)
     .map((_, index) => `item ${index}`);
 
-  return <FullWindowFixedList rowComponent={Row} data={data} rowHeight={100}/>;
+  return <FullWindowFixedList rowComponent={Row} data={data} rowHeight={100} />;
 }
 
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
   return (
-    <div
-      style={{top, height}}
-      className="react-recycled-row"
-    >
+    <div style={{ top, height }} className='react-recycled-row'>
       {value}
     </div>
   );

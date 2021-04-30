@@ -1,9 +1,7 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Avatar, Chip, CircularProgress } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+
+import GeneralPage from './GeneralPage';
 
 export default function ScrollIndicator() {
   return <GeneralPage code={code} Demo={ScrollIndicatorDemo} />;
@@ -15,14 +13,24 @@ function ScrollIndicatorDemo() {
     .map((_, index) => `item ${index}`);
 
   return (
-    <FixedList height={500} rowComponent={Row} data={data} rowHeight={100} useScrollIndicator/>
+    <FixedList
+      height={500}
+      rowComponent={Row}
+      data={data}
+      rowHeight={100}
+      useScrollIndicator
+    />
   );
 }
 
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, isScrolling, top, height } = props;
-  const value = isScrolling? "scrolling" : data[dataIndex];
-  return <div style={{top, height}} className="react-recycled-row">{value}</div>;
+  const value = isScrolling ? 'scrolling' : data[dataIndex];
+  return (
+    <div style={{ top, height }} className='react-recycled-row'>
+      {value}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";

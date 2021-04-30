@@ -1,15 +1,15 @@
-import React from "react";
-import Highlight from "react-highlight.js";
+import React from 'react';
+import Highlight from 'react-highlight.js';
 export default function GeneralPage(props: { code: string; Demo: any }) {
   const { code, Demo } = props;
   return (
     <>
-      <div className="demo-section half-section">
+      <div className='demo-section half-section'>
         <Demo />
       </div>
-      <div className="code-section half-section">
-        <div className="code-wrapper">
-          <Highlight language="js">{code}</Highlight>
+      <div className='code-section half-section'>
+        <div className='code-wrapper'>
+          <Highlight language='js'>{code}</Highlight>
         </div>
       </div>
     </>

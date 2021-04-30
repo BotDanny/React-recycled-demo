@@ -1,9 +1,7 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Button } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import GeneralPage from './GeneralPage';
+import { Button } from '@material-ui/core';
 
 export default function ScrollTo() {
   return <GeneralPage code={code} Demo={ScrollToDemo} />;
@@ -19,40 +17,40 @@ function ScrollToDemo() {
     <div>
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-evenly",
-          alignItems: "center",
-          padding: 10,
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          alignItems: 'center',
+          padding: 10
         }}
       >
         <Button
-          variant="contained"
-          color="secondary"
-          style={{ textTransform: "none" }}
+          variant='contained'
+          color='secondary'
+          style={{ textTransform: 'none' }}
           onClick={() => ref.current?.scrollTo(350)}
         >
           Scroll to scrollTop 350
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
-          style={{ textTransform: "none" }}
+          variant='contained'
+          color='secondary'
+          style={{ textTransform: 'none' }}
           onClick={() => ref.current?.scrollToRow(9)}
         >
           Scroll to 10th row
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
-          style={{ textTransform: "none" }}
+          variant='contained'
+          color='secondary'
+          style={{ textTransform: 'none' }}
           onClick={() => ref.current?.scrollToRow(-1)}
         >
           Scroll to last row
         </Button>
         <Button
-          variant="contained"
-          color="secondary"
-          style={{ textTransform: "none" }}
+          variant='contained'
+          color='secondary'
+          style={{ textTransform: 'none' }}
           onClick={() => ref.current?.scrollToDataIndex(86)}
         >
           Scroll to 87th data
@@ -75,11 +73,11 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
-    width: "25%",
-    textAlign: "center",
+    width: '25%',
+    textAlign: 'center'
   };
   return (
-    <div style={{ top, height }} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle as any}>{item}</div>
       ))}

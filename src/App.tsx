@@ -2,7 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import FixedList from "./FixedSizeList";
-import VariableSizeList from "./VariableSizeList";
+import VariableSizeList from "./VariableList";
 import { Grid } from "@material-ui/core";
 import { FixedSizeGrid, FixedSizeList } from "react-window";
 import { RowProps } from "./TypeDef";

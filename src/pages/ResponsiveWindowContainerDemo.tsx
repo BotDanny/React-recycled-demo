@@ -1,18 +1,20 @@
-import React from "react";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import ResponsiveWindowContainer from "../ResponsiveWindowContainer";
-import { FullWindowFixedList } from "../Export";
+import React from 'react';
+import Highlight from 'react-highlight.js';
+import {
+  FullWindowFixedList,
+  ResponsiveWindowContainer,
+  RowProps
+} from 'react-recycled-list';
 
 export default function ResponsiveWindowContainerDemoPage() {
   return (
     <>
-      <div className="code-section half-section">
-        <div className="code-wrapper">
-          <Highlight language="js">{code}</Highlight>
+      <div className='code-section half-section'>
+        <div className='code-wrapper'>
+          <Highlight language='js'>{code}</Highlight>
         </div>
       </div>
-      <div className="demo-section half-section">
+      <div className='demo-section half-section'>
         <ResponsiveWindowContainerDemo />
       </div>
     </>
@@ -46,11 +48,11 @@ const Row = React.memo(function (props: RowProps) {
   const rowData = data.slice(dataIndex, dataEndIndex);
 
   const columnStyle = {
-    width: column === 1 ? "100%" : "50%",
-    textAlign: "center" as any,
+    width: column === 1 ? '100%' : '50%',
+    textAlign: 'center' as any
   };
   return (
-    <div style={{top, height}} className="react-recycled-row">
+    <div style={{ top, height }} className='react-recycled-row'>
       {rowData.map((item) => (
         <div style={columnStyle}>{item}</div>
       ))}

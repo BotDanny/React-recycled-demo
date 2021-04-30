@@ -1,7 +1,6 @@
-import React from "react";
-import { RowProps } from "../TypeDef";
-import VariableList from "../VariableSizeList";
-import GeneralPage, { randInt } from "./GeneralPage";
+import React from 'react';
+import { VariableList, RowProps } from 'react-recycled-list';
+import GeneralPage, { randInt } from './GeneralPage';
 
 export default function VariableRowHeight() {
   return <GeneralPage code={code} Demo={VariableRowHeightDemo} />;
@@ -29,10 +28,7 @@ const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
   return (
-    <div
-      style={{top, height}}
-      className="react-recycled-row"
-    >
+    <div style={{ top, height }} className='react-recycled-row'>
       {value}
     </div>
   );

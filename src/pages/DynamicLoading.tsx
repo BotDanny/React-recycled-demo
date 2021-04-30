@@ -1,9 +1,8 @@
-import React from "react";
-import FixedList from "../FixedSizeList";
-import { RowProps } from "../TypeDef";
-import Highlight from "react-highlight.js";
-import GeneralPage from "./GeneralPage";
-import { Button } from "@material-ui/core";
+import React from 'react';
+import { FixedList, RowProps } from 'react-recycled-list';
+import Highlight from 'react-highlight.js';
+import GeneralPage from './GeneralPage';
+import { Button } from '@material-ui/core';
 
 export default function DynamicLoading() {
   return <GeneralPage code={code} Demo={DynamicLoadingDemo} />;
@@ -42,7 +41,7 @@ function populateInitialPage() {
       hasLoaded: false,
       data: Array(numberOfItemPerPage)
         .fill(null)
-        .map(() => undefined),
+        .map(() => undefined)
     };
   }
   return page;
@@ -63,8 +62,8 @@ function DynamicLoadingDemo() {
         [page]: {
           data: newData,
           hasLoaded: true,
-          isLoading: false,
-        },
+          isLoading: false
+        }
       };
     });
   };
@@ -76,10 +75,7 @@ function DynamicLoadingDemo() {
     lastRenderedDataIndex: number;
     lastRowIndex: number;
   }) => {
-    const {
-      firstRenderedDataIndex,
-      lastRenderedDataIndex,
-    } = renderInfo;
+    const { firstRenderedDataIndex, lastRenderedDataIndex } = renderInfo;
 
     const currentTopPage = getPageFromDataIndex(firstRenderedDataIndex);
     const currentBottomPage = getPageFromDataIndex(lastRenderedDataIndex);
@@ -91,7 +87,7 @@ function DynamicLoadingDemo() {
       if (!pagedData[page].hasLoaded && !pagedData[page].isLoading) {
         setPagedData({
           ...pagedData,
-          [page]: { ...pagedData[page], isLoading: true },
+          [page]: { ...pagedData[page], isLoading: true }
         });
 
         fetchData(page, onFetchDataSuccess);
@@ -119,8 +115,12 @@ function DynamicLoadingDemo() {
 const Row = React.memo(function (props: RowProps) {
   const { data, dataIndex, top, height } = props;
   const value = data[dataIndex];
-  const displayValue = value === undefined ? "loading" : value;
-  return <div className="react-recycled-row" style={{top, height}}>{displayValue}</div>;
+  const displayValue = value === undefined ? 'loading' : value;
+  return (
+    <div className='react-recycled-row' style={{ top, height }}>
+      {displayValue}
+    </div>
+  );
 });
 
 const code = `import { FixedList } from "react-recycled-list";
