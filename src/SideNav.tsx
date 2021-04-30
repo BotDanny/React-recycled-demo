@@ -133,7 +133,7 @@ export const introductions = [
     component: WhyPage
   },
   { label: "Performance demo", route: "/performance", component: Performance },
-  { label: "Before you begin", route: "/QA", component: BeforeYouBegin },
+  { label: "Before you begin", route: "/qa", component: BeforeYouBegin },
 ];
 
 export const examples = [
@@ -203,6 +203,6 @@ export const components = [
   { label: "VariableSizeList", route: "/variablesizelist", component: VariableListDoc },
   { label: "FullWindowFixedList", route: "/fullWindowFixedList", component: FullWindowFixedListDoc },
   { label: "FullWindowVariableList ", route: "/variablesizewindowList", component: FullWindowVariableListDoc },
-  { label: "ResponsiveContainer", route: "/rResponsivecontainer", component: ResponsiveContainerDoc },
-  { label: "ResponsiveWindowContainer", route: "/responsiveWindowcontainer", component: ResponsiveWindowContainerDoc },
+  { label: "ResponsiveContainer", route: "/responsivecontainer", component: ResponsiveContainerDoc },
+  { label: "ResponsiveWindowContainer", route: "/responsivewindowcontainer", component: ResponsiveWindowContainerDoc },
 ];
