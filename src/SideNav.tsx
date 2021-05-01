@@ -63,8 +63,8 @@ export default function SideNav() {
   return (
     <div>
       <Drawer variant="permanent" anchor="left">
-        <Typography variant="h6" className="site-title">
-          React recycled list
+        <Typography variant="h6" className="site-title" component="a" href="https://github.com/BotDanny/react-recycled-list" target="_blank">
+          react-recycled-list
         </Typography>
         <Divider />
         <ListItem id="statsjs">
@@ -138,7 +138,6 @@ export const introductions = [
 
 export const examples = [
   { label: "Simple List", route: "/simple-list", component: SimpleList },
-  //   { label: "VS React window", route: "/react-window", component: ReactWindowComparison },
   { label: "Simple Grid", route: "/simple-grid", component: SimpleGrid },
   {
     label: "Variable row height",
@@ -194,14 +193,13 @@ export const examples = [
   },
   { label: "Scroll to", route: "/scroll-to", component: ScrollTo },
   { label: "Scroll restoration", route: "/scroll-restoration", component: ScrollRestoration },
-//   { label: "Usage with React table", route: "/react-table" },
   { label: "Server side rendering", route: "/ssr", component: SSR },
 ];
 
 export const components = [
   { label: "FixedSizeList", route: "/fixedsizelist", component: FixedListDoc },
   { label: "VariableSizeList", route: "/variablesizelist", component: VariableListDoc },
-  { label: "FullWindowFixedList", route: "/fullWindowFixedList", component: FullWindowFixedListDoc },
+  { label: "FullWindowFixedList", route: "/fullwindowfixedList", component: FullWindowFixedListDoc },
   { label: "FullWindowVariableList ", route: "/variablesizewindowList", component: FullWindowVariableListDoc },
   { label: "ResponsiveContainer", route: "/responsivecontainer", component: ResponsiveContainerDoc },
   { label: "ResponsiveWindowContainer", route: "/responsivewindowcontainer", component: ResponsiveWindowContainerDoc },

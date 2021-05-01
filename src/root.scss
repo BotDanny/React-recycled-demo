@@ -68,9 +68,6 @@
     }
 
     .why-page {
-      a {
-        color: #1976d2;
-      }
 
       .MuiTypography-body1 {
         line-height: 2;
@@ -79,19 +76,7 @@
   }
 }
 
-// ::-webkit-scrollbar {
-//   width: 10px;
-//   height: 10px;
-// }
-// ::-webkit-scrollbar-thumb {
-//   background: #adadad;
-//   border-radius: 8px;
-// }
-// ::-webkit-scrollbar-thumb:hover {
-//   background: #7a7a7a;
-// }
-// ::-webkit-scrollbar-track {
-//   background: #ffffff;
-//   border-radius: 10px;
-//   box-shadow: inset 7px 10px 12px #f0f0f0;
-// }
+a {
+  color: #1976d2;
+}
+
