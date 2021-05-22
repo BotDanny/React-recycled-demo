@@ -28,7 +28,7 @@ export default function WhyPage() {
           whenever a row goes off screen, its DOM will be “recycled” to the
           appropriate position by an update to its absolute position. This
           allows react-recycled-list to truly keep a constant amount of DOM and
-          prevent unmounting which in some cases can be noticeably more
+          prevent unmounting which in most cases can be noticeably more
           performant than traditional windowing library.
         </Typography>
       </Box>
