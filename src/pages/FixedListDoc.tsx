@@ -59,7 +59,7 @@ export function FixedListDocProps() {
       <Divider className="divider" />
       <Box pl={5} pr={5}>
         <Typography variant="h6" style={{ fontWeight: 500 }}>
-          rowComponent: data:{" "}
+          rowComponent:
           <span style={{ fontStyle: "italic", fontWeight: "normal" }}>
             React component,{" "}
           </span>
